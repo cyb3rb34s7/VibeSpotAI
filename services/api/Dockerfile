@@ -10,6 +10,7 @@ RUN pip install --upgrade pip
 COPY pyproject.toml ./
 RUN pip install -e ".[dev]"
 
+COPY alembic.ini ./
 COPY app ./app
 COPY tests ./tests
 

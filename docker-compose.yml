@@ -6,7 +6,7 @@ services:
     environment:
       APP_ENV: local
       DATABASE_URL: postgresql+asyncpg://vibespot:vibespot@postgres:5432/vibespot
-      DATABASE_SYNC_URL: postgresql://vibespot:vibespot@postgres:5432/vibespot
+      DATABASE_SYNC_URL: postgresql+psycopg://vibespot:vibespot@postgres:5432/vibespot
       REDIS_URL: redis://redis:6379/0
       S3_ENDPOINT_URL: http://minio:9000
       S3_BUCKET: vibespot-local

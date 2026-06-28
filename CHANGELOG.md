@@ -2,6 +2,27 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add database schema and seed data
+
+**What changed:** Added Alembic setup, initial Postgres/PostGIS schema, SQLAlchemy models, and a seed script with Koramangala cafe data.
+**Why:** The MVP needs real local data to test map-first discovery and nearby place queries.
+**Files touched:** `services/api/alembic.ini`, `services/api/app/db/*`, `services/api/app/scripts/seed.py`, `services/api/Dockerfile`, `infra/docker/postgres/init/001-extensions.sql`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** partially. Code reverts cleanly; local database tables/data remain until Docker volumes are reset or a downgrade/reset is run.
+
+## 2026-06-29 - Normalize seed database connection
+
+**What changed:** Seed script now converts SQLAlchemy's psycopg URL into a direct psycopg connection URL.
+**Why:** `psycopg.connect()` does not accept `postgresql+psycopg://` connection strings.
+**Files touched:** `services/api/app/scripts/seed.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
+## 2026-06-29 - Fix Alembic sync driver
+
+**What changed:** Updated sync database URLs to use `postgresql+psycopg://`.
+**Why:** Alembic selected psycopg2 for plain `postgresql://` URLs, but the backend uses psycopg v3.
+**Files touched:** `.env.example`, `docker-compose.yml`, `services/api/app/core/config.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Project process and local foundation
 
 **What changed:** Added project process docs, architecture docs, local Docker infrastructure, FastAPI health endpoint, and initial implementation plan.

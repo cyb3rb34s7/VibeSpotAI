@@ -43,6 +43,20 @@ Building the local MVP foundation end to end:
 **Solution:** Run backend installation and tests inside the Docker Python 3.11 image.
 **Follow-up:** Prefer Docker-based backend verification unless a local Python 3.11 virtual environment is intentionally created.
 
+### 2026-06-29 - Alembic sync URL selected psycopg2
+
+**Problem:** `alembic upgrade head` failed with `ModuleNotFoundError: No module named 'psycopg2'`.
+**Root cause:** SQLAlchemy treats `postgresql://` sync URLs as psycopg2 by default, but the backend installs psycopg v3.
+**Solution:** Use `postgresql+psycopg://` for `DATABASE_SYNC_URL` and local sync URLs.
+**Follow-up:** Any sync SQLAlchemy URL in this repo must explicitly include the driver.
+
+### 2026-06-29 - psycopg direct connector rejected SQLAlchemy URL
+
+**Problem:** `python -m app.scripts.seed` failed with `missing "=" after "postgresql+psycopg://..."`.
+**Root cause:** `psycopg.connect()` accepts libpq-style or standard Postgres URLs, not SQLAlchemy's driver-qualified URL.
+**Solution:** Normalize the seed script connection string from `postgresql+psycopg://` to `postgresql://` before connecting.
+**Follow-up:** Keep raw driver connection helpers centralized if more scripts need direct psycopg access.
+
 ### 2026-06-29 - Postgres image needed both PostGIS and pgvector
 
 **Problem:** A plain pgvector image would not guarantee PostGIS support.
