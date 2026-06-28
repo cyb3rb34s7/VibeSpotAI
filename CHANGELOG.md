@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add local runbook and API examples
+
+**What changed:** Expanded the README with local run/test commands and added API examples for health, nearby places, place detail, and vibe-check submission.
+**Why:** The local MVP should be easy to run and verify from a fresh clone.
+**Files touched:** `README.md`, `docs/api-examples.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add Dramatiq worker groundwork
 
 **What changed:** Added Redis-backed Dramatiq broker setup, a summary refresh actor, an enqueue boundary test, and a `worker` Docker Compose service.

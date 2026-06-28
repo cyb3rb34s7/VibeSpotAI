@@ -13,7 +13,7 @@ Building the local MVP foundation end to end:
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is OpenAPI examples and final local MVP smoke verification.
+- Next implementation slice is final local MVP smoke verification and Android emulator path.
 
 ## Done
 
@@ -34,13 +34,13 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added app-level error envelope handlers for HTTP and validation errors.
 - 2026-06-29: Added deterministic summary refresh after vibe-check submission.
 - 2026-06-29: Added Redis-backed Dramatiq worker service and summary refresh job entrypoint.
+- 2026-06-29: Added README local runbook and API examples.
 
 ## Next
 
-1. Add OpenAPI examples for place and vibe-check endpoints.
-2. Add Android emulator smoke path.
-3. Add visual QA screenshots for mobile home/detail/submission.
-4. Add a final README local runbook pass.
+1. Add Android emulator smoke path.
+2. Add visual QA screenshots for mobile home/detail/submission.
+3. Add final local MVP verification summary.
 
 ## Problems & Solutions
 
@@ -151,6 +151,7 @@ Building the local MVP foundation end to end:
 - `CHANGELOG.md`: dated history of what changed and why.
 - `docs/conventions.md`: coding and process conventions.
 - `docs/architecture/`: technical architecture docs.
+- `docs/api-examples.md`: local API examples.
 - `docs/superpowers/plans/2026-06-29-vibespot-local-mvp-foundation.md`: current implementation plan.
 - `docker-compose.yml`: local service topology.
 - `services/api/app/main.py`: FastAPI entrypoint.
