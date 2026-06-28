@@ -1,0 +1,86 @@
+services:
+  api:
+    build:
+      context: ./services/api
+    container_name: vibespot-api
+    environment:
+      APP_ENV: local
+      DATABASE_URL: postgresql+asyncpg://vibespot:vibespot@postgres:5432/vibespot
+      DATABASE_SYNC_URL: postgresql://vibespot:vibespot@postgres:5432/vibespot
+      REDIS_URL: redis://redis:6379/0
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_BUCKET: vibespot-local
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "38191:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    volumes:
+      - ./services/api/app:/app/app
+      - ./services/api/tests:/app/tests
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+  postgres:
+    build:
+      context: ./infra/docker/postgres
+    container_name: vibespot-postgres
+    environment:
+      POSTGRES_DB: vibespot
+      POSTGRES_USER: vibespot
+      POSTGRES_PASSWORD: vibespot
+    ports:
+      - "38192:5432"
+    volumes:
+      - vibespot_postgres_data:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vibespot -d vibespot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: vibespot-redis
+    ports:
+      - "38193:6379"
+    volumes:
+      - vibespot_redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    container_name: vibespot-minio
+    environment:
+      MINIO_ROOT_USER: vibespot
+      MINIO_ROOT_PASSWORD: vibespot-local-secret
+    ports:
+      - "38194:9000"
+      - "38195:9001"
+    volumes:
+      - vibespot_minio_data:/data
+    command: ["server", "/data", "--console-address", ":9001"]
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: vibespot-minio-init
+    depends_on:
+      - minio
+    volumes:
+      - ./infra/docker/minio/create-bucket.sh:/create-bucket.sh:ro
+    entrypoint: ["/bin/sh", "/create-bucket.sh"]
+
+volumes:
+  vibespot_postgres_data:
+  vibespot_redis_data:
+  vibespot_minio_data:

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeSpot - Submission Success</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .kinetic-text {
+            text-shadow: 0 0 20px rgba(170, 213, 61, 0.4);
+        }
+
+        .glass-panel {
+            background: rgba(26, 26, 28, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .xp-count-container {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .pioneer-badge-container {
+            filter: drop-shadow(0 0 20px rgba(200, 245, 90, 0.4));
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-entry {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#263500",
+                        "surface-bright": "#383940",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#aad53d",
+                        "surface-container-lowest": "#0d0e15",
+                        "inverse-primary": "#4d6700",
+                        "on-tertiary-fixed": "#1b1b1d",
+                        "on-secondary-fixed": "#390c00",
+                        "on-primary-fixed": "#151f00",
+                        "outline-variant": "#444936",
+                        "on-background": "#e3e1eb",
+                        "tertiary-fixed-dim": "#c8c6c8",
+                        "on-tertiary": "#303032",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "secondary": "#ffb59d",
+                        "tertiary-fixed": "#e4e2e4",
+                        "on-tertiary-fixed-variant": "#474649",
+                        "background": "#12131a",
+                        "surface-container-highest": "#33343c",
+                        "secondary-fixed-dim": "#ffb59d",
+                        "secondary-container": "#b83900",
+                        "inverse-on-surface": "#2f3038",
+                        "on-primary-container": "#526d00",
+                        "surface": "#12131a",
+                        "on-secondary-fixed-variant": "#832600",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#e3e1eb",
+                        "on-secondary-container": "#ffddd2",
+                        "surface-tint": "#aad53d",
+                        "tertiary": "#ffffff",
+                        "surface-container-high": "#292931",
+                        "surface-variant": "#33343c",
+                        "primary-fixed": "#c5f258",
+                        "on-secondary": "#5d1900",
+                        "tertiary-container": "#e4e2e4",
+                        "secondary-fixed": "#ffdbd0",
+                        "primary-container": "#c5f258",
+                        "on-primary-fixed-variant": "#394d00",
+                        "inverse-surface": "#e3e1eb",
+                        "surface-container": "#1e1f26",
+                        "outline": "#8e937d",
+                        "primary": "#ffffff",
+                        "on-tertiary-container": "#656466",
+                        "on-surface-variant": "#c4c9b1",
+                        "surface-dim": "#12131a",
+                        "surface-container-low": "#1a1b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "8px",
+                        "margin": "20px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "sm": "12px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "title-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden selection:bg-primary-fixed/30 h-screen w-screen flex flex-col font-body-md text-body-md">
+<!-- Cinematic Background Sequence -->
+<div class="fixed inset-0 z-0 pointer-events-none">
+<!-- STITCH_SHADER_START:ANIMATION_11 class="absolute inset-0 w-full h-full opacity-60" -->
+<div class="absolute inset-0 w-full h-full opacity-60" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_11" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_11');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 center = vec2(0.5, 0.5);
+    float d = distance(uv, center);
+    
+    // Pulse timing
+    float pulse = mod(u_time * 1.2, 2.0);
+    
+    // Central burst
+    float burst = smoothstep(0.1 + pulse * 0.4, 0.0, d);
+    
+    // Rotating light rays
+    float angle = atan(uv.y - 0.5, uv.x - 0.5);
+    float rays = sin(angle * 8.0 + u_time * 2.0) * 0.5 + 0.5;
+    rays *= smoothstep(0.5, 0.0, d);
+    
+    // Golden Pioneer Palette
+    vec3 gold = vec3(1.0, 0.84, 0.0);
+    vec3 lime = vec3(0.78, 0.96, 0.35); // #C8F55A
+    vec3 color = mix(lime, gold, d * 1.5);
+    
+    float alpha = (burst + rays * 0.4) * (1.0 - d * 2.0);
+    
+    gl_FragColor = vec4(color, alpha * 0.9);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_11 -->
+<div class="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background opacity-90"></div>
+</div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-margin h-16 shadow-2xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed-dim active:scale-95 duration-200" data-icon="menu">menu</span>
+</div>
+<h1 class="font-display-lg text-[20px] tracking-tighter text-primary-fixed-dim uppercase">VIBESPOT</h1>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary-fixed-dim" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="relative z-10 flex-grow flex flex-col items-center pt-24 pb-48 px-gutter overflow-y-auto">
+<!-- Success Headline -->
+<div class="text-center mb-xl animate-entry" style="animation-delay: 0.1s">
+<h2 class="font-display-lg text-primary-fixed-dim text-[48px] italic uppercase leading-none kinetic-text tracking-tighter">Vibe Dropped!</h2>
+<p class="mt-2 font-label-md text-on-surface-variant tracking-[0.2em] uppercase">Status: Live</p>
+</div>
+<!-- XP Reveal -->
+<div class="flex flex-col items-center mb-xl animate-entry" style="animation-delay: 0.3s">
+<div class="xp-count-container flex items-baseline gap-1">
+<span class="font-display-lg text-[64px] text-primary-fixed-dim kinetic-text">+</span>
+<span class="font-display-lg text-[64px] text-primary-fixed-dim kinetic-text" id="xp-counter">12</span>
+</div>
+<span class="font-label-sm text-primary-fixed-dim tracking-widest uppercase opacity-80">Experience Gained</span>
+</div>
+<!-- Pioneer Unlocked Moment -->
+<div class="w-full max-w-sm glass-panel p-lg rounded-xl flex flex-col items-center text-center animate-entry" style="animation-delay: 0.5s">
+<div class="pioneer-badge-container w-32 h-32 mb-md">
+                <!-- STITCH_SVG_START:ANIMATION_12 class="" --><div id="animated-svg-ANIMATION_12" class="" style="display:block;width:100%;height:100%;min-height:200px;"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Glow Ring -->
+  <circle cx="50" cy="50" r="45" stroke="#C8F55A" stroke-width="0.5" opacity="0.3">
+    <animate attributeName="r" values="45;48;45" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite" />
+  </circle>
+  
+  <!-- Main Badge Body -->
+  <path d="M50 5L85 25V65L50 85L15 65V25L50 5Z" fill="#1A1A1C" stroke="#C8F55A" stroke-width="2">
+    <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="2s" repeatCount="indefinite" additive="sum" pivot="50 50" />
+  </path>
+  
+  <!-- "P" Wordmark -->
+  <text x="50" y="58" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="32" fill="#C8F55A">P</text>
+  
+  <!-- Orbiting Particles -->
+  <circle cx="50" cy="5" r="2" fill="#FF6B35">
+    <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="50" cy="95" r="2" fill="#C8F55A">
+    <animateTransform attributeName="transform" type="rotate" from="180 50 50" to="540 50 50" dur="4s" repeatCount="indefinite" />
+  </circle>
+</svg></div><!-- STITCH_SVG_END:ANIMATION_12 -->
+            </div>
+<h3 class="font-headline-lg text-primary-fixed-dim uppercase tracking-tight mb-xs">Pioneer Unlocked</h3>
+<p class="font-body-md text-on-surface-variant">
+                You're one of the first to vibe here. Your mark is permanent.
+            </p>
+<div class="w-full mt-lg pt-lg border-t border-white/10 flex items-center justify-between">
+<div class="text-left">
+<span class="block font-label-sm text-on-surface-variant uppercase">Neighborhood Rank</span>
+<p class="font-title-md text-primary-fixed-dim">#3 in Indiranagar</p>
+</div>
+<div class="bg-primary-fixed/20 px-3 py-1 rounded-full">
+<span class="text-primary-fixed-dim font-label-sm">+2 Slots</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Actions -->
+<div class="fixed bottom-24 z-30 w-full px-margin flex flex-col items-center gap-sm bg-gradient-to-t from-background via-background/80 to-transparent pt-8 pb-4">
+<button class="w-full max-w-sm py-4 bg-primary-fixed text-on-primary rounded-full font-label-md uppercase tracking-widest active:scale-95 duration-200 transition-all shadow-[0_0_30px_rgba(200,245,90,0.3)]">
+            View Local Leaderboard
+        </button>
+<button class="w-full max-w-sm py-2 text-on-surface-variant font-label-sm uppercase tracking-widest active:scale-95 duration-200 transition-all">
+            Maybe Later
+        </button>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container/90 backdrop-blur-2xl border-t border-white/5 flex justify-around items-center px-gutter pb-8 pt-2 shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary-fixed-dim bg-primary-fixed/10 rounded-full p-3">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</nav>
+<script>
+        // XP Counter Logic
+        const counter = document.getElementById('xp-counter');
+        const target = 12;
+        let current = 0;
+        const duration = 1500;
+        const startTime = performance.now();
+
+        function updateCounter(timestamp) {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 4);
+            current = Math.floor(easeProgress * target);
+            counter.innerText = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            }
+        }
+
+        setTimeout(() => {
+            requestAnimationFrame(updateCounter);
+        }, 800);
+    </script>
+<script>(function(){const map={map:"/",search:"/search",add_circle:"/submit",person:"/profile"};document.querySelectorAll("nav .material-symbols-outlined").forEach(el=>{const t=el.textContent.trim();if(map[t]){const btn=el.closest("button,div,a");if(btn){btn.style.cursor="pointer";btn.addEventListener("click",()=>{window.top.location.href=map[t];});}}});})();</script></body></html>

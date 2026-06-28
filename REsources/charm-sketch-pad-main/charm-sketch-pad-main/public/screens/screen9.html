@@ -1,0 +1,196 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VibeSpot - Noise Level</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #0F0F10;
+            color: #e3e1eb;
+            font-family: 'Hanken Grotesk', sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+        .glass-card {
+            background: rgba(26, 26, 28, 0.6);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Waveform Slider */
+        .slider-thumb::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            background: #C8F55A;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(200, 245, 90, 0.5);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .slider-thumb:active::-webkit-slider-thumb {
+            transform: scale(0.9);
+        }
+        .waveform-container {
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+        .noise-bar {
+            transition: height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-dim">
+<!-- Cinematic Background Shader -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-40">
+
+</div>
+<!-- Top Navigation / Progress -->
+<header class="fixed top-0 left-0 w-full z-50 px-margin py-md flex flex-col gap-sm">
+<div class="flex justify-between items-center w-full">
+<span class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">VibeSpot</span>
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity" onclick="window.top.location.href='/place'">
+<span class="material-symbols-outlined text-primary">close</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="flex gap-xs w-full px-base mt-sm">
+<div class="h-1 flex-1 bg-primary rounded-full"></div>
+<div class="h-1 flex-1 bg-primary rounded-full relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20" id="progress-fill"></div>
+</div>
+<div class="h-1 flex-1 bg-surface-variant rounded-full"></div>
+<div class="h-1 flex-1 bg-surface-variant rounded-full"></div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-margin text-center">
+<!-- Question Section -->
+<section class="mb-xl">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-xs">
+                Noise level right now?
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant" id="vibe-label" style="color: rgb(170, 213, 61);">Silent Study</p>
+</section>
+<!-- Waveform Visualization -->
+<div class="w-full max-w-2xl h-48 flex items-end justify-center gap-1 mb-xl waveform-container" id="waveform">
+<!-- Bars generated via JS -->
+<div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 14.6582px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 11.5119px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 18.1691px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 17.1584px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 19.0263px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 19.7169px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 16.012px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 14.9034px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 13.2815px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 16.9738px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 11.402px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 14.5826px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.0969px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.55462px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 9.42437px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 10.1649px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 13.4431px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 15.5137px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 11.8383px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 16.1035px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 18.4041px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 18.9678px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 19.2481px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 18.52px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 13.4007px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 16.598px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 16.4962px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 13.6104px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 13.1113px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 11.8604px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 9.97313px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.22112px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.12588px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.20478px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 8.16665px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 9.29905px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div><div class="noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all" style="height: 9.27272px; background-color: rgb(170, 213, 61); opacity: 0.4;"></div></div>
+<!-- Slider Control -->
+<div class="w-full max-w-md relative px-md">
+<input class="slider-thumb appearance-none w-full h-1 bg-surface-variant rounded-full outline-none transition-all duration-300" id="noise-slider" max="100" min="0" type="range" value="10">
+<div class="flex justify-between mt-md px-base">
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">SILENT</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">CHAOTIC</span>
+</div>
+</div>
+</main>
+<!-- Bottom Actions -->
+<footer class="fixed bottom-0 left-0 w-full z-50 px-margin pb-xl flex justify-center">
+<button class="w-full max-w-md py-md rounded-full font-label-md text-label-md transition-all duration-300 bg-primary-container text-on-primary-container shadow-lg cursor-pointer" id="next-button" onclick="window.top.location.href='/search'">
+            Next Step
+        </button>
+</footer>
+<script>
+        const slider = document.getElementById('noise-slider');
+        const waveform = document.getElementById('waveform');
+        const vibeLabel = document.getElementById('vibe-label');
+        const nextBtn = document.getElementById('next-button');
+        const barCount = 40;
+        const bars = [];
+
+        const vibes = [
+            { threshold: 0, label: "Silent Study", color: "#aad53d" },
+            { threshold: 25, label: "Whisper Zone", color: "#aad53d" },
+            { threshold: 50, label: "Coffee Shop Hum", color: "#C8F55A" },
+            { threshold: 75, label: "Lively Social", color: "#C8F55A" },
+            { threshold: 90, label: "Concert Peak", color: "#ffffff" }
+        ];
+
+        // Initialize Waveform
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'noise-bar w-1.5 md:w-2 bg-on-surface-variant rounded-full opacity-40 transition-all';
+            waveform.appendChild(bar);
+            bars.push(bar);
+        }
+
+        function updateWaveform(val) {
+            const intensity = val / 100;
+            
+            bars.forEach((bar, i) => {
+                // Calculate "chaos" based on intensity and sine waves
+                const freq = 0.5 + (intensity * 2);
+                const randomPart = Math.random() * (intensity * 60);
+                const sinePart = Math.sin((i / barCount) * Math.PI * 4) * (intensity * 40);
+                const baseHeight = 8 + (intensity * 20);
+                
+                const finalHeight = baseHeight + randomPart + sinePart;
+                
+                bar.style.height = `${Math.max(8, finalHeight)}px`;
+                
+                // Color shift based on intensity
+                if (intensity > 0.8) {
+                    bar.style.backgroundColor = '#ffffff';
+                    bar.style.opacity = '0.9';
+                } else if (intensity > 0.4) {
+                    bar.style.backgroundColor = '#C8F55A';
+                    bar.style.opacity = '0.7';
+                } else {
+                    bar.style.backgroundColor = '#aad53d';
+                    bar.style.opacity = '0.4';
+                }
+            });
+
+            // Update Label
+            const currentVibe = vibes.slice().reverse().find(v => val >= v.threshold);
+            vibeLabel.innerText = currentVibe.label;
+            vibeLabel.style.color = currentVibe.color;
+
+            // Update Button State
+            if (val > 0) {
+                nextBtn.classList.remove('bg-surface-container', 'text-on-surface-variant', 'pointer-events-none', 'opacity-50');
+                nextBtn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-lg');
+            }
+        }
+
+        slider.addEventListener('input', (e) => {
+            updateWaveform(e.target.value);
+            
+            // Interaction feedback
+            slider.style.transform = `scaleY(${1 + (e.target.value / 400)})`;
+            setTimeout(() => {
+                slider.style.transform = `scaleY(1)`;
+            }, 100);
+        });
+
+        // Loop for ambient movement
+        function animate() {
+            const val = parseInt(slider.value);
+            updateWaveform(val);
+            setTimeout(() => requestAnimationFrame(animate), 100);
+        }
+
+        animate();
+
+        // Button Micro-interaction
+        nextBtn.addEventListener('mousedown', () => {
+            nextBtn.style.transform = 'scale(0.96)';
+        });
+        nextBtn.addEventListener('mouseup', () => {
+            nextBtn.style.transform = 'scale(1)';
+        });
+    </script>
+
+
+<script>(function(){const map={map:"/",search:"/search",add_circle:"/submit",person:"/profile"};document.querySelectorAll("nav .material-symbols-outlined").forEach(el=>{const t=el.textContent.trim();if(map[t]){const btn=el.closest("button,div,a");if(btn){btn.style.cursor="pointer";btn.addEventListener("click",()=>{window.top.location.href=map[t];});}}});})();</script></body></html>

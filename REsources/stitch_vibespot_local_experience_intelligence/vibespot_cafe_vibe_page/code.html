@@ -1,0 +1,364 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VibeSpot - Cafe Vibe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #0F0F10;
+            overflow: hidden; /* Prevent body scroll, handle in sheet */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 31, 38, 0.7);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .gradient-border-ai {
+            position: relative;
+            background: #1A1A1C;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+        .gradient-border-ai::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(to right, #aad53d, #ffb59d);
+        }
+        .waveform-bar {
+            width: 3px;
+            background-color: #aad53d;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#526d00",
+                        "surface": "#12131a",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#832600",
+                        "on-surface": "#e3e1eb",
+                        "on-secondary-container": "#ffddd2",
+                        "surface-tint": "#aad53d",
+                        "surface-container-high": "#292931",
+                        "tertiary": "#ffffff",
+                        "surface-variant": "#33343c",
+                        "primary-fixed": "#c5f258",
+                        "secondary-fixed": "#ffdbd0",
+                        "on-primary-fixed-variant": "#394d00",
+                        "tertiary-container": "#e4e2e4",
+                        "primary-container": "#c5f258",
+                        "on-secondary": "#5d1900",
+                        "inverse-surface": "#e3e1eb",
+                        "surface-container": "#1e1f26",
+                        "outline": "#8e937d",
+                        "on-tertiary-container": "#656466",
+                        "on-surface-variant": "#c4c9b1",
+                        "primary": "#ffffff",
+                        "surface-dim": "#12131a",
+                        "surface-container-low": "#1a1b22",
+                        "on-primary": "#263500",
+                        "surface-bright": "#383940",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#aad53d",
+                        "surface-container-lowest": "#0d0e15",
+                        "inverse-primary": "#4d6700",
+                        "on-secondary-fixed": "#390c00",
+                        "on-tertiary-fixed": "#1b1b1d",
+                        "outline-variant": "#444936",
+                        "on-background": "#e3e1eb",
+                        "on-primary-fixed": "#151f00",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#303032",
+                        "tertiary-fixed-dim": "#c8c6c8",
+                        "secondary": "#ffb59d",
+                        "surface-container-highest": "#33343c",
+                        "secondary-fixed-dim": "#ffb59d",
+                        "tertiary-fixed": "#e4e2e4",
+                        "on-tertiary-fixed-variant": "#474649",
+                        "background": "#12131a",
+                        "inverse-on-surface": "#2f3038",
+                        "secondary-container": "#b83900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "8px",
+                        "margin": "20px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "sm": "12px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style><br>            @keyframes pulse {<br>                from { transform: scaleY(1); }<br>                to { transform: scaleY(1.5); }<br>            }<br>        </style></head>
+<body class="bg-background text-on-surface">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin py-md bg-gradient-to-b from-surface-dim/80 to-transparent backdrop-blur-md">
+<div class="flex items-center gap-xs cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined text-primary" data-icon="explore">explore</span>
+<span class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">VibeSpot</span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 bg-surface-container overflow-hidden cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_14}}'">
+<img class="w-full h-full object-cover" data-alt="A stylized portrait of a young urban explorer with a minimalist aesthetic, wearing dark designer streetwear. The lighting is moody and cinematic, with soft electric lime highlights on the cheekbones, matching the brand's primary accent color. The background is a blurred, dark urban nightscape." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzEroJUkcf9AhakSi-MnRpaRx8baH_c2p9G-qnA2XNWdVBAVjWqHZYSfQv0JW5MGJkwlKgaTnAzTB2Q4VPJraTPoeY2h7Jcdszxv25YJY8bbCs-tsYNhgQOUvOqb0ZtUGKmVRBMsLq4ay9LUhvLz4pcCK2CLCYoo2uXiQlb0RYwnZGjSSpBGpPlw30zI2ad69ELCd6q5jFiQM3Sy4VGBjpOggjS2Dms8ZOOD3k6tAv88vLIIa30sT9MbD7ifkk4F20xy-6pKYO0vRG">
+</div>
+</header>
+<!-- Background Map Layer -->
+<div class="fixed inset-0 z-0">
+<div class="w-full h-full grayscale brightness-[0.3]" data-alt="A cinematic night-mode map of a dense urban district like Shibuya, Tokyo. The map is rendered in deep charcoal and desaturated greys, with glowing streets. Soft neon electric lime pins highlight key locations, creating a sophisticated spatial depth and an immersive, high-tech explorer feel." data-location="Tokyo Shibuya" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-EdUUsFJPL02T3fZCv7RwAgSjSzxIcniWEh3WKJdMHVUvcM3oEsHJ6CEmePGwwG6HaUc5Eco92aqBT7vac_c5KQnBYlNzU4hYwRoNtPXGkxfL76VoZspz9KS_LzQtA1nt9TE-hmeSQ71_bg5-32185WMhnHSKw0ltlSN9k7bVlcge_RjmqvRp_thMMyRcWvsBCqSVarIKlnWOfwsxykkkwOe931I1itlsHvu6XaOlI5DxA_oVd_1C7-MmmJUglkzU3Py6gBh4CFWH')">
+</div>
+<!-- Blurred Map Overlay -->
+<div class="absolute inset-0 bg-surface-dim/40 backdrop-blur-sm"></div>
+</div>
+<!-- Bottom Sheet Container -->
+<main class="fixed bottom-0 left-0 w-full h-[751px] z-10 glass-panel rounded-t-[32px] overflow-hidden flex flex-col shadow-[0_-24px_48px_rgba(0,0,0,0.5)]">
+<!-- Sheet Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-12 h-1.5 bg-surface-variant rounded-full opacity-50"></div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-margin pb-32">
+<!-- Mood Carousel -->
+<section class="mt-xs">
+<div class="flex gap-sm overflow-x-auto no-scrollbar -mx-margin px-margin">
+<div class="min-w-[280px] h-48 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A wide cinematic shot of a modern, industrial-style cafe in Tokyo. Large floor-to-ceiling windows reveal a rainy street outside, while the interior is filled with warm, amber lighting and lush hanging plants. Minimalist concrete furniture and a sleek espresso machine create a sophisticated, quiet vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jdqWZO5CTmc4s-bOq0WwJqp6CvlIbIO0qgZAjk0kamZkIqkhb0yCrzkROIf-Lk_Kwspj1dg-K39leNxRS25aEcgfog61WjUMYVyAUVcwqVq1d70fcZDqdEZXebnpZw1wuMIGTkDoFcA6vtP8YFBy8oFe3YENSYnVKiiA_z1WgyERe79OqO6rUVf3Zc4UDBhg1_mEjIEA4UeinxxyeEa9pn7wn5bmMmhlTaNovJbPFVIMlWl1PtDfDh2j1zwrD0SKLIOmkihRY4SL">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-white/20 backdrop-blur-md"></div>
+<span class="font-label-sm text-label-sm text-white">@alex_vibe</span>
+</div>
+</div>
+<div class="min-w-[280px] h-48 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A close-up shot of a perfectly poured oat milk latte in a matte black ceramic cup, sitting on a dark wooden table. Beside it is a pair of high-end noise-canceling headphones and a minimalist journal. The lighting is soft and moody, emphasizing a focused, deep-work atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHVR7wgmT2gz9X6zOLnLLUaobMpfVtjVyck0t4_DbAKHsrhuC5UYM35cPxvdIBaKTVGDwCKKz-DRoNWtztSFX3PLZ9FBUE2C4cv-9uvQTJf8BBPDAozWDL1cIiFnqdbCDCgxGnqJQz4GOs2jyYyNgFBWfww9g8k1TEr-EaPGYbP2skSP6-44sXRl-RbAo4rVuXKQyjkKZoOmIXlZlx1YiyhErIcUcaQG1idyVmmw41uGNlenu6psLo4Xa3wE-4L2Clu0zuLagRX31E">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-white/20 backdrop-blur-md"></div>
+<span class="font-label-sm text-label-sm text-white">@mika_shib</span>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Summary Card -->
+<section class="mt-lg">
+<div class="gradient-border-ai rounded-2xl p-lg">
+<div class="flex justify-between items-start mb-md">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Kissa Focus</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span> Shibuya, 3 min walk
+                            </p>
+</div>
+<div class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-sm text-label-sm">
+                            94% Match
+                        </div>
+</div>
+<div class="flex flex-wrap gap-xs mb-lg">
+<div class="bg-surface-container-high px-3 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="laptop_mac">laptop_mac</span>
+<span class="font-label-sm text-label-sm">Deep Work</span>
+</div>
+<div class="bg-surface-container-high px-3 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-label-sm text-label-sm">10AM - 1PM</span>
+</div>
+<div class="bg-surface-container-high px-3 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="volume_down">volume_down</span>
+<span class="font-label-sm text-label-sm">Lo-fi Chill</span>
+</div>
+<div class="bg-surface-container-high px-3 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="wifi">wifi</span>
+<span class="font-label-sm text-label-sm">450 Mbps</span>
+</div>
+</div>
+<div class="border-t border-white/5 pt-md">
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-xs">Order This</p>
+<p class="font-body-md text-body-md text-on-surface">Cold Brew with Yuzu Foam — the sharp citrus acidity keeps the brain sharp for coding sprints.</p>
+</div>
+</div>
+</section>
+<!-- The Real Talk Section -->
+<section class="mt-xl">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-md text-title-md text-primary">The Real Talk</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">8 Drops today</span>
+</div>
+<!-- Vibe Drops -->
+<div class="space-y-lg">
+<!-- Drop 1 -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-white flex items-center justify-center font-bold text-lg">J</div>
+<div class="h-full w-0.5 bg-surface-variant rounded-full"></div>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-2xl p-md border border-white/5">
+<div class="flex justify-between items-center mb-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-primary">Jun P.</span>
+<span class="bg-primary/10 text-primary-fixed-dim px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-tighter border border-primary/20">Elite Explorer</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">14:20</span>
+</div>
+<div class="mb-md">
+<p class="font-body-md text-body-md text-on-surface">Total library silence right now. The corner booth by the window has a hidden outlet.</p>
+</div>
+<div class="flex items-center gap-md bg-surface-container-highest/50 rounded-xl p-3">
+<div class="flex items-end gap-[2px] h-6">
+<div class="waveform-bar h-[20%]" style="animation: 1.5s ease-in-out 0s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[35%]" style="animation: 1.5s ease-in-out 0.1s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[15%]" style="animation: 1.5s ease-in-out 0.2s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[25%]" style="animation: 1.5s ease-in-out 0.3s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[10%]" style="animation: 1.5s ease-in-out 0.4s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[40%]" style="animation: 1.5s ease-in-out 0.5s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[15%]" style="animation: 1.5s ease-in-out 0.6s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[30%]" style="animation: 1.5s ease-in-out 0.7s infinite alternate none running pulse;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Whisper Quiet</span>
+</div>
+<div class="mt-md flex items-start gap-2 bg-primary-container/10 p-3 rounded-lg border border-primary-container/20">
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="auto_awesome">auto_awesome</span>
+<p class="font-label-sm text-label-sm text-primary-container italic">Note: The barista gives out dark chocolate squares with every third espresso.</p>
+</div>
+</div>
+</div>
+<!-- Drop 2 -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold text-lg">S</div>
+<div class="h-full w-0.5 bg-surface-variant rounded-full"></div>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-2xl p-md border border-white/5">
+<div class="flex justify-between items-center mb-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-primary">Sora K.</span>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-tighter">Newbie</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">11:05</span>
+</div>
+<div class="mb-md">
+<p class="font-body-md text-body-md text-on-surface">WiFi is blazing fast. Just uploaded 4GB in under 2 minutes.</p>
+</div>
+<div class="flex items-center gap-md bg-surface-container-highest/50 rounded-xl p-3">
+<div class="flex items-end gap-[2px] h-6 w-32">
+<div class="waveform-bar h-[60%] opacity-40" style="animation: 1.5s ease-in-out 0.8s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[80%] opacity-40" style="animation: 1.5s ease-in-out 0.9s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[75%] opacity-40" style="animation: 1.5s ease-in-out 1s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[90%] opacity-40" style="animation: 1.5s ease-in-out 1.1s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[65%] opacity-40" style="animation: 1.5s ease-in-out 1.2s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[55%] opacity-40" style="animation: 1.5s ease-in-out 1.3s infinite alternate none running pulse;"></div>
+<div class="waveform-bar h-[70%] opacity-40" style="animation: 1.5s ease-in-out 1.4s infinite alternate none running pulse;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Moderate Buzz</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-32 right-margin z-50 bg-primary-container text-on-primary-container h-14 px-6 rounded-full flex items-center gap-2 shadow-[0_8px_24px_rgba(170,213,61,0.4)] active:scale-95 transition-all duration-200 cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_18}}'">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider">Drop a Vibe</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-xl pb-xl bg-surface-container/40 backdrop-blur-xl border-t border-white/5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full p-3 scale-110 shadow-[0_0_15px_rgba(170,213,61,0.5)]">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction: Waveform animation simulation
+        document.querySelectorAll('.waveform-bar').forEach((bar, index) => {
+            const delay = index * 0.1;
+            bar.style.animation = `pulse 1.5s ease-in-out ${delay}s infinite alternate`;
+        });
+
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes pulse {
+                from { transform: scaleY(1); }
+                to { transform: scaleY(1.5); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // Simple press interaction for cards
+        document.querySelectorAll('.gradient-border-ai').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+
+
+</body></html>

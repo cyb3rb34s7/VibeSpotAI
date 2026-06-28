@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --primary: #aad53d; /* Electric Lime */
+            --surface-0: #0F0F10;
+            --surface-1: #1A1A1C;
+            --surface-2: #242428;
+        }
+
+        body {
+            background-color: var(--surface-0);
+            font-family: 'Hanken Grotesk', sans-serif;
+            color: #e3e1eb;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-panel {
+            background: rgba(30, 31, 38, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .lime-glow {
+            box-shadow: 0 0 20px rgba(170, 213, 61, 0.3);
+        }
+
+        .amber-glow {
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.2);
+        }
+
+        .coral-glow {
+            box-shadow: 0 0 20px rgba(255, 111, 97, 0.2);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .map-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .7; transform: scale(1.2); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#526d00",
+                      "surface": "#12131a",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#832600",
+                      "on-surface": "#e3e1eb",
+                      "on-secondary-container": "#ffddd2",
+                      "surface-tint": "#aad53d",
+                      "surface-container-high": "#292931",
+                      "tertiary": "#ffffff",
+                      "surface-variant": "#33343c",
+                      "primary-fixed": "#c5f258",
+                      "secondary-fixed": "#ffdbd0",
+                      "on-primary-fixed-variant": "#394d00",
+                      "tertiary-container": "#e4e2e4",
+                      "primary-container": "#c5f258",
+                      "on-secondary": "#5d1900",
+                      "inverse-surface": "#e3e1eb",
+                      "surface-container": "#1e1f26",
+                      "outline": "#8e937d",
+                      "on-tertiary-container": "#656466",
+                      "on-surface-variant": "#c4c9b1",
+                      "primary": "#ffffff",
+                      "surface-dim": "#12131a",
+                      "surface-container-low": "#1a1b22",
+                      "on-primary": "#263500",
+                      "surface-bright": "#383940",
+                      "error": "#ffb4ab",
+                      "primary-fixed-dim": "#aad53d",
+                      "surface-container-lowest": "#0d0e15",
+                      "inverse-primary": "#4d6700",
+                      "on-secondary-fixed": "#390c00",
+                      "on-tertiary-fixed": "#1b1b1d",
+                      "outline-variant": "#444936",
+                      "on-background": "#e3e1eb",
+                      "on-primary-fixed": "#151f00",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "on-tertiary": "#303032",
+                      "tertiary-fixed-dim": "#c8c6c8",
+                      "secondary": "#ffb59d",
+                      "surface-container-highest": "#33343c",
+                      "secondary-fixed-dim": "#ffb59d",
+                      "tertiary-fixed": "#e4e2e4",
+                      "on-tertiary-fixed-variant": "#474649",
+                      "background": "#12131a",
+                      "inverse-on-surface": "#2f3038",
+                      "secondary-container": "#b83900"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "xs": "8px",
+                      "margin": "20px",
+                      "base": "4px",
+                      "xl": "32px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "title-md": ["Hanken Grotesk"],
+                      "label-md": ["Hanken Grotesk"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "body-lg": ["Hanken Grotesk"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "label-sm": ["Hanken Grotesk"],
+                      "body-md": ["Hanken Grotesk"],
+                      "display-lg": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen pb-32">
+<!-- Top AppBar (from JSON logic) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin py-md bg-gradient-to-b from-surface-dim/80 to-transparent backdrop-blur-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary" data-icon="explore">explore</span>
+<span class="font-display-lg text-display-lg font-bold text-primary tracking-tighter text-[24px]">VibeSpot</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a stylish young woman with a warm, confident expression. She is framed in a close-up shot, wearing modern urban apparel. The lighting is dramatic and cinematic, with a soft electric lime rim light accentuating her features against a deep, desaturated city background at night. The overall aesthetic is premium, moody, and highly polished." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf8cbU6gQGoisT4LcsKjuvHkA0fq8DF6FL2gyfnOJIpOGGza_hpmWZxIcDYcZdaIvyzt-sI1TZHzmr0X-5yPoC3N-pcyDpmvD2i4BczCkSbwUEkyukVCLXoIwkiWG8aBeAqgOJwaHLzYstgF-8RgWpSvTMEXe9BcP4LwdF8MOA0p4zcJzRTeqiSLOPUOaDAKDzuk-hqicuKdvRnsDmdgF0XCk1pCejZKM168OchWur7Yq2uwg1PXPsu9QgYdFecVtsuv7XKqYYfaGm"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-margin space-y-xl">
+<!-- Profile Header -->
+<section class="flex flex-col items-center text-center space-y-md">
+<div class="relative">
+<div class="w-24 h-24 rounded-full p-1 border-2 border-primary-fixed-dim lime-glow">
+<img class="w-full h-full rounded-full object-cover" data-alt="Close-up headshot of Priya, a fashionable urban explorer, with a minimalist aesthetic. The image captures her personality—creative, thoughtful, and adventurous. She has soft studio lighting hitting her from one side, creating high-contrast depth. The background is a dark, clean charcoal texture, making the subject and the lime green border of the interface around her pop. High fashion photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPRyo2pgx73jhLUqCmAov5hZJj37rBNCcFaR6VedyWVXyEM6t39XFdTgoJD4i2Pi6Cjn3IG_WF6ZEI_JwrWgUbBn7-cqWUsZGxtgBM0WiQo0x4PQzZqq6CCqWYNHWdPVEdrrwSYpap2s1o4nHwViAO_erAMKnnFbhm0eVlm-bHZlc9C0bOVUQ8SUYf530lRT_PsquYWWq1RTFbJzvZ7pFIi-n676Ztnx8HY6q1N9CnBnhtzMPf3YAwhX1Vyb8xEl6N6A-Ubs_C7iDO"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary-fixed text-on-primary p-1.5 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="space-y-xs">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-white">Priya</h1>
+<p class="font-label-md text-label-md text-on-surface-variant tracking-wide px-4">Afternoon worker · Window-seat hunter · Cold brew person</p>
+</div>
+</section>
+<!-- Stats Row -->
+<section class="grid grid-cols-3 gap-gutter">
+<div class="glass-panel rounded-xl p-md text-center flex flex-col justify-center items-center">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed-dim">38</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Drops</span>
+</div>
+<div class="glass-panel rounded-xl p-md text-center flex flex-col justify-center items-center">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed-dim">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Places</span>
+</div>
+<div class="glass-panel rounded-xl p-md text-center flex flex-col justify-center items-center">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed-dim">3</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Pioneered</span>
+</div>
+</section>
+<!-- Neighbourhood Rank Card -->
+<section class="glass-panel rounded-2xl p-lg relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="location_city">location_city</span>
+</div>
+<div class="flex justify-between items-end relative z-10">
+<div class="space-y-xs">
+<span class="font-label-md text-label-md text-on-surface-variant">Neighborhood Rank</span>
+<div class="flex items-center gap-xs">
+<span class="font-display-lg text-display-lg text-white">#4</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mb-2">in Koramangala</span>
+</div>
+</div>
+<div class="bg-primary-container/20 px-sm py-xs rounded-full flex items-center gap-1 border border-primary-container/30">
+<span class="material-symbols-outlined text-primary-fixed-dim text-md" data-icon="north">north</span>
+<span class="font-label-md text-label-md text-primary-fixed-dim">2</span>
+</div>
+</div>
+</section>
+<!-- Badges Horizontal Scroll -->
+<section class="space-y-md">
+<div class="flex justify-between items-center">
+<h2 class="font-title-md text-title-md text-white">Earned Badges</h2>
+<span class="text-primary-fixed-dim font-label-md text-label-md">View All</span>
+</div>
+<div class="flex gap-md overflow-x-auto hide-scrollbar py-sm -mx-margin px-margin">
+<!-- Pioneer Badge -->
+<div class="flex-shrink-0 flex flex-col items-center space-y-sm">
+<div class="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500/20 to-amber-200/10 border border-amber-500/30 flex items-center justify-center amber-glow">
+<span class="material-symbols-outlined text-[32px] text-amber-400" data-icon="diamond" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<span class="font-label-sm text-label-sm text-white">Pioneer</span>
+</div>
+<!-- Streak Badge -->
+<div class="flex-shrink-0 flex flex-col items-center space-y-sm">
+<div class="w-20 h-20 rounded-full bg-gradient-to-tr from-[#aad53d]/20 to-[#aad53d]/10 border border-[#aad53d]/30 flex items-center justify-center lime-glow">
+<span class="material-symbols-outlined text-[32px] text-primary-fixed-dim" data-icon="local_fire_department" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<span class="font-label-sm text-label-sm text-white">Streak</span>
+</div>
+<!-- Challenger Badge -->
+<div class="flex-shrink-0 flex flex-col items-center space-y-sm">
+<div class="w-20 h-20 rounded-full bg-gradient-to-tr from-red-500/20 to-red-300/10 border border-red-500/30 flex items-center justify-center coral-glow">
+<span class="material-symbols-outlined text-[32px] text-red-400" data-icon="rocket_launch" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<span class="font-label-sm text-label-sm text-white">Challenger</span>
+</div>
+<!-- Locked/Future Badge -->
+<div class="flex-shrink-0 flex flex-col items-center space-y-sm opacity-30">
+<div class="w-20 h-20 rounded-full bg-surface-container border border-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">???</span>
+</div>
+</div>
+</section>
+<!-- Your City Map Section -->
+<section class="space-y-md pb-8">
+<h2 class="font-title-md text-title-md text-white">Your City Map</h2>
+<div class="relative w-full h-48 rounded-2xl overflow-hidden border border-white/5">
+<!-- Map Background -->
+<div class="absolute inset-0 grayscale contrast-[1.2] brightness-[0.4]" data-alt="A desaturated night-time aerial view of Koramangala district in Bengaluru. The map shows intricate urban streets and blocks in dark greys and deep blacks. The lighting is cinematic, with only the major arterial roads having a subtle white glow. The overall feeling is high-end, digital, and immersive, acting as a sophisticated background for UI pins." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3ELNHS1C48OQJ0L2R-kPvhDrHq4Qo-8vmxch9LfgWTlATiqpkUbPtdPf14G7eEE910AP17Jfgxv22jfEJ56NSeV0bWY2VV9lMsHLfEfb7c_m4v1wjsjoodkyXWcVGUTP4dXXDt4b2jns8Gfz0RweeJLsgrni-_99Fs0P6afZwK65quTvGrsyraaHfb0xlDzpxD8x8h3xKL-EjE1Wfgjp_aEJboNBSks-Cysgj4DYeJ_1Dwy1ZBviuhtuvjoq6yg7Jf9flh6zzaZPe')"></div>
+<!-- Pins as Lit Nodes -->
+<div class="absolute top-1/2 left-1/3 w-3 h-3 bg-primary-fixed-dim rounded-full shadow-[0_0_15px_#aad53d]">
+<div class="absolute inset-0 bg-primary-fixed-dim rounded-full map-pulse"></div>
+</div>
+<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-primary-fixed-dim rounded-full shadow-[0_0_15px_#aad53d]">
+<div class="absolute inset-0 bg-primary-fixed-dim rounded-full map-pulse" style="animation-delay: 0.5s"></div>
+</div>
+<div class="absolute bottom-1/4 left-1/2 w-3 h-3 bg-primary-fixed-dim rounded-full shadow-[0_0_15px_#aad53d]">
+<div class="absolute inset-0 bg-primary-fixed-dim rounded-full map-pulse" style="animation-delay: 1.2s"></div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-0 via-transparent to-transparent"></div>
+<div class="absolute bottom-md left-md right-md flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary-fixed-dim text-sm" data-icon="map">map</span>
+<span class="font-label-sm text-label-sm text-white">12 Locations Visited</span>
+</div>
+<button class="bg-primary-fixed text-on-primary px-md py-1.5 rounded-full font-label-md text-label-md scale-95 hover:scale-100 transition-transform duration-300">
+                        Expand Map
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (from JSON logic) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-xl pb-xl bg-surface-container/40 backdrop-blur-xl border-t border-white/5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full p-3 scale-110 shadow-[0_0_15px_rgba(170,213,61,0.5)] active:scale-90 duration-300 spring-300-20" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for badges and buttons
+        document.querySelectorAll('.glass-panel, .flex-shrink-0, button').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                el.style.transform = 'scale(0.96)';
+            });
+            el.addEventListener('touchend', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+
+        // Parallax effect on map background when scrolling
+        window.addEventListener('scroll', () => {
+            const mapBg = document.querySelector('[data-location]');
+            if (mapBg) {
+                let offset = window.pageYOffset;
+                mapBg.style.backgroundPositionY = offset * 0.1 + 'px';
+            }
+        });
+    </script>
+</body></html>

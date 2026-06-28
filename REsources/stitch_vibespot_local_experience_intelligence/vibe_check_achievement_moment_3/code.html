@@ -1,0 +1,230 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VibeSpot - Achievement Unlocked</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .kinetic-text {
+            text-shadow: 0 0 20px rgba(200, 245, 90, 0.5);
+        }
+
+        .glass-panel {
+            background: rgba(18, 19, 26, 0.6);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .xp-count-container {
+            font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        @keyframes scale-in {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-stagger-1 { animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.1s; opacity: 0; }
+        .animate-stagger-2 { animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s; opacity: 0; }
+        .animate-stagger-3 { animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s; opacity: 0; }
+        .animate-stagger-4 { animation: scale-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s; opacity: 0; }
+
+        .pulse-xp {
+            animation: pulse-subtle 2s ease-in-out infinite;
+        }
+
+        .vignette {
+            background: radial-gradient(circle, transparent 20%, rgba(18, 19, 26, 0.95) 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffffff",
+                        "on-primary": "#263500",
+                        "primary-container": "#c5f258",
+                        "on-primary-container": "#526d00",
+                        "secondary": "#ffb59d",
+                        "surface": "#12131a",
+                        "surface-dim": "#12131a",
+                        "surface-container": "#1e1f26",
+                        "background": "#12131a",
+                        "on-background": "#e3e1eb",
+                        "on-surface": "#e3e1eb",
+                        "on-surface-variant": "#c4c9b1",
+                        "electric-lime": "#C8F55A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "8px",
+                        "margin": "20px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "sm": "12px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "title-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background overflow-hidden selection:bg-electric-lime/30 h-screen w-screen flex flex-col font-body-md text-body-md">
+<!-- Immersive Background -->
+<div class="fixed inset-0 z-0 pointer-events-none">
+
+<div class="absolute inset-0 vignette"></div>
+</div>
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin py-md bg-gradient-to-b from-surface-dim/80 to-transparent backdrop-blur-md">
+<div class="flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-out">
+<span class="material-symbols-outlined text-primary" data-icon="explore">explore</span>
+</div>
+<h1 class="font-display-lg text-headline-lg-mobile font-bold text-primary tracking-tighter uppercase">VibeSpot</h1>
+<div class="w-8 h-8 rounded-full bg-surface-container border border-white/10 overflow-hidden hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-out">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMiYTfOu7sQt-uVQTPZJJMgHFyRDCCDZQ2lAGqUJN4NluGihTL8_JHZqnK6CTaiAVxZz-fmJ7HntI2ZX485AuvOQerV2XoRbs8mXLHlBPpW0_Hp6xQwr5fDIfxordmMszj0YzaPb6_nGtEd15t9FCkHT3JT4tU6OZ8Bt4xxDDjDjJ02WByeZDCmXWTxg_yKG4SiR8tIafEGnpVQb1jOd0z5nB4x_kQUG-OS-l8aEfUXWEyqeQJfeS_9ssZK24KcJfG4nvXyZegjXxV">
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 flex-grow flex flex-col items-center justify-start pt-32 pb-44 px-gutter overflow-y-auto">
+<!-- XP Gain Pulse Section - Fixed spacing to prevent overlap -->
+<div class="flex flex-col items-center mb-xl animate-stagger-1 pulse-xp">
+<div class="xp-count-container flex items-baseline gap-1 mb-2">
+<span class="font-display-lg text-[72px] text-electric-lime kinetic-text leading-none">+</span>
+<span class="font-display-lg text-[72px] text-electric-lime kinetic-text leading-none" id="xp-counter">12</span>
+</div>
+<span class="font-label-sm text-electric-lime tracking-[0.4em] uppercase opacity-90 block">Experience Gained</span>
+</div>
+<!-- Achievement Headline -->
+<div class="text-center mb-xl animate-stagger-2">
+<h2 class="font-display-lg text-primary text-[42px] italic uppercase leading-tight kinetic-text tracking-tighter">Vibe Dropped!</h2>
+<p class="mt-1 font-label-md text-on-surface-variant tracking-[0.2em] uppercase opacity-70">Grid Status: Live</p>
+</div>
+<!-- Premium Achievement Card -->
+<div class="w-full max-w-sm glass-panel p-xl rounded-[2.5rem] flex flex-col items-center text-center animate-stagger-3 shadow-2xl relative overflow-hidden mb-xl">
+<!-- Shine Effect -->
+<div class="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-br from-white/5 via-transparent to-transparent rotate-45 pointer-events-none"></div>
+<!-- Animated Badge Container - Corrected Embedding -->
+<div class="w-44 h-44 mb-lg relative flex items-center justify-center">
+<div class="absolute inset-0 bg-electric-lime/10 rounded-full blur-3xl"></div>
+<div class="relative w-full h-full">
+
+</div>
+</div>
+<h3 class="font-headline-lg text-electric-lime uppercase tracking-tight mb-sm">Pioneer Unlocked</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed mb-xl opacity-90 px-4">
+                You're among the first to leave a mark here. Your influence on the local grid is now permanent.
+            </p>
+<!-- Stats Row -->
+<div class="w-full pt-lg border-t border-white/10 flex items-center justify-between">
+<div class="text-left">
+<span class="block font-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Local Rank</span>
+<p class="font-title-md text-primary">#3 Indiranagar</p>
+</div>
+<div class="bg-electric-lime/10 px-4 py-1.5 rounded-full border border-electric-lime/20">
+<span class="text-electric-lime font-label-sm font-bold">+2 SLOTS</span>
+</div>
+</div>
+</div>
+<!-- Actions Section - Separated to ensure no overlap with card content -->
+<div class="w-full max-w-sm flex flex-col items-center gap-md animate-stagger-4 pb-12">
+<button class="w-full py-5 bg-electric-lime text-on-primary rounded-full font-label-md font-bold uppercase tracking-[0.15em] active:scale-95 hover:brightness-110 transition-all shadow-[0_0_50px_rgba(200,245,90,0.3)] cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+                View Local Leaderboard
+            </button>
+<button class="py-2 text-on-surface-variant font-label-sm uppercase tracking-widest hover:text-primary transition-colors opacity-60 cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+                Maybe Later
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-xl pb-10 pt-4 bg-surface-container/60 backdrop-blur-2xl border-t border-white/5 shadow-[0_-8px_24px_rgba(0,0,0,0.6)] rounded-t-[2rem]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors cursor-pointer" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full p-3 scale-110 shadow-[0_0_20px_rgba(170,213,61,0.6)] active:scale-90 duration-300 -translate-y-2">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</nav>
+<script>
+        // Precise XP Counter Animation
+        const counter = document.getElementById('xp-counter');
+        const target = 12;
+        let current = 0;
+        const duration = 2000;
+        let startTime;
+
+        function updateCounter(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Custom easing for a "Linear/CRED" feel - rapid start, slow smooth finish
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            current = Math.floor(easeOutQuart * target);
+            counter.innerText = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.innerText = target;
+            }
+        }
+
+        // Trigger after initial animations
+        setTimeout(() => {
+            requestAnimationFrame(updateCounter);
+        }, 800);
+    </script>
+
+
+</body></html>

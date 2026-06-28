@@ -1,0 +1,324 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VibeSpot | Discovery Query</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #0F0F10;
+            color: #e3e1eb;
+            font-family: 'Hanken Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: #1A1A1C;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .stagger-entry {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-glow:focus-within {
+            box-shadow: 0 0 0 1px #aad53d;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #12131a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #33343c;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#263500",
+                        "surface-bright": "#383940",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#aad53d",
+                        "surface-container-lowest": "#0d0e15",
+                        "inverse-primary": "#4d6700",
+                        "on-tertiary-fixed": "#1b1b1d",
+                        "on-secondary-fixed": "#390c00",
+                        "on-primary-fixed": "#151f00",
+                        "outline-variant": "#444936",
+                        "on-background": "#e3e1eb",
+                        "tertiary-fixed-dim": "#c8c6c8",
+                        "on-tertiary": "#303032",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "secondary": "#ffb59d",
+                        "tertiary-fixed": "#e4e2e4",
+                        "on-tertiary-fixed-variant": "#474649",
+                        "background": "#12131a",
+                        "surface-container-highest": "#33343c",
+                        "secondary-fixed-dim": "#ffb59d",
+                        "secondary-container": "#b83900",
+                        "inverse-on-surface": "#2f3038",
+                        "on-primary-container": "#526d00",
+                        "surface": "#12131a",
+                        "on-secondary-fixed-variant": "#832600",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#e3e1eb",
+                        "on-secondary-container": "#ffddd2",
+                        "surface-tint": "#aad53d",
+                        "tertiary": "#ffffff",
+                        "surface-container-high": "#292931",
+                        "surface-variant": "#33343c",
+                        "primary-fixed": "#c5f258",
+                        "on-secondary": "#5d1900",
+                        "tertiary-container": "#e4e2e4",
+                        "secondary-fixed": "#ffdbd0",
+                        "primary-container": "#c5f258",
+                        "on-primary-fixed-variant": "#394d00",
+                        "inverse-surface": "#e3e1eb",
+                        "surface-container": "#1e1f26",
+                        "outline": "#8e937d",
+                        "primary": "#ffffff",
+                        "on-tertiary-container": "#656466",
+                        "on-surface-variant": "#c4c9b1",
+                        "surface-dim": "#12131a",
+                        "surface-container-low": "#1a1b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "8px",
+                        "margin": "20px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "sm": "12px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "title-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen">
+<!-- Top Navigation Bar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-black/40 flex items-center justify-between px-margin h-16">
+<div class="flex items-center gap-xs">
+<button class="active:scale-95 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] text-on-surface-variant hover:opacity-80 transition-opacity" onclick="window.top.location.href='/'">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg text-display-lg tracking-tighter text-primary-fixed-dim select-none" style="font-size: 24px; line-height: 1;">VIBESPOT</h1>
+</div>
+<button class="active:scale-95 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Discovery Canvas -->
+<main class="pt-24 pb-32 px-margin max-w-2xl mx-auto">
+<!-- Search Pill Section -->
+<div class="stagger-entry w-full mb-xl" style="animation-delay: 0.1s;">
+<div class="input-glow group relative flex items-center bg-surface-container-low rounded-full px-lg py-md border border-white/5 transition-all duration-300 hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary-fixed-dim mr-md">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant/50 outline-none" placeholder="What's the vibe?" type="text" value="Quiet cafe with wifi after 9pm...">
+<button class="ml-xs text-on-surface-variant hover:text-primary-fixed-dim transition-colors cursor-pointer" onclick="window.top.location.href='/'">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex gap-xs mt-md overflow-x-auto no-scrollbar pb-2">
+<span class="bg-primary-fixed/10 text-primary-fixed-dim px-sm py-1 rounded-full font-label-sm text-label-sm whitespace-nowrap">Quiet</span>
+<span class="bg-surface-container text-on-surface-variant px-sm py-1 rounded-full font-label-sm text-label-sm whitespace-nowrap">Late Night</span>
+<span class="bg-surface-container text-on-surface-variant px-sm py-1 rounded-full font-label-sm text-label-sm whitespace-nowrap">Good Wifi</span>
+<span class="bg-surface-container text-on-surface-variant px-sm py-1 rounded-full font-label-sm text-label-sm whitespace-nowrap">Work-friendly</span>
+</div>
+</div>
+<!-- Live Results -->
+<div class="space-y-lg">
+<!-- Result Card 1 -->
+<div class="stagger-entry glass-card rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200 cursor-pointer" style="animation-delay: 0.2s;" onclick="window.top.location.href='/place'">
+<div class="relative h-48 w-full">
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="A moody, high-end interior of a minimalist Japanese-inspired cafe at night. Soft pendant lighting illuminates dark wood textures and sleek concrete walls. People are quietly working on laptops in a spacious, cinematic setting with deep shadows and warm accent highlights. The overall aesthetic is Kinetic Noir with premium urban vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIYJjS_LemOMxADpwd6uVZhmnmc8N7W9Zo0u8GXmISAjIjRltBwoLCCP_jt4olyPVtRa-iiEu453kg5OBpSNClU38hBQ253NQeaK7exxYhh5DrtLed7t39t0tJipespUY0JUoflx8djOd40nscYXRnD4VLMy58nIBjyD8CrwxWyMajgGXOcGg1Ux2fzvBAhhXJKpaSl7dpTBdvxJqr-PFhw-b6aXCo56XDZkYegsi6k5nvRqM7xzQ8n8h1u07K0GkzqwOGlDsuIvLf">
+<div class="absolute top-md right-md z-20 bg-primary-fixed-dim text-on-primary px-sm py-1 rounded-full font-label-sm text-label-sm">
+                        98% Match
+                    </div>
+</div>
+<div class="p-lg -mt-8 relative z-20">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Aromas Cafe</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">400m • Roppongi District</p>
+</div>
+<button class="text-primary-fixed-dim">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-xs mt-md">
+<span class="border border-primary-fixed-dim/30 text-primary-fixed-dim px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Deep Work</span>
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Fast Wifi</span>
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Lo-fi Playlist</span>
+</div>
+</div>
+</div>
+<!-- Result Card 2 -->
+<div class="stagger-entry glass-card rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200 cursor-pointer" style="animation-delay: 0.3s;" onclick="window.top.location.href='/place'">
+<div class="relative h-48 w-full">
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="An industrial-style focus lounge with exposed brick and dark steel beams. Dim, atmospheric lighting creates a sense of deep concentration. A high-contrast urban environment where each table is a private island of light. The scene is shot with a cinematic shallow depth of field, emphasizing the premium textures and nocturnal mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUl7VMS4pPL9HQ-eo4gYrtNCH9QcnAzIJlhvMYuYlwCQgZl07xW0pas6zPkI8hgwkpFUf7dkUofMUB6_v3AuM3EShkLyGq9FZhqHwP_Ucz48wDuFuGmtUU6GFQ6DWzKkHFenC7qCrS3GXBsr6IMF81o1PC5WQQ8gJ0qGNeT_aOMPGwSTEH5eDsxtl_3knCANBrtS2sC8WagOVXnMW_qpUJNN6HJGszQLHqEpljT3j9SzTwBUOtUMbyIhly_z2hHFZFj4blZY0F3ilY">
+<div class="absolute top-md right-md z-20 bg-primary-fixed-dim/80 backdrop-blur-md text-on-primary px-sm py-1 rounded-full font-label-sm text-label-sm">
+                        92% Match
+                    </div>
+</div>
+<div class="p-lg -mt-8 relative z-20">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Kissa Focus</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">1.2km • Shibuya Sky</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-xs mt-md">
+<span class="border border-primary-fixed-dim/30 text-primary-fixed-dim px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Silent Space</span>
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Ergonomic</span>
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Open Till 2AM</span>
+</div>
+</div>
+</div>
+<!-- Result Card 3 -->
+<div class="stagger-entry glass-card rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200" style="animation-delay: 0.4s;">
+<div class="relative h-48 w-full">
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
+<div class="absolute inset-0 bg-[#1A1A1C]/60 backdrop-grayscale"></div>
+<img class="w-full h-full object-cover opacity-60" data-alt="A sleek underground library bar with leather armchairs and walls of books. The space is illuminated by warm, focused desk lamps creating a sanctuary-like atmosphere. Dark teal and charcoal tones dominate the palette, offering a tactile and immersive feeling of sophisticated solitude. Cinematic noir lighting style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS86ZZvei--PYtlrWL7_tdWLosghTWf6xAv1GByatCJbklCRrohfqV0DZxj5V35Fl3k3d6JXn-8a1H3qE7UO20c2IUmr4v3sF6taP1de8BtbhbcWpB3qoB7Sggfb4uFMWPbL9ulcE4kKyyfN1S1OAGpT-ADHMFWZoToSY9z_VgXaiIgK-yTNYBUKaPo7S4bLg4UpSwEDMywNA6GIWRyS5M3w9zfVdmygDW_uzrr9mt4K1NwRFb4MD4o2WzsFmMDpVYFhF3bvf5CCxS">
+<div class="absolute top-md right-md z-20 bg-surface-container-highest/80 backdrop-blur-md text-on-surface px-sm py-1 rounded-full font-label-sm text-label-sm">
+                        85% Match
+                    </div>
+</div>
+<div class="p-lg -mt-8 relative z-20">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">The Archive</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">2.5km • Old Town</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-xs mt-md">
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Library Vibe</span>
+<span class="border border-white/10 text-on-surface-variant px-xs py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wider">Jazz</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Kinetic Background Detail -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-20">
+
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component) -->
+<nav class="fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container/90 backdrop-blur-2xl border-t border-white/5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)] flex justify-around items-center px-gutter pb-8 pt-2">
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary-fixed transition-colors active:scale-90 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer" onclick="window.top.location.href='/'">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary-fixed-dim bg-primary-fixed/10 rounded-full p-3 active:scale-90 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary-fixed transition-colors active:scale-90 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+<span class="material-symbols-outlined">add_circle</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary-fixed transition-colors active:scale-90 duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+<span class="material-symbols-outlined">person</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.97)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Floating animation for tags
+        const tags = document.querySelectorAll('.font-label-sm.text-[10px]');
+        tags.forEach((tag, index) => {
+            tag.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite alternate`;
+        });
+
+        // Simple floating keyframe injected via script
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                from { transform: translateY(0px); }
+                to { transform: translateY(-2px); }
+            }
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+
+<script>(function(){const map={map:"/",search:"/search",add_circle:"/submit",person:"/profile"};document.querySelectorAll("nav .material-symbols-outlined").forEach(el=>{const t=el.textContent.trim();if(map[t]){const btn=el.closest("button,div,a");if(btn){btn.style.cursor="pointer";btn.addEventListener("click",()=>{window.top.location.href=map[t];});}}});})();</script></body></html>
