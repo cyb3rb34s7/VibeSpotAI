@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add place detail loop
+
+**What changed:** Added `GET /places/{slug}` with summary, signals, and recent vibe checks; added a mobile place detail bottom sheet opened from nearby place cards.
+**Why:** The map-first home screen needs a real inspection flow so users can understand why a place is recommended before contributing or visiting.
+**Files touched:** `services/api/app/api/routes/places.py`, `services/api/app/services/places_service.py`, `services/api/app/schemas/place.py`, `services/api/app/core/response.py`, `services/api/app/db/session.py`, `services/api/tests/test_places_api.py`, `apps/mobile/src/api/client.ts`, `apps/mobile/src/components/*`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add Expo-safe premium press states
 
 **What changed:** Added a reusable animated `PressScale` wrapper, replaced fragile text glyph icons with Expo vector icons, and tightened the search, place card, and bottom nav interaction states.

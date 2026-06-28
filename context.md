@@ -7,8 +7,9 @@ Building the local MVP foundation end to end:
 - Local Docker infra is running for Postgres/PostGIS/pgvector, Redis, and MinIO.
 - FastAPI backend is running through Docker with explicit `uvicorn --reload`.
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
+- `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is the place detail/vibe-check loop.
+- Next implementation slice is the vibe-check submission loop.
 
 ## Done
 
@@ -24,13 +25,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added Expo TypeScript mobile shell with premium VibeSpot map-home UI.
 - 2026-06-29: Verified Expo web renders backend place data in a phone-sized viewport.
 - 2026-06-29: Added Expo-safe vector icons and animated press states for search, place cards, and bottom nav.
+- 2026-06-29: Added place detail API and a mobile bottom sheet opened from nearby place cards.
 
 ## Next
 
-1. Add the place detail endpoint and place detail screen.
-2. Add the vibe-check submission endpoint and mobile flow.
-3. Add typed error envelopes and global exception handling.
-4. Add backend worker setup for summary refresh jobs.
+1. Add the vibe-check submission endpoint and mobile flow.
+2. Add typed error envelopes and global exception handling.
+3. Add backend worker setup for summary refresh jobs.
+4. Add deterministic summary refresh pipeline.
 
 ## Problems & Solutions
 
@@ -97,6 +99,20 @@ Building the local MVP foundation end to end:
 **Solution:** Removed `lucide-react-native`/`react-native-svg` and used Expo's compatible `@expo/vector-icons` package.
 **Follow-up:** Prefer Expo-compatible icon packages unless a native dependency is explicitly verified on web and Android.
 
+### 2026-06-29 - asyncpg pooled connections crossed TestClient loops
+
+**Problem:** Adding a second DB-backed API test caused `Future attached to a different loop`.
+**Root cause:** The module-level async SQLAlchemy engine reused asyncpg pooled connections across separate Starlette TestClient event loops.
+**Solution:** Use `NullPool` for the async engine during the local MVP.
+**Follow-up:** Revisit pooling before production deployment; local reload/test stability matters more right now.
+
+### 2026-06-29 - Noise score scale looked wrong in detail UI
+
+**Problem:** Place detail showed `avg_noise_score` around `25.3`, which looked invalid when the UI labeled it like a 1-5 score.
+**Root cause:** `noise_score` is seeded and constrained as a 0-100 index, while `wifi_score` is 1-5.
+**Solution:** Keep the backend contract as 0-100 for noise and display the mobile metric as `/100`.
+**Follow-up:** Rename or document signal scales in API docs when formal OpenAPI examples are added.
+
 ## Decisions
 
 - Use FastAPI for the entire backend to keep AI/data workflows and API logic in one Python codebase for the MVP.
@@ -107,6 +123,7 @@ Building the local MVP foundation end to end:
 - Keep root `AGENTS.md` as the single agent instruction source; remove generated nested agent files from app scaffolds.
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
+- Noise scores use a 0-100 index; wifi scores use a 1-5 score.
 
 ## Critical Files
 

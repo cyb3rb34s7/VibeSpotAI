@@ -2,8 +2,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { getNearbyPlaces, type NearbyPlace } from "../api/client";
+import { getNearbyPlaces, getPlaceDetail, type NearbyPlace, type PlaceDetail } from "../api/client";
 import { BottomNav } from "../components/BottomNav";
+import { PlaceDetailSheet } from "../components/PlaceDetailSheet";
 import { PlacePreviewCard } from "../components/PlacePreviewCard";
 import { SearchPill } from "../components/SearchPill";
 import { VibeMap } from "../components/VibeMap";
@@ -13,6 +14,10 @@ export function MapHomeScreen() {
   const [places, setPlaces] = useState<NearbyPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<PlaceDetail | null>(null);
+  const [detailError, setDetailError] = useState<string | null>(null);
+  const [detailLoadingSlug, setDetailLoadingSlug] = useState<string | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -41,6 +46,29 @@ export function MapHomeScreen() {
       isMounted = false;
     };
   }, []);
+
+  async function openPlaceDetail(slug: string) {
+    setSelectedSlug(slug);
+    setDetail(null);
+    setDetailError(null);
+    setDetailLoadingSlug(slug);
+
+    try {
+      const placeDetail = await getPlaceDetail(slug);
+      setDetail(placeDetail);
+    } catch (caught) {
+      setDetailError(caught instanceof Error ? caught.message : "Unable to load this place");
+    } finally {
+      setDetailLoadingSlug(null);
+    }
+  }
+
+  function closePlaceDetail() {
+    setSelectedSlug(null);
+    setDetail(null);
+    setDetailError(null);
+    setDetailLoadingSlug(null);
+  }
 
   return (
     <View style={styles.root}>
@@ -86,13 +114,24 @@ export function MapHomeScreen() {
               </View>
 
               {places.slice(0, 6).map((place) => (
-                <PlacePreviewCard key={place.id} place={place} />
+                <PlacePreviewCard
+                  key={place.id}
+                  onPress={() => openPlaceDetail(place.slug)}
+                  place={place}
+                />
               ))}
             </>
           )}
         </ScrollView>
       </SafeAreaView>
       <BottomNav />
+      <PlaceDetailSheet
+        detail={detail}
+        error={detailError}
+        isLoading={detailLoadingSlug !== null}
+        isVisible={selectedSlug !== null}
+        onClose={closePlaceDetail}
+      />
     </View>
   );
 }

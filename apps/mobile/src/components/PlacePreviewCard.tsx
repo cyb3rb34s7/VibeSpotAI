@@ -6,12 +6,13 @@ import { colors, radii, spacing, typography } from "../theme/tokens";
 import { PressScale } from "./PressScale";
 
 type PlacePreviewCardProps = {
+  onPress?: () => void;
   place: NearbyPlace;
 };
 
-export function PlacePreviewCard({ place }: PlacePreviewCardProps) {
+export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
   return (
-    <PressScale accessibilityRole="button" pressedScale={0.985} style={styles.card}>
+    <PressScale accessibilityRole="button" onPress={onPress} pressedScale={0.985} style={styles.card}>
       <View style={styles.header}>
         <View style={styles.titleGroup}>
           <Text style={styles.name}>{place.name}</Text>
