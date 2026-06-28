@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add Dramatiq worker groundwork
+
+**What changed:** Added Redis-backed Dramatiq broker setup, a summary refresh actor, an enqueue boundary test, and a `worker` Docker Compose service.
+**Why:** The MVP needs a background job path ready for summary refreshes, tag extraction, embeddings, and future profile work without turning every request into a long-running process.
+**Files touched:** `docker-compose.yml`, `services/api/app/jobs/*`, `services/api/tests/test_summary_jobs.py`, `docs/architecture/*`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. Stop/remove `vibespot-worker` if reverting while it is running.
+
 ## 2026-06-29 - Refresh summaries after vibe checks
 
 **What changed:** Added deterministic summary refresh after vibe-check submission and tightened tests so evidence counts update and cleanup restores local seed state.

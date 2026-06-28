@@ -40,7 +40,7 @@ Example command split:
 
 ```txt
 api: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-worker: dramatiq app.jobs.tasks
+worker: dramatiq app.jobs.summary_jobs
 ```
 
 ## Database Image

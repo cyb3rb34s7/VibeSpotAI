@@ -66,7 +66,7 @@ backend/
         tag_extraction.py
     jobs/
       broker.py
-      tasks.py
+      summary_jobs.py
     tests/
 ```
 
@@ -139,7 +139,7 @@ On creation, the backend should:
 2. Calculate location confidence if user coordinates are provided.
 3. Store structured answers.
 4. Create reputation events where appropriate.
-5. Enqueue place summary refresh.
+5. Refresh the local summary immediately and optionally enqueue follow-up jobs.
 6. Return the immediate reward state.
 
 ### Search
@@ -189,6 +189,12 @@ Initial jobs:
 - Recompute local trending scores
 
 Jobs should be idempotent where possible. Re-running a summary job should update the same summary row, not create duplicates.
+
+The current local worker entrypoint is:
+
+```txt
+dramatiq app.jobs.summary_jobs
+```
 
 ## Error Handling
 
