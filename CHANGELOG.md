@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Normalize API error envelopes
+
+**What changed:** Added trace-aware handlers for HTTP errors and request validation errors.
+**Why:** Mobile and future clients should receive one predictable envelope shape for both success and failure.
+**Files touched:** `services/api/app/main.py`, `services/api/app/core/response.py`, `services/api/tests/test_error_envelopes.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add vibe-check submission loop
 
 **What changed:** Added `POST /places/{slug}/vibe-checks`, request/response schemas, local demo-user insertion, API tests, mobile submission client, and an in-sheet signal form.

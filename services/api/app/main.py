@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.routes import places
-from app.core.response import ok
+from app.core.response import error_response, ok
 from app.core.trace import ensure_trace_id
 
 app = FastAPI(title="VibeSpot API", version="0.1.0")
@@ -26,6 +28,28 @@ async def trace_middleware(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Trace-Id"] = trace_id
     return response
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    code = "not_found" if exc.status_code == 404 else "http_error"
+    return error_response(
+        request,
+        status_code=exc.status_code,
+        code=code,
+        message=str(exc.detail),
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return error_response(
+        request,
+        status_code=422,
+        code="validation_error",
+        message="Request validation failed",
+        details={"errors": exc.errors()},
+    )
 
 
 @app.get("/health")

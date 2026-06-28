@@ -9,8 +9,9 @@ Building the local MVP foundation end to end:
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
 - `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
 - `POST /places/{slug}/vibe-checks` accepts local demo-user submissions and returns the created signal.
+- API errors now use the same trace-aware envelope shape as success responses.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is typed exception handling and summary refresh groundwork.
+- Next implementation slice is summary refresh groundwork.
 
 ## Done
 
@@ -28,13 +29,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added Expo-safe vector icons and animated press states for search, place cards, and bottom nav.
 - 2026-06-29: Added place detail API and a mobile bottom sheet opened from nearby place cards.
 - 2026-06-29: Added vibe-check submission API and a mobile in-sheet signal form.
+- 2026-06-29: Added app-level error envelope handlers for HTTP and validation errors.
 
 ## Next
 
-1. Add typed error envelopes and global exception handling.
-2. Add backend worker setup for summary refresh jobs.
-3. Add deterministic summary refresh pipeline.
-4. Add OpenAPI examples for place and vibe-check endpoints.
+1. Add backend worker setup for summary refresh jobs.
+2. Add deterministic summary refresh pipeline.
+3. Add OpenAPI examples for place and vibe-check endpoints.
+4. Add Android emulator smoke path.
 
 ## Problems & Solutions
 
@@ -134,6 +136,7 @@ Building the local MVP foundation end to end:
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
 - Local vibe-check submissions use the seeded `priya` demo user until real auth is designed.
+- All API responses should use `{success, data|error, trace_id}`.
 
 ## Critical Files
 
