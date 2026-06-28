@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.xl,
     borderWidth: 1,
-    height: 300,
+    height: 270,
     overflow: "hidden",
   },
   mapCanvas: {

@@ -40,18 +40,16 @@ export function BottomNav() {
 
 const styles = StyleSheet.create({
   container: {
-    alignSelf: "center",
-    backgroundColor: colors.surfaceGlass,
+    alignSelf: "stretch",
+    backgroundColor: colors.surface,
     borderColor: colors.border,
     borderRadius: radii.xl,
     borderWidth: 1,
-    bottom: spacing.lg,
     flexDirection: "row",
     gap: spacing.xs,
-    left: spacing.md,
+    marginBottom: spacing.lg,
+    marginHorizontal: spacing.md,
     padding: spacing.xs,
-    position: "absolute",
-    right: spacing.md,
   },
   item: {
     alignItems: "center",

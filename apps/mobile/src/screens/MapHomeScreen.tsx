@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   getNearbyPlaces,
@@ -140,8 +141,8 @@ export function MapHomeScreen() {
             </>
           )}
         </ScrollView>
+        <BottomNav />
       </SafeAreaView>
-      <BottomNav />
       <PlaceDetailSheet
         detail={detail}
         error={detailError}
@@ -163,9 +164,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    gap: spacing.lg,
+    gap: spacing.md,
     padding: spacing.md,
-    paddingBottom: 116,
+    paddingBottom: spacing.lg,
   },
   header: {
     alignItems: "center",

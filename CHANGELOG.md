@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Polish Android safe-area layout
+
+**What changed:** Added `react-native-safe-area-context`, wrapped the app in a safe-area provider, moved bottom navigation into the screen safe area, tightened home spacing, shortened preview cards, and added keyboard-aware padding to the place detail submission sheet.
+**Why:** Native Android smoke testing showed the deprecated built-in safe area warning and bottom navigation crowding/overlapping content on the emulator.
+**Files touched:** `apps/mobile/App.tsx`, `apps/mobile/package.json`, `apps/mobile/package-lock.json`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `apps/mobile/src/components/*`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. Reinstall mobile dependencies after reverting package metadata.
+
 ## 2026-06-29 - Add local runbook and API examples
 
 **What changed:** Expanded the README with local run/test commands and added API examples for health, nearby places, place detail, and vibe-check submission.

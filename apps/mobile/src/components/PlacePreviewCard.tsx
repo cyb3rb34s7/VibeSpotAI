@@ -36,7 +36,7 @@ export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
         ))}
       </View>
 
-      <Text numberOfLines={2} style={styles.summary}>
+      <Text numberOfLines={1} style={styles.summary}>
         {place.summary}
       </Text>
       <View style={styles.evidenceRow}>

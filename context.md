@@ -13,8 +13,8 @@ Building the local MVP foundation end to end:
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, and TypeScript.
-- Android emulator launch is blocked by the AVD package service state; see Problems & Solutions.
+- Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, and TypeScript.
+- Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders home/detail/submission flows against the local backend.
 
 ## Done
 
@@ -37,12 +37,13 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added Redis-backed Dramatiq worker service and summary refresh job entrypoint.
 - 2026-06-29: Added README local runbook and API examples.
 - 2026-06-29: Completed final local smoke checks for backend, worker, API endpoints, Expo web bundle, and mobile typecheck.
+- 2026-06-29: Repaired Android emulator smoke path, added safe-area layout handling, and visually checked home/detail/submission flows in Expo Go.
 
 ## Next
 
-1. Fix or recreate Android AVD, then rerun `npm run android`.
-2. Add visual QA screenshots for mobile home/detail/submission.
-3. Start auth/profile design after local demo loop is accepted.
+1. Start auth/profile design after local demo loop is accepted.
+2. Decide whether the first deployed preview should stay Expo Go based or move to a development build.
+3. Configure Google Cloud Maps JavaScript API/referrers when real map rendering is required beyond the fallback.
 
 ## Problems & Solutions
 
@@ -134,8 +135,15 @@ Building the local MVP foundation end to end:
 
 **Problem:** `npm run android` reached `Medium_Phone_API_36.1` but Expo Go install/check failed with `cmd: Can't find service: package`.
 **Root cause:** The AVD connected through ADB before Android fully exposed the package manager; `sys.boot_completed` stayed blank during the wait window.
-**Solution:** Web/Expo bundle verification remains the current local smoke path. Recreate or cold-boot the AVD from Android Studio before the next native run.
-**Follow-up:** After AVD repair, rerun `npm run android`; the app already uses `10.0.2.2:38191` as Android's default API base URL.
+**Solution:** Cold-booted the AVD with `-wipe-data -no-snapshot-load -gpu swiftshader_indirect -no-boot-anim`, waited for `sys.boot_completed=1`, then installed/launched Expo Go successfully.
+**Follow-up:** If the emulator regresses, prefer a cold boot before changing app code; the app uses `10.0.2.2:38191` as Android's default API base URL.
+
+### 2026-06-29 - Expo web resolver stayed stale after safe-area install
+
+**Problem:** After adding `react-native-safe-area-context`, the Android bundle worked but the web bundle returned `Unable to resolve "react-native-safe-area-context"` from `App.tsx`.
+**Root cause:** The web Metro process on port `38201` had stale resolver state from before the package install; the package files were present on disk.
+**Solution:** Restart the web Expo process and re-hit the web bundle endpoint.
+**Follow-up:** After adding Expo/native dependencies, restart active Metro servers before treating resolver errors as package/code bugs.
 
 ## Decisions
 

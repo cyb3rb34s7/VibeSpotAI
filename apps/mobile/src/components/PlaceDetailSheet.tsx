@@ -2,7 +2,9 @@ import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -74,7 +76,10 @@ export function PlaceDetailSheet({
 
   return (
     <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
-      <View style={styles.backdrop}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.backdrop}
+      >
         <PressScale accessibilityLabel="Close place detail" onPress={onClose} style={styles.scrim} />
         <View style={styles.sheet}>
           <View style={styles.grabber} />
@@ -89,7 +94,11 @@ export function PlaceDetailSheet({
               <Text style={styles.stateText}>{error}</Text>
             </View>
           ) : detail ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              contentContainerStyle={styles.sheetContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
               <View style={styles.header}>
                 <View style={styles.titleBlock}>
                   <Text style={styles.name}>{detail.name}</Text>
@@ -205,7 +214,7 @@ export function PlaceDetailSheet({
             </ScrollView>
           ) : null}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -254,7 +263,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     maxHeight: "82%",
     padding: spacing.md,
-    paddingBottom: spacing.xl,
+  },
+  sheetContent: {
+    paddingBottom: 96,
   },
   grabber: {
     alignSelf: "center",
