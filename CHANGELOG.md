@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add local smoke script
+
+**What changed:** Added `scripts/smoke-local.ps1` to verify Docker containers, API success/error envelopes, seeded nearby/detail data, and optional Expo web/Android bundles.
+**Why:** Local development and deployment testing needs a repeatable one-command smoke path instead of hand-running curl and bundle checks.
+**Files touched:** `scripts/smoke-local.ps1`, `README.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Mark local MVP foundation plan complete
 
 **What changed:** Updated the local MVP foundation implementation plan checklist to reflect the completed Docker, FastAPI, database, worker, Expo web, and Android smoke work.

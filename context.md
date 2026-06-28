@@ -15,6 +15,7 @@ Building the local MVP foundation end to end:
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
 - Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, and TypeScript.
 - Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders home/detail/submission flows against the local backend.
+- `scripts/smoke-local.ps1` verifies Docker, API envelopes, seeded place data, and optional Expo web/Android bundles.
 
 ## Done
 
@@ -39,6 +40,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Completed final local smoke checks for backend, worker, API endpoints, Expo web bundle, and mobile typecheck.
 - 2026-06-29: Repaired Android emulator smoke path, added safe-area layout handling, and visually checked home/detail/submission flows in Expo Go.
 - 2026-06-29: Marked the local MVP foundation implementation plan checklist complete.
+- 2026-06-29: Added a repeatable local smoke script for Docker, API, and optional mobile bundle checks.
 
 ## Next
 
@@ -172,6 +174,7 @@ Building the local MVP foundation end to end:
 - `docs/api-examples.md`: local API examples.
 - `docs/superpowers/plans/2026-06-29-vibespot-local-mvp-foundation.md`: current implementation plan.
 - `docker-compose.yml`: local service topology.
+- `scripts/smoke-local.ps1`: repeatable local smoke verification command.
 - `services/api/app/main.py`: FastAPI entrypoint.
 
 ## Solution Notes

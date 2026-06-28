@@ -56,6 +56,18 @@ curl.exe http://localhost:38191/health
 curl.exe "http://localhost:38191/places/nearby?lat=12.9352&lng=77.6245&radius_m=2500"
 ```
 
+Run the local smoke script:
+
+```powershell
+.\scripts\smoke-local.ps1 -IncludeDocker
+```
+
+When Expo web and Android Metro are already running, include bundle checks:
+
+```powershell
+.\scripts\smoke-local.ps1 -IncludeDocker -IncludeExpoWebBundle -IncludeAndroidBundle
+```
+
 ## Current MVP Loop
 
 The local MVP supports:
