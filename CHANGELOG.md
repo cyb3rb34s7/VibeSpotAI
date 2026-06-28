@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Mark local MVP foundation plan complete
+
+**What changed:** Updated the local MVP foundation implementation plan checklist to reflect the completed Docker, FastAPI, database, worker, Expo web, and Android smoke work.
+**Why:** The tracked implementation plan should match the actual project state before new product slices begin.
+**Files touched:** `docs/superpowers/plans/2026-06-29-vibespot-local-mvp-foundation.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Polish Android safe-area layout
 
 **What changed:** Added `react-native-safe-area-context`, wrapped the app in a safe-area provider, moved bottom navigation into the screen safe area, tightened home spacing, shortened preview cards, and added keyboard-aware padding to the place detail submission sheet.

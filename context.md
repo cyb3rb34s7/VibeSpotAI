@@ -38,6 +38,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added README local runbook and API examples.
 - 2026-06-29: Completed final local smoke checks for backend, worker, API endpoints, Expo web bundle, and mobile typecheck.
 - 2026-06-29: Repaired Android emulator smoke path, added safe-area layout handling, and visually checked home/detail/submission flows in Expo Go.
+- 2026-06-29: Marked the local MVP foundation implementation plan checklist complete.
 
 ## Next
 

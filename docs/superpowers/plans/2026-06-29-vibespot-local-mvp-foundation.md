@@ -1,6 +1,6 @@
 # VibeSpot Local MVP Foundation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build a locally runnable VibeSpot foundation with Docker infrastructure, a FastAPI backend, seedable location data, and an Expo mobile app shell ready for premium map-first product development.
 
@@ -70,7 +70,7 @@ Responsibilities:
 **Interfaces:**
 - Produces: a stable repo layout and documented environment variable names consumed by later Docker, API, and mobile tasks.
 
-- [ ] **Step 1: Create the repository folders**
+- [x] **Step 1: Create the repository folders**
 
 Create:
 
@@ -80,7 +80,7 @@ services/api/
 infra/docker/
 ```
 
-- [ ] **Step 2: Add root README**
+- [x] **Step 2: Add root README**
 
 Create `README.md`:
 
@@ -110,7 +110,7 @@ VibeSpot is a map-first local experience intelligence app for discovering places
 The `REsources/` folder contains concept and UI reference material. It is not the production codebase.
 ```
 
-- [ ] **Step 3: Add root `.env.example`**
+- [x] **Step 3: Add root `.env.example`**
 
 Create `.env.example`:
 
@@ -142,7 +142,7 @@ EXPO_PUBLIC_API_BASE_URL=http://localhost:38191
 EXPO_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=
 ```
 
-- [ ] **Step 4: Add root `.gitignore`**
+- [x] **Step 4: Add root `.gitignore`**
 
 Create `.gitignore`:
 
@@ -163,7 +163,7 @@ build/
 *.log
 ```
 
-- [ ] **Step 5: Verify skeleton**
+- [x] **Step 5: Verify skeleton**
 
 Run:
 
@@ -186,7 +186,7 @@ Expected: the root folders and environment files exist.
 - Consumes: `.env.example` variable names from Task 1.
 - Produces: local Postgres/PostGIS/pgvector, Redis, and MinIO services on ports `38192` to `38195`.
 
-- [ ] **Step 1: Add Postgres extension init script**
+- [x] **Step 1: Add Postgres extension init script**
 
 Create `infra/docker/postgres/init/001-extensions.sql`:
 
@@ -195,7 +195,7 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
-- [ ] **Step 2: Add Docker Compose**
+- [x] **Step 2: Add Docker Compose**
 
 Create `docker-compose.yml`:
 
@@ -257,7 +257,7 @@ volumes:
   vibespot_minio_data:
 ```
 
-- [ ] **Step 3: Verify Docker infra starts**
+- [x] **Step 3: Verify Docker infra starts**
 
 Run:
 
@@ -267,7 +267,7 @@ docker compose up -d postgres redis minio
 
 Expected: all three containers become healthy.
 
-- [ ] **Step 4: Verify ports**
+- [x] **Step 4: Verify ports**
 
 Run:
 
@@ -291,7 +291,7 @@ Expected: `vibespot-postgres`, `vibespot-redis`, and `vibespot-minio` are runnin
 **Interfaces:**
 - Produces: `GET /health` returning `{"status":"ok","service":"vibespot-api"}`.
 
-- [ ] **Step 1: Add backend dependencies**
+- [x] **Step 1: Add backend dependencies**
 
 Create `services/api/pyproject.toml`:
 
@@ -328,7 +328,7 @@ pythonpath = ["."]
 testpaths = ["tests"]
 ```
 
-- [ ] **Step 2: Add backend Dockerfile**
+- [x] **Step 2: Add backend Dockerfile**
 
 Create `services/api/Dockerfile`:
 
@@ -351,7 +351,7 @@ COPY tests ./tests
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-- [ ] **Step 3: Add config**
+- [x] **Step 3: Add config**
 
 Create `services/api/app/core/config.py`:
 
@@ -373,7 +373,7 @@ class Settings(BaseSettings):
 settings = Settings()
 ```
 
-- [ ] **Step 4: Add FastAPI app**
+- [x] **Step 4: Add FastAPI app**
 
 Create `services/api/app/main.py`:
 
@@ -388,7 +388,7 @@ def health() -> dict[str, str]:
     return {"status": "ok", "service": "vibespot-api"}
 ```
 
-- [ ] **Step 5: Add health test**
+- [x] **Step 5: Add health test**
 
 Create `services/api/tests/test_health.py`:
 
@@ -407,7 +407,7 @@ def test_health_returns_ok() -> None:
     assert response.json() == {"status": "ok", "service": "vibespot-api"}
 ```
 
-- [ ] **Step 6: Run backend test**
+- [x] **Step 6: Run backend test**
 
 Run:
 
@@ -430,7 +430,7 @@ Expected: `1 passed`.
 - Consumes: backend from Task 3.
 - Produces: local API at `http://localhost:38191/health`.
 
-- [ ] **Step 1: Add API service to Compose**
+- [x] **Step 1: Add API service to Compose**
 
 Add to `docker-compose.yml`:
 
@@ -460,7 +460,7 @@ Add to `docker-compose.yml`:
         condition: service_healthy
 ```
 
-- [ ] **Step 2: Start API**
+- [x] **Step 2: Start API**
 
 Run:
 
@@ -470,7 +470,7 @@ docker compose up -d --build api
 
 Expected: `vibespot-api` starts.
 
-- [ ] **Step 3: Curl health endpoint**
+- [x] **Step 3: Curl health endpoint**
 
 Run:
 
@@ -502,19 +502,19 @@ Expected:
 - Produces tables: `users`, `places`, `vibe_checks`, `place_summaries`.
 - Produces seed command: `python -m app.scripts.seed`.
 
-- [ ] **Step 1: Define models**
+- [x] **Step 1: Define models**
 
 Create SQLAlchemy models for users, places, vibe checks, and place summaries. Place locations use `Geography(geometry_type="POINT", srid=4326)`.
 
-- [ ] **Step 2: Add Alembic migration**
+- [x] **Step 2: Add Alembic migration**
 
 Create a migration that enables `postgis` and `vector`, then creates the MVP tables.
 
-- [ ] **Step 3: Add seed script**
+- [x] **Step 3: Add seed script**
 
 Seed Bangalore/Koramangala with at least 12 cafes and 40 vibe checks. Use real-looking place names and coordinates around Koramangala.
 
-- [ ] **Step 4: Verify migrations**
+- [x] **Step 4: Verify migrations**
 
 Run:
 
@@ -525,7 +525,7 @@ alembic upgrade head
 
 Expected: migration succeeds.
 
-- [ ] **Step 5: Verify seed**
+- [x] **Step 5: Verify seed**
 
 Run:
 
@@ -549,19 +549,19 @@ Expected: prints `Seeded VibeSpot local data`.
 **Interfaces:**
 - Produces: `GET /places/nearby?lat=12.9352&lng=77.6245&radius_m=2000`.
 
-- [ ] **Step 1: Write API test**
+- [x] **Step 1: Write API test**
 
 Test that `/places/nearby` returns seeded cafes ordered by distance.
 
-- [ ] **Step 2: Implement service**
+- [x] **Step 2: Implement service**
 
 Use `ST_DWithin` and `ST_Distance` to fetch nearby places.
 
-- [ ] **Step 3: Implement route**
+- [x] **Step 3: Implement route**
 
 Return JSON cards with `id`, `name`, `neighborhood`, `distance_m`, `tags`, and `match_percent`.
 
-- [ ] **Step 4: Verify with curl**
+- [x] **Step 4: Verify with curl**
 
 Run:
 
@@ -586,11 +586,11 @@ Expected: a JSON array of seeded cafes.
 **Interfaces:**
 - Produces: Expo app running on a non-standard port if web is used.
 
-- [ ] **Step 1: Create Expo app dependencies**
+- [x] **Step 1: Create Expo app dependencies**
 
 Use Expo with TypeScript, React Navigation or Expo Router, Reanimated, and Google Maps support.
 
-- [ ] **Step 2: Add premium theme tokens**
+- [x] **Step 2: Add premium theme tokens**
 
 Create a calm Kinetic Noir theme:
 
@@ -606,11 +606,11 @@ export const colors = {
 };
 ```
 
-- [ ] **Step 3: Add app shell**
+- [x] **Step 3: Add app shell**
 
 Create a first screen with VibeSpot title, map placeholder, search pill, bottom nav, and premium spacing.
 
-- [ ] **Step 4: Run app**
+- [x] **Step 4: Run app**
 
 Run:
 
@@ -635,7 +635,7 @@ Expected: Expo starts without using common ports.
 - Consumes: `GET /places/nearby` from Task 6.
 - Produces: mobile home screen showing seeded places from the backend.
 
-- [ ] **Step 1: Add API client**
+- [x] **Step 1: Add API client**
 
 Implement:
 
@@ -647,11 +647,11 @@ export async function getNearbyPlaces() {
 }
 ```
 
-- [ ] **Step 2: Render nearby places**
+- [x] **Step 2: Render nearby places**
 
 Show cards using backend data. Keep the map placeholder until native Google Maps is configured.
 
-- [ ] **Step 3: Verify in Expo**
+- [x] **Step 3: Verify in Expo**
 
 Run the backend and mobile app, then confirm seeded cafes appear in the UI.
 
@@ -668,7 +668,7 @@ Run the backend and mobile app, then confirm seeded cafes appear in the UI.
 - Consumes: `EXPO_PUBLIC_GOOGLE_MAPS_BROWSER_KEY` or native Google Maps config.
 - Produces: map view with seeded cafe pins.
 
-- [ ] **Step 1: Add env key shape**
+- [x] **Step 1: Add env key shape**
 
 Use:
 
@@ -678,15 +678,15 @@ EXPO_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=
 
 Do not commit a real key.
 
-- [ ] **Step 2: Add map component**
+- [x] **Step 2: Add map component**
 
 Use `react-native-maps` for native preview or Google Maps JS only if running Expo web.
 
-- [ ] **Step 3: Render pins**
+- [x] **Step 3: Render pins**
 
 Use backend `lat/lng` data to render markers.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 Run on Expo Go or Android emulator and confirm that the map renders and pins are visible.
 
@@ -704,15 +704,15 @@ Run on Expo Go or Android emulator and confirm that the map renders and pins are
 **Interfaces:**
 - Produces: a polished first-screen experience matching the product direction.
 
-- [ ] **Step 1: Extract UI components**
+- [x] **Step 1: Extract UI components**
 
 Create focused components for search, place preview cards, and bottom navigation.
 
-- [ ] **Step 2: Add motion**
+- [x] **Step 2: Add motion**
 
 Use Reanimated for press states and bottom-sheet/card transitions.
 
-- [ ] **Step 3: Visual check**
+- [x] **Step 3: Visual check**
 
 Open the app in Expo web and Android emulator. Confirm:
 
