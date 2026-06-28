@@ -2,6 +2,20 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add Expo mobile shell
+
+**What changed:** Added Expo TypeScript app, premium VibeSpot home screen, theme tokens, backend API client, map preview, place cards, search pill, and bottom navigation.
+**Why:** The project needs a local mobile-first surface that can iterate visually while consuming the FastAPI backend.
+**Files touched:** `apps/mobile/*`, `services/api/app/main.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** partially. Code reverts cleanly; installed npm packages are local artifacts and can be restored with `npm install`.
+
+## 2026-06-29 - Allow Expo web API calls
+
+**What changed:** Added CORS middleware for local Expo web origins.
+**Why:** The browser app on port `38201` could not fetch the FastAPI backend on port `38191` without CORS headers.
+**Files touched:** `services/api/app/main.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add nearby places API
 
 **What changed:** Added trace-aware response envelopes, `/places/nearby`, nearby place schemas, and a PostGIS-backed service query.
