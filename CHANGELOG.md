@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add Google Maps web fallback
+
+**What changed:** Added a `VibeMap` component that tries Google Maps on web when an env key is present and falls back to the stylized local map if Google reports a load error.
+**Why:** Local iteration should continue even when Google Cloud key restrictions or API enablement are not fully configured yet.
+**Files touched:** `apps/mobile/src/components/VibeMap.tsx`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add Expo mobile shell
 
 **What changed:** Added Expo TypeScript app, premium VibeSpot home screen, theme tokens, backend API client, map preview, place cards, search pill, and bottom navigation.

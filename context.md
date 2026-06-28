@@ -76,6 +76,13 @@ Building the local MVP foundation end to end:
 **Solution:** Do not run `npm audit fix --force` blindly because it can introduce breaking dependency changes in Expo projects.
 **Follow-up:** Revisit after core app shell is stable; prefer Expo-compatible dependency updates.
 
+### 2026-06-29 - Google Maps script loads but map errors
+
+**Problem:** Expo web loaded the Google Maps JS script, but Google rendered `This page didn't load Google Maps correctly`.
+**Root cause:** The browser key likely needs Google Maps JavaScript API enablement, billing, or localhost referrer restrictions configured in Google Cloud.
+**Solution:** Keep the real Google Maps path behind `EXPO_PUBLIC_GOOGLE_MAPS_BROWSER_KEY`, detect Google's error container, and fall back to the stylized VibeSpot map.
+**Follow-up:** When the Google Cloud key is ready, test `http://localhost:38201` as an allowed referrer and confirm Maps JavaScript API is enabled.
+
 ### 2026-06-29 - Postgres image needed both PostGIS and pgvector
 
 **Problem:** A plain pgvector image would not guarantee PostGIS support.
@@ -91,6 +98,7 @@ Building the local MVP foundation end to end:
 - Use Docker as the backend runtime and test environment because it gives a stable Python 3.11 environment.
 - Treat Lovable/charm-sketch UI as reference only, not production architecture.
 - Keep root `AGENTS.md` as the single agent instruction source; remove generated nested agent files from app scaffolds.
+- Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
 
 ## Critical Files
 

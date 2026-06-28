@@ -4,9 +4,9 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } f
 
 import { getNearbyPlaces, type NearbyPlace } from "../api/client";
 import { BottomNav } from "../components/BottomNav";
-import { MapPreview } from "../components/MapPreview";
 import { PlacePreviewCard } from "../components/PlacePreviewCard";
 import { SearchPill } from "../components/SearchPill";
+import { VibeMap } from "../components/VibeMap";
 import { colors, spacing, typography } from "../theme/tokens";
 
 export function MapHomeScreen() {
@@ -78,7 +78,7 @@ export function MapHomeScreen() {
             </View>
           ) : (
             <>
-              <MapPreview places={places} />
+              <VibeMap places={places} />
 
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Best nearby</Text>
