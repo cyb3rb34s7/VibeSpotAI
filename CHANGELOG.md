@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add nearby places API
+
+**What changed:** Added trace-aware response envelopes, `/places/nearby`, nearby place schemas, and a PostGIS-backed service query.
+**Why:** The mobile map home needs a real local endpoint that returns seeded cafes ordered by distance.
+**Files touched:** `services/api/app/main.py`, `services/api/app/api/routes/places.py`, `services/api/app/services/places_service.py`, `services/api/app/schemas/place.py`, `services/api/app/core/response.py`, `services/api/app/core/trace.py`, `services/api/tests/*`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add database schema and seed data
 
 **What changed:** Added Alembic setup, initial Postgres/PostGIS schema, SQLAlchemy models, and a seed script with Koramangala cafe data.

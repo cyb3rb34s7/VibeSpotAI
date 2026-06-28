@@ -9,4 +9,8 @@ def test_health_returns_ok() -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "vibespot-api"}
+    body = response.json()
+    assert body["success"] is True
+    assert body["data"] == {"status": "ok", "service": "vibespot-api"}
+    assert len(body["trace_id"]) == 10
+    assert response.headers["X-Trace-Id"] == body["trace_id"]

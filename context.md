@@ -6,7 +6,8 @@ Building the local MVP foundation end to end:
 
 - Local Docker infra is running for Postgres/PostGIS/pgvector, Redis, and MinIO.
 - FastAPI backend is running through Docker with explicit `uvicorn --reload`.
-- Next implementation slice is database models, migrations, seed data, and `/places/nearby`.
+- `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
+- Next implementation slice is Expo mobile app shell and API connection.
 
 ## Done
 
@@ -17,15 +18,16 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added local Docker infra on non-standard ports `38191-38195`.
 - 2026-06-29: Verified Postgres has `postgis` and `vector` extensions.
 - 2026-06-29: Verified FastAPI health endpoint through Docker at `http://localhost:38191/health`.
+- 2026-06-29: Added API response envelope with trace IDs.
+- 2026-06-29: Added `/places/nearby` backed by PostGIS distance queries.
 
 ## Next
 
-1. Add SQLAlchemy models and Alembic migration for users, places, vibe checks, and place summaries.
-2. Add deterministic seed data for Bangalore/Koramangala cafes.
-3. Add `/places/nearby` using PostGIS distance queries.
-4. Set up Expo mobile shell on port `38201`.
-5. Connect the mobile home screen to backend seed data.
-6. Spike Google Maps integration once the basic screen and API loop are stable.
+1. Set up Expo mobile shell on port `38201`.
+2. Connect the mobile home screen to backend seed data.
+3. Spike Google Maps integration once the basic screen and API loop are stable.
+4. Add the place detail endpoint and vibe-check submission flow.
+5. Add typed error envelopes and global exception handling.
 
 ## Problems & Solutions
 
