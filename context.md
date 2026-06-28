@@ -7,8 +7,8 @@ Building the local MVP foundation end to end:
 - Local Docker infra is running for Postgres/PostGIS/pgvector, Redis, and MinIO.
 - FastAPI backend is running through Docker with explicit `uvicorn --reload`.
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
-- Expo web runs on port `38201` and renders seeded nearby places from the backend.
-- Next implementation slice is Google Maps integration and then the place detail/vibe-check loop.
+- Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
+- Next implementation slice is the place detail/vibe-check loop.
 
 ## Done
 
@@ -23,14 +23,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added `/places/nearby` backed by PostGIS distance queries.
 - 2026-06-29: Added Expo TypeScript mobile shell with premium VibeSpot map-home UI.
 - 2026-06-29: Verified Expo web renders backend place data in a phone-sized viewport.
+- 2026-06-29: Added Expo-safe vector icons and animated press states for search, place cards, and bottom nav.
 
 ## Next
 
-1. Add Google Maps integration behind the existing map component.
-2. Add the place detail endpoint and place detail screen.
-3. Add the vibe-check submission endpoint and mobile flow.
-4. Add typed error envelopes and global exception handling.
-5. Add backend worker setup for summary refresh jobs.
+1. Add the place detail endpoint and place detail screen.
+2. Add the vibe-check submission endpoint and mobile flow.
+3. Add typed error envelopes and global exception handling.
+4. Add backend worker setup for summary refresh jobs.
 
 ## Problems & Solutions
 
@@ -90,6 +90,13 @@ Building the local MVP foundation end to end:
 **Solution:** Added a custom Postgres 16 image that installs `postgresql-16-postgis-3` and `postgresql-16-pgvector`.
 **Follow-up:** Keep extension availability checked with `SELECT extname FROM pg_extension WHERE extname IN ('postgis','vector');`.
 
+### 2026-06-29 - `lucide-react-native` broke Expo web bundling
+
+**Problem:** Expo web showed a blank white page after adding Lucide icons.
+**Root cause:** Metro could not resolve generated `lucide-react-native` icon exports such as `./icons/a-arrow-down.mjs`, so the bundle endpoint returned an `UnableToResolveError`.
+**Solution:** Removed `lucide-react-native`/`react-native-svg` and used Expo's compatible `@expo/vector-icons` package.
+**Follow-up:** Prefer Expo-compatible icon packages unless a native dependency is explicitly verified on web and Android.
+
 ## Decisions
 
 - Use FastAPI for the entire backend to keep AI/data workflows and API logic in one Python codebase for the MVP.
@@ -99,6 +106,7 @@ Building the local MVP foundation end to end:
 - Treat Lovable/charm-sketch UI as reference only, not production architecture.
 - Keep root `AGENTS.md` as the single agent instruction source; remove generated nested agent files from app scaffolds.
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
+- Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 
 ## Critical Files
 

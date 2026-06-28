@@ -1,7 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 
 import type { NearbyPlace } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 type PlacePreviewCardProps = {
   place: NearbyPlace;
@@ -9,13 +11,16 @@ type PlacePreviewCardProps = {
 
 export function PlacePreviewCard({ place }: PlacePreviewCardProps) {
   return (
-    <Pressable style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
+    <PressScale accessibilityRole="button" pressedScale={0.985} style={styles.card}>
       <View style={styles.header}>
         <View style={styles.titleGroup}>
           <Text style={styles.name}>{place.name}</Text>
-          <Text style={styles.meta}>
-            {place.neighborhood} · {place.distance_m}m
-          </Text>
+          <View style={styles.metaRow}>
+            <Feather color={colors.muted} name="map-pin" size={14} />
+            <Text style={styles.meta}>
+              {place.neighborhood} / {place.distance_m}m
+            </Text>
+          </View>
         </View>
         <View style={styles.matchPill}>
           <Text style={styles.matchText}>{place.match_percent}%</Text>
@@ -33,8 +38,11 @@ export function PlacePreviewCard({ place }: PlacePreviewCardProps) {
       <Text numberOfLines={2} style={styles.summary}>
         {place.summary}
       </Text>
-      <Text style={styles.evidence}>Based on {place.evidence_count} early drops</Text>
-    </Pressable>
+      <View style={styles.evidenceRow}>
+        <Feather color={colors.muted} name="message-circle" size={14} />
+        <Text style={styles.evidence}>Based on {place.evidence_count} early drops</Text>
+      </View>
+    </PressScale>
   );
 }
 
@@ -46,9 +54,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: spacing.md,
     padding: spacing.md,
-  },
-  pressed: {
-    transform: [{ scale: 0.985 }],
   },
   header: {
     alignItems: "flex-start",
@@ -64,11 +69,16 @@ const styles = StyleSheet.create({
     fontSize: typography.title,
     fontWeight: "900",
   },
+  metaRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 5,
+    marginTop: 5,
+  },
   meta: {
     color: colors.muted,
     fontSize: typography.small,
     fontWeight: "700",
-    marginTop: 4,
   },
   matchPill: {
     backgroundColor: colors.lime,
@@ -104,10 +114,15 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginTop: spacing.md,
   },
+  evidenceRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    marginTop: spacing.sm,
+  },
   evidence: {
     color: colors.muted,
     fontSize: typography.small,
     fontWeight: "700",
-    marginTop: spacing.sm,
   },
 });

@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add Expo-safe premium press states
+
+**What changed:** Added a reusable animated `PressScale` wrapper, replaced fragile text glyph icons with Expo vector icons, and tightened the search, place card, and bottom nav interaction states.
+**Why:** The mobile shell needs premium-feeling touch feedback without relying on glyph rendering or dependencies that break Metro bundling.
+**Files touched:** `apps/mobile/package.json`, `apps/mobile/package-lock.json`, `apps/mobile/src/components/*`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. Reinstall mobile dependencies after reverting package metadata.
+
 ## 2026-06-29 - Add Google Maps web fallback
 
 **What changed:** Added a `VibeMap` component that tries Google Maps on web when an env key is present and falls back to the stylized local map if Google reports a load error.

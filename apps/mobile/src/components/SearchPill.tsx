@@ -1,18 +1,20 @@
+import { Feather } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 export function SearchPill() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.icon}>⌕</Text>
+    <PressScale accessibilityRole="button" pressedScale={0.985} style={styles.container}>
+      <Feather color={colors.lime} name="star" size={23} />
       <Text numberOfLines={1} style={styles.placeholder}>
         Find a quiet cafe with strong wifi...
       </Text>
-      <View style={styles.filterButton}>
-        <Text style={styles.filterText}>≡</Text>
+      <View pointerEvents="none" style={styles.filterButton}>
+        <Feather color={colors.text} name="sliders" size={19} />
       </View>
-    </View>
+    </PressScale>
   );
 }
 
@@ -29,11 +31,6 @@ const styles = StyleSheet.create({
     paddingLeft: spacing.md,
     paddingRight: spacing.xs,
   },
-  icon: {
-    color: colors.lime,
-    fontSize: 28,
-    lineHeight: 30,
-  },
   placeholder: {
     color: colors.text,
     flex: 1,
@@ -47,10 +44,5 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
-  },
-  filterText: {
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: "900",
   },
 });

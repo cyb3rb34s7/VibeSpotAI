@@ -1,30 +1,39 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 const navItems = [
-  { label: "Map", icon: "◇", active: true },
-  { label: "Search", icon: "⌕", active: false },
-  { label: "Drop", icon: "+", active: false },
-  { label: "Profile", icon: "◡", active: false },
+  { label: "Map", icon: "map" },
+  { label: "Search", icon: "search" },
+  { label: "Drop", icon: "plus-circle" },
+  { label: "Profile", icon: "user" },
 ] as const;
 
 export function BottomNav() {
   return (
     <View style={styles.container}>
-      {navItems.map((item) => (
-        <Pressable
+      {navItems.map((item, index) => {
+        const isActive = index === 0;
+
+        return (
+        <PressScale
+          accessibilityLabel={item.label}
+          accessibilityRole="button"
           key={item.label}
-          style={({ pressed }) => [
-            styles.item,
-            item.active && styles.activeItem,
-            pressed && styles.pressed,
-          ]}
+          pressedScale={0.95}
+          style={[styles.item, isActive && styles.activeItem]}
         >
-          <Text style={[styles.icon, item.active && styles.activeText]}>{item.icon}</Text>
-          <Text style={[styles.label, item.active && styles.activeText]}>{item.label}</Text>
-        </Pressable>
-      ))}
+          <Feather
+            color={isActive ? colors.onLime : colors.muted}
+            name={item.icon}
+            size={21}
+          />
+          <Text style={[styles.label, isActive && styles.activeText]}>{item.label}</Text>
+        </PressScale>
+        );
+      })}
     </View>
   );
 }
@@ -32,6 +41,10 @@ export function BottomNav() {
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
+    backgroundColor: colors.surfaceGlass,
+    borderColor: colors.border,
+    borderRadius: radii.xl,
+    borderWidth: 1,
     bottom: spacing.lg,
     flexDirection: "row",
     gap: spacing.xs,
@@ -39,18 +52,14 @@ const styles = StyleSheet.create({
     padding: spacing.xs,
     position: "absolute",
     right: spacing.md,
-    backgroundColor: colors.surfaceGlass,
-    borderColor: colors.border,
-    borderRadius: radii.xl,
-    borderWidth: 1,
   },
   item: {
     alignItems: "center",
     borderRadius: radii.lg,
     flex: 1,
     gap: 2,
-    minHeight: 56,
     justifyContent: "center",
+    minHeight: 56,
   },
   activeItem: {
     backgroundColor: colors.lime,
@@ -58,14 +67,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
-  },
-  pressed: {
-    transform: [{ scale: 0.97 }],
-  },
-  icon: {
-    color: colors.muted,
-    fontSize: 22,
-    lineHeight: 24,
   },
   label: {
     color: colors.muted,
