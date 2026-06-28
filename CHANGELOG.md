@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Refresh summaries after vibe checks
+
+**What changed:** Added deterministic summary refresh after vibe-check submission and tightened tests so evidence counts update and cleanup restores local seed state.
+**Why:** Place details should reflect newly submitted local signals immediately without needing an LLM or background worker.
+**Files touched:** `services/api/app/services/places_service.py`, `services/api/tests/test_places_api.py`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Normalize API error envelopes
 
 **What changed:** Added trace-aware handlers for HTTP errors and request validation errors.

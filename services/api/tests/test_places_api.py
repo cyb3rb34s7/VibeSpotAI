@@ -12,6 +12,30 @@ def delete_vibe_check(vibe_check_id: str) -> None:
             cur.execute("DELETE FROM vibe_checks WHERE id = %s", (vibe_check_id,))
 
 
+def restore_summary_state(place_slug: str, summary: dict) -> None:
+    conninfo = settings.database_sync_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(conninfo) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE place_summaries
+                SET
+                    evidence_count = %s,
+                    summary_text = %s,
+                    best_for = %s,
+                    confidence_score = %s
+                WHERE place_id = (SELECT id FROM places WHERE slug = %s)
+                """,
+                (
+                    summary["evidence_count"],
+                    summary["summary"],
+                    summary["best_for"],
+                    summary["confidence_score"],
+                    place_slug,
+                ),
+            )
+
+
 def test_nearby_places_returns_seeded_places_ordered_by_distance() -> None:
     client = TestClient(app)
 
@@ -68,29 +92,38 @@ def test_place_detail_returns_404_for_unknown_slug() -> None:
 
 def test_create_vibe_check_accepts_local_submission() -> None:
     client = TestClient(app)
+    before_detail = client.get("/places/kissa-focus").json()["data"]
+    created_id = None
 
-    response = client.post(
-        "/places/kissa-focus/vibe-checks",
-        json={
-            "visit_intent": "deep_work",
-            "noise_score": 22,
-            "wifi_score": 5,
-            "crowd_level": "low",
-            "best_use_case": "Deep Work",
-            "recommend_mode": "yes",
-            "short_note": "calm corner table, excellent wifi",
-            "location_confidence": 0.9,
-        },
-    )
+    try:
+        response = client.post(
+            "/places/kissa-focus/vibe-checks",
+            json={
+                "visit_intent": "deep_work",
+                "noise_score": 22,
+                "wifi_score": 5,
+                "crowd_level": "low",
+                "best_use_case": "Deep Work",
+                "recommend_mode": "yes",
+                "short_note": "calm corner table, excellent wifi",
+                "location_confidence": 0.9,
+            },
+        )
 
-    assert response.status_code == 201
-    body = response.json()
-    assert body["success"] is True
-    assert body["data"]["place_slug"] == "kissa-focus"
-    assert body["data"]["short_note"] == "calm corner table, excellent wifi"
-    assert body["data"]["trust_weight"] == 0.9
-    assert len(body["data"]["id"]) > 10
-    delete_vibe_check(body["data"]["id"])
+        assert response.status_code == 201
+        body = response.json()
+        created_id = body["data"]["id"]
+        assert body["success"] is True
+        assert body["data"]["place_slug"] == "kissa-focus"
+        assert body["data"]["short_note"] == "calm corner table, excellent wifi"
+        assert body["data"]["trust_weight"] == 0.9
+        assert len(body["data"]["id"]) > 10
+        after_detail = client.get("/places/kissa-focus").json()["data"]
+        assert after_detail["evidence_count"] == before_detail["evidence_count"] + 1
+    finally:
+        if created_id is not None:
+            delete_vibe_check(created_id)
+            restore_summary_state("kissa-focus", before_detail)
 
 
 def test_create_vibe_check_rejects_unknown_place() -> None:

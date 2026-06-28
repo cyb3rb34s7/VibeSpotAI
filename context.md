@@ -9,9 +9,10 @@ Building the local MVP foundation end to end:
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
 - `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
 - `POST /places/{slug}/vibe-checks` accepts local demo-user submissions and returns the created signal.
+- Vibe-check submissions refresh place summary evidence counts deterministically.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is summary refresh groundwork.
+- Next implementation slice is backend worker/container groundwork.
 
 ## Done
 
@@ -30,13 +31,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added place detail API and a mobile bottom sheet opened from nearby place cards.
 - 2026-06-29: Added vibe-check submission API and a mobile in-sheet signal form.
 - 2026-06-29: Added app-level error envelope handlers for HTTP and validation errors.
+- 2026-06-29: Added deterministic summary refresh after vibe-check submission.
 
 ## Next
 
 1. Add backend worker setup for summary refresh jobs.
-2. Add deterministic summary refresh pipeline.
-3. Add OpenAPI examples for place and vibe-check endpoints.
-4. Add Android emulator smoke path.
+2. Add OpenAPI examples for place and vibe-check endpoints.
+3. Add Android emulator smoke path.
+4. Add visual QA screenshots for mobile home/detail/submission.
 
 ## Problems & Solutions
 
@@ -137,6 +139,7 @@ Building the local MVP foundation end to end:
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
 - Local vibe-check submissions use the seeded `priya` demo user until real auth is designed.
 - All API responses should use `{success, data|error, trace_id}`.
+- Summary refreshes are deterministic SQL/Python work for now; no LLM call is needed for the local contribution loop.
 
 ## Critical Files
 

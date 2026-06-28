@@ -280,5 +280,52 @@ async def create_vibe_check(
     if row is None:
         return None
 
+    await refresh_place_summary(session=session, slug=slug)
     await session.commit()
     return VibeCheckCreated(**dict(row))
+
+
+async def refresh_place_summary(session: AsyncSession, slug: str) -> None:
+    await session.execute(
+        text(
+            """
+            WITH target_place AS (
+                SELECT id, name
+                FROM places
+                WHERE slug = :slug
+            ),
+            stats AS (
+                SELECT
+                    COUNT(*)::integer AS evidence_count,
+                    ROUND(AVG(trust_weight)::numeric, 2)::float AS avg_trust
+                FROM vibe_checks
+                WHERE place_id = (SELECT id FROM target_place)
+            ),
+            best_modes AS (
+                SELECT best_use_case
+                FROM vibe_checks
+                WHERE place_id = (SELECT id FROM target_place)
+                GROUP BY best_use_case
+                ORDER BY COUNT(*) DESC, best_use_case ASC
+                LIMIT 1
+            )
+            UPDATE place_summaries
+            SET
+                evidence_count = stats.evidence_count,
+                best_for = COALESCE((SELECT best_use_case FROM best_modes), best_for),
+                summary_text = CONCAT(
+                    target_place.name,
+                    ' is currently best understood as a ',
+                    LOWER(COALESCE((SELECT best_use_case FROM best_modes), best_for)),
+                    ' spot based on ',
+                    stats.evidence_count,
+                    ' local drops.'
+                ),
+                confidence_score = LEAST(0.95, GREATEST(0.50, stats.avg_trust)),
+                generated_at = now()
+            FROM target_place, stats
+            WHERE place_summaries.place_id = target_place.id
+            """
+        ),
+        {"slug": slug},
+    )
