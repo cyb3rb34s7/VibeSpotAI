@@ -13,7 +13,8 @@ Building the local MVP foundation end to end:
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is final local MVP smoke verification and Android emulator path.
+- Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, and TypeScript.
+- Android emulator launch is blocked by the AVD package service state; see Problems & Solutions.
 
 ## Done
 
@@ -35,12 +36,13 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added deterministic summary refresh after vibe-check submission.
 - 2026-06-29: Added Redis-backed Dramatiq worker service and summary refresh job entrypoint.
 - 2026-06-29: Added README local runbook and API examples.
+- 2026-06-29: Completed final local smoke checks for backend, worker, API endpoints, Expo web bundle, and mobile typecheck.
 
 ## Next
 
-1. Add Android emulator smoke path.
+1. Fix or recreate Android AVD, then rerun `npm run android`.
 2. Add visual QA screenshots for mobile home/detail/submission.
-3. Add final local MVP verification summary.
+3. Start auth/profile design after local demo loop is accepted.
 
 ## Problems & Solutions
 
@@ -127,6 +129,13 @@ Building the local MVP foundation end to end:
 **Root cause:** `:raw_answers::jsonb` inside a SQLAlchemy `text()` query was not parsed as a bind parameter followed by a Postgres cast.
 **Solution:** Use `CAST(:raw_answers AS jsonb)`.
 **Follow-up:** Prefer `CAST(:param AS type)` in raw SQLAlchemy text queries when binding typed values.
+
+### 2026-06-29 - Android emulator package service unavailable
+
+**Problem:** `npm run android` reached `Medium_Phone_API_36.1` but Expo Go install/check failed with `cmd: Can't find service: package`.
+**Root cause:** The AVD connected through ADB before Android fully exposed the package manager; `sys.boot_completed` stayed blank during the wait window.
+**Solution:** Web/Expo bundle verification remains the current local smoke path. Recreate or cold-boot the AVD from Android Studio before the next native run.
+**Follow-up:** After AVD repair, rerun `npm run android`; the app already uses `10.0.2.2:38191` as Android's default API base URL.
 
 ## Decisions
 
