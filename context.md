@@ -8,8 +8,9 @@ Building the local MVP foundation end to end:
 - FastAPI backend is running through Docker with explicit `uvicorn --reload`.
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
 - `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
+- `POST /places/{slug}/vibe-checks` accepts local demo-user submissions and returns the created signal.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Next implementation slice is the vibe-check submission loop.
+- Next implementation slice is typed exception handling and summary refresh groundwork.
 
 ## Done
 
@@ -26,13 +27,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Verified Expo web renders backend place data in a phone-sized viewport.
 - 2026-06-29: Added Expo-safe vector icons and animated press states for search, place cards, and bottom nav.
 - 2026-06-29: Added place detail API and a mobile bottom sheet opened from nearby place cards.
+- 2026-06-29: Added vibe-check submission API and a mobile in-sheet signal form.
 
 ## Next
 
-1. Add the vibe-check submission endpoint and mobile flow.
-2. Add typed error envelopes and global exception handling.
-3. Add backend worker setup for summary refresh jobs.
-4. Add deterministic summary refresh pipeline.
+1. Add typed error envelopes and global exception handling.
+2. Add backend worker setup for summary refresh jobs.
+3. Add deterministic summary refresh pipeline.
+4. Add OpenAPI examples for place and vibe-check endpoints.
 
 ## Problems & Solutions
 
@@ -113,6 +115,13 @@ Building the local MVP foundation end to end:
 **Solution:** Keep the backend contract as 0-100 for noise and display the mobile metric as `/100`.
 **Follow-up:** Rename or document signal scales in API docs when formal OpenAPI examples are added.
 
+### 2026-06-29 - SQLAlchemy text bind failed with Postgres cast syntax
+
+**Problem:** Vibe-check insertion failed with `syntax error at or near ":"`.
+**Root cause:** `:raw_answers::jsonb` inside a SQLAlchemy `text()` query was not parsed as a bind parameter followed by a Postgres cast.
+**Solution:** Use `CAST(:raw_answers AS jsonb)`.
+**Follow-up:** Prefer `CAST(:param AS type)` in raw SQLAlchemy text queries when binding typed values.
+
 ## Decisions
 
 - Use FastAPI for the entire backend to keep AI/data workflows and API logic in one Python codebase for the MVP.
@@ -124,6 +133,7 @@ Building the local MVP foundation end to end:
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
+- Local vibe-check submissions use the seeded `priya` demo user until real auth is designed.
 
 ## Critical Files
 

@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add vibe-check submission loop
+
+**What changed:** Added `POST /places/{slug}/vibe-checks`, request/response schemas, local demo-user insertion, API tests, mobile submission client, and an in-sheet signal form.
+**Why:** VibeSpot needs a contribution loop so the app can collect fresh local signals, not only display seeded recommendations.
+**Files touched:** `services/api/app/api/routes/places.py`, `services/api/app/services/places_service.py`, `services/api/app/schemas/place.py`, `services/api/tests/test_places_api.py`, `apps/mobile/src/api/client.ts`, `apps/mobile/src/components/PlaceDetailSheet.tsx`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** mostly. Code reverts cleanly; any manually submitted local vibe checks remain in the database until deleted or reseeded.
+
 ## 2026-06-29 - Add place detail loop
 
 **What changed:** Added `GET /places/{slug}` with summary, signals, and recent vibe checks; added a mobile place detail bottom sheet opened from nearby place cards.

@@ -2,7 +2,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { getNearbyPlaces, getPlaceDetail, type NearbyPlace, type PlaceDetail } from "../api/client";
+import {
+  getNearbyPlaces,
+  getPlaceDetail,
+  submitVibeCheck,
+  type NearbyPlace,
+  type PlaceDetail,
+  type VibeCheckPayload,
+} from "../api/client";
 import { BottomNav } from "../components/BottomNav";
 import { PlaceDetailSheet } from "../components/PlaceDetailSheet";
 import { PlacePreviewCard } from "../components/PlacePreviewCard";
@@ -70,6 +77,16 @@ export function MapHomeScreen() {
     setDetailLoadingSlug(null);
   }
 
+  async function submitDetailVibeCheck(payload: VibeCheckPayload) {
+    if (!selectedSlug) {
+      throw new Error("No place selected");
+    }
+
+    await submitVibeCheck(selectedSlug, payload);
+    const refreshedDetail = await getPlaceDetail(selectedSlug);
+    setDetail(refreshedDetail);
+  }
+
   return (
     <View style={styles.root}>
       <LinearGradient
@@ -131,6 +148,7 @@ export function MapHomeScreen() {
         isLoading={detailLoadingSlug !== null}
         isVisible={selectedSlug !== null}
         onClose={closePlaceDetail}
+        onSubmitVibeCheck={submitDetailVibeCheck}
       />
     </View>
   );

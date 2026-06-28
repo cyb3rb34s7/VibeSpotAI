@@ -1,6 +1,15 @@
+import psycopg
 from fastapi.testclient import TestClient
 
+from app.core.config import settings
 from app.main import app
+
+
+def delete_vibe_check(vibe_check_id: str) -> None:
+    conninfo = settings.database_sync_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(conninfo) as conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM vibe_checks WHERE id = %s", (vibe_check_id,))
 
 
 def test_nearby_places_returns_seeded_places_ordered_by_distance() -> None:
@@ -50,6 +59,55 @@ def test_place_detail_returns_404_for_unknown_slug() -> None:
     client = TestClient(app)
 
     response = client.get("/places/not-a-real-place")
+
+    assert response.status_code == 404
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "not_found"
+
+
+def test_create_vibe_check_accepts_local_submission() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        "/places/kissa-focus/vibe-checks",
+        json={
+            "visit_intent": "deep_work",
+            "noise_score": 22,
+            "wifi_score": 5,
+            "crowd_level": "low",
+            "best_use_case": "Deep Work",
+            "recommend_mode": "yes",
+            "short_note": "calm corner table, excellent wifi",
+            "location_confidence": 0.9,
+        },
+    )
+
+    assert response.status_code == 201
+    body = response.json()
+    assert body["success"] is True
+    assert body["data"]["place_slug"] == "kissa-focus"
+    assert body["data"]["short_note"] == "calm corner table, excellent wifi"
+    assert body["data"]["trust_weight"] == 0.9
+    assert len(body["data"]["id"]) > 10
+    delete_vibe_check(body["data"]["id"])
+
+
+def test_create_vibe_check_rejects_unknown_place() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        "/places/not-a-real-place/vibe-checks",
+        json={
+            "visit_intent": "deep_work",
+            "noise_score": 22,
+            "wifi_score": 5,
+            "crowd_level": "low",
+            "best_use_case": "Deep Work",
+            "recommend_mode": "yes",
+            "short_note": "calm corner table, excellent wifi",
+        },
+    )
 
     assert response.status_code == 404
     body = response.json()

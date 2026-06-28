@@ -1,7 +1,16 @@
 import { Feather } from "@expo/vector-icons";
-import { ActivityIndicator, Modal, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
-import type { PlaceDetail } from "../api/client";
+import type { PlaceDetail, VibeCheckPayload } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
 import { PressScale } from "./PressScale";
 
@@ -11,7 +20,19 @@ type PlaceDetailSheetProps = {
   isLoading: boolean;
   isVisible: boolean;
   onClose: () => void;
+  onSubmitVibeCheck: (payload: VibeCheckPayload) => Promise<void>;
 };
+
+const intentOptions = [
+  { label: "Deep work", value: "deep_work", bestUseCase: "Deep Work" },
+  { label: "Catch up", value: "catch_up", bestUseCase: "Friends" },
+  { label: "Coffee", value: "coffee", bestUseCase: "Quick Coffee" },
+] as const;
+
+const crowdOptions = ["low", "medium", "high"] as const;
+const wifiOptions = [3, 4, 5] as const;
+
+type IntentOption = (typeof intentOptions)[number];
 
 export function PlaceDetailSheet({
   detail,
@@ -19,7 +40,38 @@ export function PlaceDetailSheet({
   isLoading,
   isVisible,
   onClose,
+  onSubmitVibeCheck,
 }: PlaceDetailSheetProps) {
+  const [selectedIntent, setSelectedIntent] = useState<IntentOption>(intentOptions[0]);
+  const [crowdLevel, setCrowdLevel] = useState<(typeof crowdOptions)[number]>("low");
+  const [wifiScore, setWifiScore] = useState<(typeof wifiOptions)[number]>(5);
+  const [note, setNote] = useState("calm enough to focus, wifi felt stable");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+
+  async function submitSignal() {
+    setIsSubmitting(true);
+    setSubmitMessage(null);
+
+    try {
+      await onSubmitVibeCheck({
+        best_use_case: selectedIntent.bestUseCase,
+        crowd_level: crowdLevel,
+        location_confidence: 0.9,
+        noise_score: crowdLevel === "low" ? 22 : crowdLevel === "medium" ? 48 : 72,
+        recommend_mode: "yes",
+        short_note: note.trim(),
+        visit_intent: selectedIntent.value,
+        wifi_score: wifiScore,
+      });
+      setSubmitMessage("Signal added");
+    } catch (caught) {
+      setSubmitMessage(caught instanceof Error ? caught.message : "Could not add signal");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
       <View style={styles.backdrop}>
@@ -86,6 +138,70 @@ export function PlaceDetailSheet({
                   </View>
                 ))}
               </View>
+
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Drop your signal</Text>
+                <Text style={styles.bodyText}>Intent</Text>
+                <View style={styles.chipRow}>
+                  {intentOptions.map((option) => (
+                    <ChoiceChip
+                      isActive={selectedIntent.value === option.value}
+                      key={option.value}
+                      label={option.label}
+                      onPress={() => setSelectedIntent(option)}
+                    />
+                  ))}
+                </View>
+
+                <Text style={styles.bodyText}>Crowd</Text>
+                <View style={styles.chipRow}>
+                  {crowdOptions.map((option) => (
+                    <ChoiceChip
+                      isActive={crowdLevel === option}
+                      key={option}
+                      label={option}
+                      onPress={() => setCrowdLevel(option)}
+                    />
+                  ))}
+                </View>
+
+                <Text style={styles.bodyText}>Wifi</Text>
+                <View style={styles.chipRow}>
+                  {wifiOptions.map((option) => (
+                    <ChoiceChip
+                      isActive={wifiScore === option}
+                      key={option}
+                      label={`${option}/5`}
+                      onPress={() => setWifiScore(option)}
+                    />
+                  ))}
+                </View>
+
+                <TextInput
+                  maxLength={180}
+                  multiline
+                  onChangeText={setNote}
+                  placeholder="What did it actually feel like?"
+                  placeholderTextColor={colors.muted}
+                  style={styles.noteInput}
+                  value={note}
+                />
+                <PressScale
+                  accessibilityLabel="Submit vibe check"
+                  disabled={isSubmitting || note.trim().length < 4}
+                  onPress={submitSignal}
+                  pressedScale={0.97}
+                  style={[
+                    styles.submitButton,
+                    (isSubmitting || note.trim().length < 4) && styles.disabledButton,
+                  ]}
+                >
+                  <Text style={styles.submitText}>
+                    {isSubmitting ? "Dropping..." : "Drop signal"}
+                  </Text>
+                </PressScale>
+                {submitMessage ? <Text style={styles.submitMessage}>{submitMessage}</Text> : null}
+              </View>
             </ScrollView>
           ) : null}
         </View>
@@ -102,6 +218,22 @@ function Metric({ label, value }: { label: string; value: string }) {
         {value}
       </Text>
     </View>
+  );
+}
+
+function ChoiceChip({
+  isActive,
+  label,
+  onPress,
+}: {
+  isActive: boolean;
+  label: string;
+  onPress: () => void;
+}) {
+  return (
+    <PressScale onPress={onPress} pressedScale={0.94} style={[styles.choiceChip, isActive && styles.activeChoice]}>
+      <Text style={[styles.choiceText, isActive && styles.activeChoiceText]}>{label}</Text>
+    </PressScale>
   );
 }
 
@@ -227,6 +359,7 @@ const styles = StyleSheet.create({
     color: colors.textSoft,
     fontSize: typography.body,
     lineHeight: 23,
+    marginBottom: spacing.xs,
   },
   drop: {
     backgroundColor: colors.surface,
@@ -252,5 +385,66 @@ const styles = StyleSheet.create({
     fontSize: typography.small,
     fontWeight: "700",
     marginTop: 6,
+  },
+  chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  choiceChip: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 9,
+  },
+  activeChoice: {
+    backgroundColor: colors.lime,
+    borderColor: colors.lime,
+  },
+  choiceText: {
+    color: colors.text,
+    fontSize: typography.small,
+    fontWeight: "800",
+    textTransform: "capitalize",
+  },
+  activeChoiceText: {
+    color: colors.onLime,
+  },
+  noteInput: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    color: colors.text,
+    fontSize: typography.body,
+    lineHeight: 22,
+    minHeight: 86,
+    padding: spacing.sm,
+    textAlignVertical: "top",
+  },
+  submitButton: {
+    alignItems: "center",
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    marginTop: spacing.sm,
+    paddingVertical: spacing.sm,
+  },
+  disabledButton: {
+    opacity: 0.55,
+  },
+  submitText: {
+    color: colors.onLime,
+    fontSize: typography.body,
+    fontWeight: "900",
+  },
+  submitMessage: {
+    color: colors.muted,
+    fontSize: typography.small,
+    fontWeight: "800",
+    marginTop: spacing.sm,
+    textAlign: "center",
   },
 });

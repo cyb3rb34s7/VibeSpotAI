@@ -56,6 +56,24 @@ export type PlaceDetail = NearbyPlace & {
   }>;
 };
 
+export type VibeCheckPayload = {
+  visit_intent: string;
+  noise_score: number;
+  wifi_score: number;
+  crowd_level: string;
+  best_use_case: string;
+  recommend_mode: string;
+  short_note: string;
+  location_confidence: number;
+};
+
+export type VibeCheckCreated = VibeCheckPayload & {
+  id: string;
+  place_slug: string;
+  trust_weight: number;
+  submitted_at: string;
+};
+
 function unwrapEnvelope<T>(response: Response, envelope: ApiEnvelope<T>, fallbackMessage: string): T {
   if (!response.ok || !envelope.success || !envelope.data) {
     const message = envelope.error?.message || fallbackMessage;
@@ -77,4 +95,19 @@ export async function getPlaceDetail(slug: string): Promise<PlaceDetail> {
   const response = await fetch(`${API_BASE_URL}/places/${slug}`);
   const envelope = (await response.json()) as ApiEnvelope<PlaceDetail>;
   return unwrapEnvelope(response, envelope, "Failed to load place detail");
+}
+
+export async function submitVibeCheck(
+  slug: string,
+  payload: VibeCheckPayload,
+): Promise<VibeCheckCreated> {
+  const response = await fetch(`${API_BASE_URL}/places/${slug}/vibe-checks`, {
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  const envelope = (await response.json()) as ApiEnvelope<VibeCheckCreated>;
+  return unwrapEnvelope(response, envelope, "Failed to drop vibe check");
 }

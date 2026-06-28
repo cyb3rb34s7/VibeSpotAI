@@ -1,7 +1,14 @@
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.place import PlaceDetail, PlaceSignalSummary, RecentVibeCheck, NearbyPlace
+from app.schemas.place import (
+    NearbyPlace,
+    PlaceDetail,
+    PlaceSignalSummary,
+    RecentVibeCheck,
+    VibeCheckCreate,
+    VibeCheckCreated,
+)
 
 
 async def get_nearby_places(
@@ -177,3 +184,101 @@ async def get_place_detail(session: AsyncSession, slug: str) -> PlaceDetail | No
             RecentVibeCheck(**dict(row._mapping)) for row in checks_result
         ],
     )
+
+
+async def create_vibe_check(
+    session: AsyncSession,
+    *,
+    slug: str,
+    payload: VibeCheckCreate,
+) -> VibeCheckCreated | None:
+    result = await session.execute(
+        text(
+            """
+            WITH target_place AS (
+                SELECT id, slug FROM places WHERE slug = :slug
+            ),
+            demo_user AS (
+                SELECT id FROM users WHERE handle = 'priya' LIMIT 1
+            ),
+            inserted AS (
+                INSERT INTO vibe_checks (
+                    user_id,
+                    place_id,
+                    visit_intent,
+                    noise_score,
+                    wifi_score,
+                    crowd_level,
+                    best_use_case,
+                    recommend_mode,
+                    short_note,
+                    location_confidence,
+                    trust_weight,
+                    raw_answers
+                )
+                SELECT
+                    demo_user.id,
+                    target_place.id,
+                    :visit_intent,
+                    :noise_score,
+                    :wifi_score,
+                    :crowd_level,
+                    :best_use_case,
+                    :recommend_mode,
+                    :short_note,
+                    :location_confidence,
+                    :trust_weight,
+                    CAST(:raw_answers AS jsonb)
+                FROM target_place
+                CROSS JOIN demo_user
+                RETURNING
+                    id::text,
+                    place_id,
+                    visit_intent,
+                    noise_score,
+                    wifi_score,
+                    crowd_level,
+                    best_use_case,
+                    recommend_mode,
+                    short_note,
+                    location_confidence,
+                    trust_weight,
+                    submitted_at::text
+            )
+            SELECT
+                inserted.id,
+                target_place.slug AS place_slug,
+                inserted.visit_intent,
+                inserted.noise_score,
+                inserted.wifi_score,
+                inserted.crowd_level,
+                inserted.best_use_case,
+                inserted.recommend_mode,
+                inserted.short_note,
+                inserted.location_confidence,
+                inserted.trust_weight,
+                inserted.submitted_at
+            FROM inserted
+            JOIN target_place ON target_place.id = inserted.place_id
+            """
+        ),
+        {
+            "slug": slug,
+            "visit_intent": payload.visit_intent,
+            "noise_score": payload.noise_score,
+            "wifi_score": payload.wifi_score,
+            "crowd_level": payload.crowd_level,
+            "best_use_case": payload.best_use_case,
+            "recommend_mode": payload.recommend_mode,
+            "short_note": payload.short_note,
+            "location_confidence": payload.location_confidence,
+            "trust_weight": round(payload.location_confidence, 2),
+            "raw_answers": "{}",
+        },
+    )
+    row = result.mappings().one_or_none()
+    if row is None:
+        return None
+
+    await session.commit()
+    return VibeCheckCreated(**dict(row))
