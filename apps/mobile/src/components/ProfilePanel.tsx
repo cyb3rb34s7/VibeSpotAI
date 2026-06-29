@@ -3,14 +3,16 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import type { MyProfile } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 type ProfilePanelProps = {
   error: string | null;
   isLoading: boolean;
+  onLogout: () => void;
   profile: MyProfile | null;
 };
 
-export function ProfilePanel({ error, isLoading, profile }: ProfilePanelProps) {
+export function ProfilePanel({ error, isLoading, onLogout, profile }: ProfilePanelProps) {
   if (isLoading) {
     return (
       <View style={styles.statePanel}>
@@ -42,6 +44,16 @@ export function ProfilePanel({ error, isLoading, profile }: ProfilePanelProps) {
           </Text>
         </View>
       </View>
+
+      <PressScale
+        accessibilityRole="button"
+        onPress={onLogout}
+        pressedScale={0.98}
+        style={styles.logoutButton}
+      >
+        <Feather color={colors.text} name="log-out" size={16} />
+        <Text style={styles.logoutText}>Sign out</Text>
+      </PressScale>
 
       <View style={styles.statsRow}>
         <Metric label="drops" value={profile.stats.vibe_checks_count.toString()} />
@@ -133,6 +145,23 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: "row",
     gap: spacing.sm,
+  },
+  logoutButton: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: colors.surfaceHigh,
+    borderColor: colors.border,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 6,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 8,
+  },
+  logoutText: {
+    color: colors.text,
+    fontSize: typography.small,
+    fontWeight: "900",
   },
   metric: {
     backgroundColor: colors.surfaceHigh,

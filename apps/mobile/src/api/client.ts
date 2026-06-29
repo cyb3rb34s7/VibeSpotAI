@@ -79,11 +79,18 @@ export type VibeCheckCreated = VibeCheckPayload & {
 export type AuthUser = {
   id: string;
   handle: string;
+  email: string;
   display_name: string;
   home_city: string;
 };
 
-export type DevLoginResponse = {
+export type AuthStartResponse = {
+  delivery: string;
+  expires_in_seconds: number;
+  otp_code: string | null;
+};
+
+export type AuthSessionResponse = {
   access_token: string;
   token_type: "bearer";
   user: AuthUser;
@@ -160,16 +167,28 @@ export async function submitVibeCheck(
   return unwrapEnvelope(response, envelope, "Failed to drop vibe check");
 }
 
-export async function devLogin(handle = "priya"): Promise<DevLoginResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/dev-login`, {
-    body: JSON.stringify({ handle }),
+export async function startAuth(email: string): Promise<AuthStartResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/start`, {
+    body: JSON.stringify({ email }),
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
   });
-  const envelope = (await response.json()) as ApiEnvelope<DevLoginResponse>;
-  return unwrapEnvelope(response, envelope, "Failed to start local session");
+  const envelope = (await response.json()) as ApiEnvelope<AuthStartResponse>;
+  return unwrapEnvelope(response, envelope, "Failed to start sign in");
+}
+
+export async function verifyAuth(email: string, otpCode: string): Promise<AuthSessionResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+    body: JSON.stringify({ email, otp_code: otpCode }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  const envelope = (await response.json()) as ApiEnvelope<AuthSessionResponse>;
+  return unwrapEnvelope(response, envelope, "Failed to verify sign in");
 }
 
 export async function getMyProfile(accessToken: string): Promise<MyProfile> {
@@ -180,4 +199,15 @@ export async function getMyProfile(accessToken: string): Promise<MyProfile> {
   });
   const envelope = (await response.json()) as ApiEnvelope<MyProfile>;
   return unwrapEnvelope(response, envelope, "Failed to load profile");
+}
+
+export async function logout(accessToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    method: "POST",
+  });
+  const envelope = (await response.json()) as ApiEnvelope<{ revoked: boolean }>;
+  unwrapEnvelope(response, envelope, "Failed to sign out");
 }

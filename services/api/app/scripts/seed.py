@@ -8,11 +8,11 @@ from psycopg.types.json import Jsonb
 from app.core.config import settings
 
 USERS = [
-    ("priya", "Priya"),
-    ("alex_vibe", "Alex"),
-    ("mika_shib", "Mika"),
-    ("rahul_roasts", "Rahul"),
-    ("naina_notes", "Naina"),
+    ("priya", "priya@vibespot.local", "Priya"),
+    ("alex_vibe", "alex@vibespot.local", "Alex"),
+    ("mika_shib", "mika@vibespot.local", "Mika"),
+    ("rahul_roasts", "rahul@vibespot.local", "Rahul"),
+    ("naina_notes", "naina@vibespot.local", "Naina"),
 ]
 
 PLACES = [
@@ -46,16 +46,27 @@ def main() -> None:
     conninfo = settings.database_sync_url.replace("postgresql+psycopg://", "postgresql://", 1)
     with psycopg.connect(conninfo) as conn:
         with conn.cursor() as cur:
-            cur.execute("TRUNCATE place_summaries, vibe_checks, places, users RESTART IDENTITY CASCADE")
+            cur.execute(
+                """
+                TRUNCATE
+                    auth_sessions,
+                    auth_otp_challenges,
+                    place_summaries,
+                    vibe_checks,
+                    places,
+                    users
+                RESTART IDENTITY CASCADE
+                """
+            )
             user_ids = []
-            for handle, display_name in USERS:
+            for handle, email, display_name in USERS:
                 cur.execute(
                     """
-                    INSERT INTO users (handle, display_name, home_city)
-                    VALUES (%s, %s, 'Bangalore')
+                    INSERT INTO users (handle, email, display_name, home_city)
+                    VALUES (%s, %s, %s, 'Bangalore')
                     RETURNING id
                     """,
-                    (handle, display_name),
+                    (handle, email, display_name),
                 )
                 user_ids.append(cur.fetchone()[0])
 
@@ -145,6 +156,20 @@ def main() -> None:
                         Jsonb({"seeded": True, "tag": tags[0]}),
                     ),
                 )
+
+            cur.execute(
+                """
+                WITH stats AS (
+                    SELECT place_id, COUNT(*)::integer AS evidence_count
+                    FROM vibe_checks
+                    GROUP BY place_id
+                )
+                UPDATE place_summaries
+                SET evidence_count = stats.evidence_count
+                FROM stats
+                WHERE place_summaries.place_id = stats.place_id
+                """
+            )
 
         conn.commit()
 

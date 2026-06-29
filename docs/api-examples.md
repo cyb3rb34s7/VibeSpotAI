@@ -54,19 +54,34 @@ curl.exe http://localhost:38191/places/kissa-focus
 
 Returns the place profile, summary, signal averages, and recent vibe checks.
 
-## Local Dev Login
+## Start Email OTP
+
+```powershell
+$authStart = Invoke-RestMethod `
+  -Uri http://localhost:38191/auth/start `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body '{"email":"priya@vibespot.local"}'
+```
+
+Local mode returns `data.otp_code` directly because no email provider is configured.
+
+## Verify OTP
 
 ```powershell
 $login = Invoke-RestMethod `
-  -Uri http://localhost:38191/auth/dev-login `
+  -Uri http://localhost:38191/auth/verify `
   -Method Post `
   -ContentType "application/json" `
-  -Body '{"handle":"priya"}'
+  -Body (@{
+    email = "priya@vibespot.local"
+    otp_code = $authStart.data.otp_code
+  } | ConvertTo-Json -Compress)
 
 $token = $login.data.access_token
 ```
 
-Returns a local-only bearer token and the seeded user profile. This is a development adapter, not production OTP/auth.
+Returns a database-backed bearer session and the seeded user profile.
 
 ## Current User
 
@@ -108,4 +123,13 @@ Invoke-RestMethod `
   -Body $payload
 ```
 
-Without an authorization header, local submissions still fall back to the seeded `priya` demo user.
+Vibe-check submission requires a bearer session.
+
+## Logout
+
+```powershell
+Invoke-RestMethod `
+  -Uri http://localhost:38191/auth/logout `
+  -Method Post `
+  -Headers @{ Authorization = "Bearer $token" }
+```

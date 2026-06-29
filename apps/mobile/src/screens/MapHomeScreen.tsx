@@ -1,15 +1,17 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
-  devLogin,
   getMyProfile,
   getNearbyPlaces,
   getPlaceDetail,
+  logout,
   searchPlaces,
+  startAuth,
   submitVibeCheck,
+  verifyAuth,
   type AuthUser,
   type MyProfile,
   type NearbyPlace,
@@ -17,6 +19,7 @@ import {
   type VibeCheckPayload,
 } from "../api/client";
 import { BottomNav, type BottomNavTab } from "../components/BottomNav";
+import { AuthPanel } from "../components/AuthPanel";
 import { PlaceDetailSheet } from "../components/PlaceDetailSheet";
 import { PlacePreviewCard } from "../components/PlacePreviewCard";
 import { ProfilePanel } from "../components/ProfilePanel";
@@ -29,6 +32,7 @@ export function MapHomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchQueryRef = useRef("");
   const [searchLabel, setSearchLabel] = useState("Best nearby");
   const [detail, setDetail] = useState<PlaceDetail | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -40,6 +44,9 @@ export function MapHomeScreen() {
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [localOtpCode, setLocalOtpCode] = useState<string | null>(null);
 
   async function loadNearbyPlaces() {
     setIsLoading(true);
@@ -60,34 +67,7 @@ export function MapHomeScreen() {
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadLocalSession() {
-      try {
-        const session = await devLogin("priya");
-        const myProfile = await getMyProfile(session.access_token);
-        if (isMounted) {
-          setAccessToken(session.access_token);
-          setCurrentUser(session.user);
-          setProfile(myProfile);
-          setProfileError(null);
-        }
-      } catch (caught) {
-        if (isMounted) {
-          setProfileError(caught instanceof Error ? caught.message : "Unable to start profile");
-        }
-      } finally {
-        if (isMounted) {
-          setProfileLoading(false);
-        }
-      }
-    }
-
-    loadLocalSession();
-
-    return () => {
-      isMounted = false;
-    };
+    setProfileLoading(false);
   }, []);
 
   async function openPlaceDetail(slug: string) {
@@ -117,8 +97,11 @@ export function MapHomeScreen() {
     if (!selectedSlug) {
       throw new Error("No place selected");
     }
+    if (!accessToken) {
+      throw new Error("Sign in before dropping a vibe check");
+    }
 
-    await submitVibeCheck(selectedSlug, payload, accessToken ?? undefined);
+    await submitVibeCheck(selectedSlug, payload, accessToken);
     const refreshedDetail = await getPlaceDetail(selectedSlug);
     setDetail(refreshedDetail);
     if (accessToken) {
@@ -127,7 +110,49 @@ export function MapHomeScreen() {
     }
   }
 
-  async function runSearch(nextQuery = searchQuery) {
+  async function handleStartAuth(email: string) {
+    setAuthLoading(true);
+    try {
+      const result = await startAuth(email);
+      setLocalOtpCode(result.otp_code);
+      setAuthError(null);
+    } catch (caught) {
+      setAuthError(caught instanceof Error ? caught.message : "Unable to start sign in");
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function handleVerifyAuth(email: string, otpCode: string) {
+    setAuthLoading(true);
+    try {
+      const session = await verifyAuth(email, otpCode);
+      const myProfile = await getMyProfile(session.access_token);
+      setAccessToken(session.access_token);
+      setCurrentUser(session.user);
+      setProfile(myProfile);
+      setProfileError(null);
+      setAuthError(null);
+      setLocalOtpCode(null);
+      setActiveTab("Map");
+    } catch (caught) {
+      setAuthError(caught instanceof Error ? caught.message : "Unable to verify sign in");
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function handleLogout() {
+    if (accessToken) {
+      await logout(accessToken);
+    }
+    setAccessToken(null);
+    setCurrentUser(null);
+    setProfile(null);
+    setActiveTab("Profile");
+  }
+
+  async function runSearch(nextQuery = searchQueryRef.current) {
     const query = nextQuery.trim();
     if (!query) {
       await loadNearbyPlaces();
@@ -148,11 +173,17 @@ export function MapHomeScreen() {
   }
 
   function updateSearchQuery(value: string) {
+    searchQueryRef.current = value;
     setSearchQuery(value);
-    if (!value.trim() && searchLabel !== "Best nearby") {
-      void runSearch(value);
-    }
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void runSearch(searchQueryRef.current);
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   function selectTab(tab: BottomNavTab) {
     if (tab === "Drop" && places[0]) {
@@ -188,7 +219,22 @@ export function MapHomeScreen() {
           </View>
 
           {activeTab === "Profile" ? (
-            <ProfilePanel error={profileError} isLoading={profileLoading} profile={profile} />
+            accessToken ? (
+              <ProfilePanel
+                error={profileError}
+                isLoading={profileLoading}
+                onLogout={handleLogout}
+                profile={profile}
+              />
+            ) : (
+              <AuthPanel
+                error={authError}
+                isLoading={authLoading}
+                localOtpCode={localOtpCode}
+                onStart={handleStartAuth}
+                onVerify={handleVerifyAuth}
+              />
+            )
           ) : (
             <>
               <SearchPill

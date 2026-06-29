@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Replace dev auth with OTP sessions
+
+**What changed:** Replaced `/auth/dev-login` and stateless `local-dev.*` tokens with `/auth/start`, `/auth/verify`, `/auth/logout`, hashed OTP challenges, hashed bearer sessions, authenticated-only vibe-check submission, mobile sign-in UI, and updated smoke/API docs.
+**Why:** The product should exercise a real auth/session boundary locally instead of relying on mock identity.
+**Files touched:** `services/api/app/db/migrations/versions/0002_auth_sessions.py`, `services/api/app/api/routes/auth.py`, `services/api/app/api/routes/places.py`, `services/api/app/schemas/auth.py`, `services/api/app/services/auth_service.py`, `services/api/app/services/places_service.py`, `services/api/app/scripts/seed.py`, `services/api/tests/*`, `apps/mobile/src/api/client.ts`, `apps/mobile/src/components/*`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `scripts/smoke-local.ps1`, `README.md`, `docs/api-examples.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** code reverts cleanly; local databases migrated to `0002_auth_sessions` need downgrade/reset if reverting.
+
 ## 2026-06-29 - Add deterministic intent search
 
 **What changed:** Added `GET /places/search`, explicit keyword-plus-distance ranking with match reasons, backend tests, mobile search input wiring, reason display on cards, and smoke/API docs.

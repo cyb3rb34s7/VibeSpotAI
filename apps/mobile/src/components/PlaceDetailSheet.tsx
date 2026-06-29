@@ -197,6 +197,7 @@ export function PlaceDetailSheet({
                 />
                 <PressScale
                   accessibilityLabel="Submit vibe check"
+                  accessibilityRole="button"
                   disabled={isSubmitting || note.trim().length < 4}
                   onPress={submitSignal}
                   pressedScale={0.97}
@@ -240,7 +241,13 @@ function ChoiceChip({
   onPress: () => void;
 }) {
   return (
-    <PressScale onPress={onPress} pressedScale={0.94} style={[styles.choiceChip, isActive && styles.activeChoice]}>
+    <PressScale
+      accessibilityLabel={label}
+      accessibilityRole="button"
+      onPress={onPress}
+      pressedScale={0.94}
+      style={[styles.choiceChip, isActive && styles.activeChoice]}
+    >
       <Text style={[styles.choiceText, isActive && styles.activeChoiceText]}>{label}</Text>
     </PressScale>
   );

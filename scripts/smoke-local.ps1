@@ -89,11 +89,19 @@ Assert-True ($detail.success -eq $true) "Place detail response did not use a suc
 Assert-True ($detail.data.slug -eq "kissa-focus") "Place detail returned the wrong slug"
 Assert-True ($detail.data.recent_vibe_checks.Count -ge 1) "Place detail returned no recent vibe checks"
 
-Write-Step "Checking local auth and profile"
-$login = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/dev-login" -Method Post -ContentType "application/json" -Body '{"handle":"priya"}'
-Assert-True ($login.success -eq $true) "Dev login response did not use a success envelope"
-Assert-True ($login.data.access_token.StartsWith("local-dev.")) "Dev login did not return a local token"
-Assert-True ($login.data.user.handle -eq "priya") "Dev login returned the wrong user"
+Write-Step "Checking OTP auth and profile"
+$authStart = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/start" -Method Post -ContentType "application/json" -Body '{"email":"priya@vibespot.local"}'
+Assert-True ($authStart.success -eq $true) "Auth start response did not use a success envelope"
+Assert-True ($authStart.data.delivery -eq "local_response") "Auth start did not use local response delivery"
+Assert-True ($authStart.data.otp_code.Length -eq 6) "Auth start did not return a six-digit local OTP"
+
+$login = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/verify" -Method Post -ContentType "application/json" -Body (@{
+    email = "priya@vibespot.local"
+    otp_code = $authStart.data.otp_code
+} | ConvertTo-Json -Compress)
+Assert-True ($login.success -eq $true) "Auth verify response did not use a success envelope"
+Assert-True ($login.data.access_token.Length -ge 32) "Auth verify did not return a session token"
+Assert-True ($login.data.user.handle -eq "priya") "Auth verify returned the wrong user"
 
 $authHeaders = @{ Authorization = "Bearer $($login.data.access_token)" }
 $me = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/me" -Headers $authHeaders

@@ -74,23 +74,20 @@ async def submit_vibe_check(
     authorization: str | None = Depends(read_authorization_header),
     session: AsyncSession = Depends(get_session),
 ) -> dict:
-    user_handle = "priya"
-    if authorization is not None:
-        current_user = await resolve_current_user(session=session, authorization=authorization)
-        if isinstance(current_user, AuthFailure):
-            return error_response(
-                request,
-                status_code=401,
-                code="unauthorized",
-                message=current_user.message,
-            )
-        user_handle = current_user.handle
+    current_user = await resolve_current_user(session=session, authorization=authorization)
+    if isinstance(current_user, AuthFailure):
+        return error_response(
+            request,
+            status_code=401,
+            code=current_user.code,
+            message=current_user.message,
+        )
 
     vibe_check = await create_vibe_check(
         session=session,
         slug=slug,
         payload=payload,
-        user_handle=user_handle,
+        user_handle=current_user.handle,
     )
     if vibe_check is None:
         return error_response(

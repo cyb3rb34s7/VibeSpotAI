@@ -5,6 +5,16 @@ from app.core.config import settings
 from app.main import app
 
 
+def start_and_verify_session(client: TestClient, email: str = "priya@vibespot.local") -> str:
+    start_response = client.post("/auth/start", json={"email": email})
+    otp_code = start_response.json()["data"]["otp_code"]
+    verify_response = client.post(
+        "/auth/verify",
+        json={"email": email, "otp_code": otp_code},
+    )
+    return verify_response.json()["data"]["access_token"]
+
+
 def delete_vibe_check(vibe_check_id: str) -> None:
     conninfo = settings.database_sync_url.replace("postgresql+psycopg://", "postgresql://", 1)
     with psycopg.connect(conninfo) as conn:
@@ -110,12 +120,14 @@ def test_place_detail_returns_404_for_unknown_slug() -> None:
 
 def test_create_vibe_check_accepts_local_submission() -> None:
     client = TestClient(app)
+    token = start_and_verify_session(client)
     before_detail = client.get("/places/kissa-focus").json()["data"]
     created_id = None
 
     try:
         response = client.post(
             "/places/kissa-focus/vibe-checks",
+            headers={"Authorization": f"Bearer {token}"},
             json={
                 "visit_intent": "deep_work",
                 "noise_score": 22,
@@ -146,9 +158,11 @@ def test_create_vibe_check_accepts_local_submission() -> None:
 
 def test_create_vibe_check_rejects_unknown_place() -> None:
     client = TestClient(app)
+    token = start_and_verify_session(client)
 
     response = client.post(
         "/places/not-a-real-place/vibe-checks",
+        headers={"Authorization": f"Bearer {token}"},
         json={
             "visit_intent": "deep_work",
             "noise_score": 22,
@@ -164,3 +178,25 @@ def test_create_vibe_check_rejects_unknown_place() -> None:
     body = response.json()
     assert body["success"] is False
     assert body["error"]["code"] == "not_found"
+
+
+def test_create_vibe_check_requires_session() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        "/places/kissa-focus/vibe-checks",
+        json={
+            "visit_intent": "deep_work",
+            "noise_score": 22,
+            "wifi_score": 5,
+            "crowd_level": "low",
+            "best_use_case": "Deep Work",
+            "recommend_mode": "yes",
+            "short_note": "calm corner table, excellent wifi",
+        },
+    )
+
+    assert response.status_code == 401
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "unauthorized"

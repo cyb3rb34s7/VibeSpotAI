@@ -36,28 +36,46 @@ def restore_summary_state(place_slug: str, summary: dict) -> None:
             )
 
 
-def test_dev_login_returns_token_and_current_user() -> None:
+def start_and_verify_session(client: TestClient, email: str) -> str:
+    start_response = client.post("/auth/start", json={"email": email})
+    assert start_response.status_code == 200
+    start_body = start_response.json()
+    assert start_body["success"] is True
+    assert start_body["data"]["delivery"] == "local_response"
+    assert len(start_body["data"]["otp_code"]) == 6
+    assert start_body["data"]["expires_in_seconds"] > 0
+
+    verify_response = client.post(
+        "/auth/verify",
+        json={
+            "email": email,
+            "otp_code": start_body["data"]["otp_code"],
+        },
+    )
+    assert verify_response.status_code == 200
+    verify_body = verify_response.json()
+    assert verify_body["success"] is True
+    assert verify_body["data"]["token_type"] == "bearer"
+    assert len(verify_body["data"]["access_token"]) >= 32
+    assert verify_body["data"]["user"]["email"] == email
+    return verify_body["data"]["access_token"]
+
+
+def test_email_otp_creates_database_backed_session_and_current_user() -> None:
     client = TestClient(app)
 
-    login_response = client.post("/auth/dev-login", json={"handle": "priya"})
-
-    assert login_response.status_code == 200
-    login_body = login_response.json()
-    assert login_body["success"] is True
-    assert login_body["data"]["token_type"] == "bearer"
-    assert login_body["data"]["access_token"].startswith("local-dev.")
-    assert login_body["data"]["user"]["handle"] == "priya"
-    assert login_body["data"]["user"]["display_name"] == "Priya"
+    token = start_and_verify_session(client, "priya@vibespot.local")
 
     me_response = client.get(
         "/auth/me",
-        headers={"Authorization": f"Bearer {login_body['data']['access_token']}"},
+        headers={"Authorization": f"Bearer {token}"},
     )
 
     assert me_response.status_code == 200
     me_body = me_response.json()
     assert me_body["success"] is True
     assert me_body["data"]["handle"] == "priya"
+    assert me_body["data"]["email"] == "priya@vibespot.local"
     assert me_body["data"]["home_city"] == "Bangalore"
 
 
@@ -73,11 +91,37 @@ def test_auth_me_rejects_missing_or_invalid_token() -> None:
     assert invalid_response.json()["error"]["code"] == "unauthorized"
 
 
+def test_auth_verify_rejects_wrong_otp() -> None:
+    client = TestClient(app)
+
+    client.post("/auth/start", json={"email": "priya@vibespot.local"})
+    response = client.post(
+        "/auth/verify",
+        json={"email": "priya@vibespot.local", "otp_code": "000000"},
+    )
+
+    assert response.status_code == 401
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "invalid_otp"
+
+
+def test_logout_revokes_session() -> None:
+    client = TestClient(app)
+    token = start_and_verify_session(client, "priya@vibespot.local")
+
+    logout_response = client.post("/auth/logout", headers={"Authorization": f"Bearer {token}"})
+    me_response = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+
+    assert logout_response.status_code == 200
+    assert logout_response.json()["success"] is True
+    assert me_response.status_code == 401
+    assert me_response.json()["error"]["code"] == "unauthorized"
+
+
 def test_profiles_me_returns_contribution_summary() -> None:
     client = TestClient(app)
-    token = client.post("/auth/dev-login", json={"handle": "rahul_roasts"}).json()["data"][
-        "access_token"
-    ]
+    token = start_and_verify_session(client, "rahul@vibespot.local")
 
     response = client.get("/profiles/me", headers={"Authorization": f"Bearer {token}"})
 
@@ -97,9 +141,7 @@ def test_profiles_me_returns_contribution_summary() -> None:
 
 def test_authenticated_vibe_check_uses_bearer_user() -> None:
     client = TestClient(app)
-    token = client.post("/auth/dev-login", json={"handle": "rahul_roasts"}).json()["data"][
-        "access_token"
-    ]
+    token = start_and_verify_session(client, "rahul@vibespot.local")
     before_detail = client.get("/places/kissa-focus").json()["data"]
     created_id = None
 

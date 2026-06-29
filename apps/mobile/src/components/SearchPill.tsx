@@ -1,7 +1,8 @@
 import { Feather } from "@expo/vector-icons";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 type SearchPillProps = {
   onChangeText: (value: string) => void;
@@ -25,9 +26,15 @@ export function SearchPill({ onChangeText, onSubmit, value }: SearchPillProps) {
         style={styles.input}
         value={value}
       />
-      <View pointerEvents="none" style={styles.filterButton}>
-        <Feather color={colors.text} name="sliders" size={19} />
-      </View>
+      <PressScale
+        accessibilityLabel="Run intent search"
+        accessibilityRole="button"
+        onPress={onSubmit}
+        pressedScale={0.94}
+        style={styles.filterButton}
+      >
+        <Text style={styles.buttonText}>Go</Text>
+      </PressScale>
     </View>
   );
 }
@@ -57,8 +64,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.surfaceHigh,
     borderRadius: 999,
+    minWidth: 52,
+    paddingHorizontal: spacing.sm,
     height: 44,
     justifyContent: "center",
-    width: 44,
+  },
+  buttonText: {
+    color: colors.text,
+    fontSize: typography.small,
+    fontWeight: "900",
   },
 });

@@ -299,7 +299,7 @@ async def create_vibe_check(
     *,
     slug: str,
     payload: VibeCheckCreate,
-    user_handle: str = "priya",
+    user_handle: str,
 ) -> VibeCheckCreated | None:
     result = await session.execute(
         text(
