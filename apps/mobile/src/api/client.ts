@@ -6,6 +6,7 @@ const fallbackApiBaseUrl = Platform.select({
 });
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || fallbackApiBaseUrl;
+const REQUEST_TIMEOUT_MS = 8000;
 
 type ApiEnvelope<T> = {
   success: boolean;
@@ -124,11 +125,37 @@ function unwrapEnvelope<T>(response: Response, envelope: ApiEnvelope<T>, fallbac
   return envelope.data;
 }
 
+async function requestEnvelope<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<{ envelope: ApiEnvelope<T>; response: Response }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      signal: controller.signal,
+    });
+    return {
+      envelope: (await response.json()) as ApiEnvelope<T>,
+      response,
+    };
+  } catch (caught) {
+    if (caught instanceof Error && caught.name === "AbortError") {
+      throw new Error(`API timed out at ${API_BASE_URL}`);
+    }
+
+    const message = caught instanceof Error ? caught.message : "Unknown network error";
+    throw new Error(`API request failed at ${API_BASE_URL}: ${message}`);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function getNearbyPlaces(): Promise<NearbyPlace[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/places/nearby?lat=12.9352&lng=77.6245&radius_m=2500`,
-  );
-  const envelope = (await response.json()) as ApiEnvelope<NearbyPlace[]>;
+  const path = "/places/nearby?lat=12.9352&lng=77.6245&radius_m=2500";
+  const { envelope, response } = await requestEnvelope<NearbyPlace[]>(path);
   return unwrapEnvelope(response, envelope, "Failed to load nearby places");
 }
 
@@ -139,14 +166,14 @@ export async function searchPlaces(query: string): Promise<NearbyPlace[]> {
     query,
     radius_m: "2500",
   });
-  const response = await fetch(`${API_BASE_URL}/places/search?${params.toString()}`);
-  const envelope = (await response.json()) as ApiEnvelope<NearbyPlace[]>;
+  const { envelope, response } = await requestEnvelope<NearbyPlace[]>(
+    `/places/search?${params.toString()}`,
+  );
   return unwrapEnvelope(response, envelope, "Failed to search places");
 }
 
 export async function getPlaceDetail(slug: string): Promise<PlaceDetail> {
-  const response = await fetch(`${API_BASE_URL}/places/${slug}`);
-  const envelope = (await response.json()) as ApiEnvelope<PlaceDetail>;
+  const { envelope, response } = await requestEnvelope<PlaceDetail>(`/places/${slug}`);
   return unwrapEnvelope(response, envelope, "Failed to load place detail");
 }
 
@@ -155,59 +182,57 @@ export async function submitVibeCheck(
   payload: VibeCheckPayload,
   accessToken?: string,
 ): Promise<VibeCheckCreated> {
-  const response = await fetch(`${API_BASE_URL}/places/${slug}/vibe-checks`, {
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+  const { envelope, response } = await requestEnvelope<VibeCheckCreated>(
+    `/places/${slug}/vibe-checks`,
+    {
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      method: "POST",
     },
-    method: "POST",
-  });
-  const envelope = (await response.json()) as ApiEnvelope<VibeCheckCreated>;
+  );
   return unwrapEnvelope(response, envelope, "Failed to drop vibe check");
 }
 
 export async function startAuth(email: string): Promise<AuthStartResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/start`, {
+  const { envelope, response } = await requestEnvelope<AuthStartResponse>("/auth/start", {
     body: JSON.stringify({ email }),
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
   });
-  const envelope = (await response.json()) as ApiEnvelope<AuthStartResponse>;
   return unwrapEnvelope(response, envelope, "Failed to start sign in");
 }
 
 export async function verifyAuth(email: string, otpCode: string): Promise<AuthSessionResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+  const { envelope, response } = await requestEnvelope<AuthSessionResponse>("/auth/verify", {
     body: JSON.stringify({ email, otp_code: otpCode }),
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
   });
-  const envelope = (await response.json()) as ApiEnvelope<AuthSessionResponse>;
   return unwrapEnvelope(response, envelope, "Failed to verify sign in");
 }
 
 export async function getMyProfile(accessToken: string): Promise<MyProfile> {
-  const response = await fetch(`${API_BASE_URL}/profiles/me`, {
+  const { envelope, response } = await requestEnvelope<MyProfile>("/profiles/me", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  const envelope = (await response.json()) as ApiEnvelope<MyProfile>;
   return unwrapEnvelope(response, envelope, "Failed to load profile");
 }
 
 export async function logout(accessToken: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+  const { envelope, response } = await requestEnvelope<{ revoked: boolean }>("/auth/logout", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
     method: "POST",
   });
-  const envelope = (await response.json()) as ApiEnvelope<{ revoked: boolean }>;
   unwrapEnvelope(response, envelope, "Failed to sign out");
 }
