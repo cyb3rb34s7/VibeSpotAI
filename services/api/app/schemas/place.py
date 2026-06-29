@@ -69,6 +69,7 @@ class VibeCheckCreate(BaseModel):
 class VibeCheckCreated(BaseModel):
     id: str
     place_slug: str
+    created_by_handle: str
     visit_intent: str
     noise_score: int = Field(ge=0, le=100)
     wifi_score: int = Field(ge=1, le=5)

@@ -11,17 +11,25 @@ const navItems = [
   { label: "Profile", icon: "user" },
 ] as const;
 
-export function BottomNav() {
+export type BottomNavTab = (typeof navItems)[number]["label"];
+
+type BottomNavProps = {
+  activeTab: BottomNavTab;
+  onSelectTab: (tab: BottomNavTab) => void;
+};
+
+export function BottomNav({ activeTab, onSelectTab }: BottomNavProps) {
   return (
     <View style={styles.container}>
-      {navItems.map((item, index) => {
-        const isActive = index === 0;
+      {navItems.map((item) => {
+        const isActive = item.label === activeTab;
 
         return (
         <PressScale
           accessibilityLabel={item.label}
           accessibilityRole="button"
           key={item.label}
+          onPress={() => onSelectTab(item.label)}
           pressedScale={0.95}
           style={[styles.item, isActive && styles.activeItem]}
         >

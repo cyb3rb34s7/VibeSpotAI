@@ -46,6 +46,38 @@ curl.exe http://localhost:38191/places/kissa-focus
 
 Returns the place profile, summary, signal averages, and recent vibe checks.
 
+## Local Dev Login
+
+```powershell
+$login = Invoke-RestMethod `
+  -Uri http://localhost:38191/auth/dev-login `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body '{"handle":"priya"}'
+
+$token = $login.data.access_token
+```
+
+Returns a local-only bearer token and the seeded user profile. This is a development adapter, not production OTP/auth.
+
+## Current User
+
+```powershell
+Invoke-RestMethod `
+  -Uri http://localhost:38191/auth/me `
+  -Headers @{ Authorization = "Bearer $token" }
+```
+
+## My Profile
+
+```powershell
+Invoke-RestMethod `
+  -Uri http://localhost:38191/profiles/me `
+  -Headers @{ Authorization = "Bearer $token" }
+```
+
+Returns the current user, contribution counts, taste tags, and recent drops.
+
 ## Submit Vibe Check
 
 ```powershell
@@ -64,7 +96,8 @@ Invoke-RestMethod `
   -Uri http://localhost:38191/places/kissa-focus/vibe-checks `
   -Method Post `
   -ContentType "application/json" `
+  -Headers @{ Authorization = "Bearer $token" } `
   -Body $payload
 ```
 
-Local submissions use the seeded `priya` demo user until auth is designed.
+Without an authorization header, local submissions still fall back to the seeded `priya` demo user.

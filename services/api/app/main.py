@@ -3,7 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.api.routes import places
+from app.api.routes import auth, places, profiles
 from app.core.response import error_response, ok
 from app.core.trace import ensure_trace_id
 
@@ -18,7 +18,9 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+app.include_router(auth.router)
 app.include_router(places.router)
+app.include_router(profiles.router)
 
 
 @app.middleware("http")

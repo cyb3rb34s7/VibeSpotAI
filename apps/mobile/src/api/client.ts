@@ -70,8 +70,41 @@ export type VibeCheckPayload = {
 export type VibeCheckCreated = VibeCheckPayload & {
   id: string;
   place_slug: string;
+  created_by_handle: string;
   trust_weight: number;
   submitted_at: string;
+};
+
+export type AuthUser = {
+  id: string;
+  handle: string;
+  display_name: string;
+  home_city: string;
+};
+
+export type DevLoginResponse = {
+  access_token: string;
+  token_type: "bearer";
+  user: AuthUser;
+};
+
+export type MyProfile = {
+  user: AuthUser;
+  stats: {
+    vibe_checks_count: number;
+    places_contributed_count: number;
+  };
+  taste_tags: Array<{
+    label: string;
+    count: number;
+  }>;
+  recent_drops: Array<{
+    place_name: string;
+    place_slug: string;
+    short_note: string;
+    best_use_case: string;
+    submitted_at: string;
+  }>;
 };
 
 function unwrapEnvelope<T>(response: Response, envelope: ApiEnvelope<T>, fallbackMessage: string): T {
@@ -100,14 +133,38 @@ export async function getPlaceDetail(slug: string): Promise<PlaceDetail> {
 export async function submitVibeCheck(
   slug: string,
   payload: VibeCheckPayload,
+  accessToken?: string,
 ): Promise<VibeCheckCreated> {
   const response = await fetch(`${API_BASE_URL}/places/${slug}/vibe-checks`, {
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
     method: "POST",
   });
   const envelope = (await response.json()) as ApiEnvelope<VibeCheckCreated>;
   return unwrapEnvelope(response, envelope, "Failed to drop vibe check");
+}
+
+export async function devLogin(handle = "priya"): Promise<DevLoginResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/dev-login`, {
+    body: JSON.stringify({ handle }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  const envelope = (await response.json()) as ApiEnvelope<DevLoginResponse>;
+  return unwrapEnvelope(response, envelope, "Failed to start local session");
+}
+
+export async function getMyProfile(accessToken: string): Promise<MyProfile> {
+  const response = await fetch(`${API_BASE_URL}/profiles/me`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  const envelope = (await response.json()) as ApiEnvelope<MyProfile>;
+  return unwrapEnvelope(response, envelope, "Failed to load profile");
 }

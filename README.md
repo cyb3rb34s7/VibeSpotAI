@@ -75,6 +75,7 @@ The local MVP supports:
 - Nearby place discovery around Koramangala using PostGIS.
 - Place detail sheets with summary, signal averages, and recent drops.
 - Local vibe-check submission through the mobile detail sheet.
+- Local dev auth, current-user lookup, and a profile tab with contribution stats.
 - Deterministic summary refresh after submissions.
 - Trace-aware API success and error envelopes.
 - Redis-backed Dramatiq worker groundwork for future async jobs.

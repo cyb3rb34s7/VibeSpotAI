@@ -5,6 +5,7 @@ from app.core.response import ok
 from app.core.response import error_response
 from app.db.session import get_session
 from app.schemas.place import VibeCheckCreate
+from app.services.auth_service import AuthFailure, read_authorization_header, resolve_current_user
 from app.services.places_service import create_vibe_check, get_nearby_places, get_place_detail
 
 router = APIRouter(prefix="/places", tags=["places"])
@@ -46,9 +47,27 @@ async def submit_vibe_check(
     request: Request,
     payload: VibeCheckCreate,
     slug: str,
+    authorization: str | None = Depends(read_authorization_header),
     session: AsyncSession = Depends(get_session),
 ) -> dict:
-    vibe_check = await create_vibe_check(session=session, slug=slug, payload=payload)
+    user_handle = "priya"
+    if authorization is not None:
+        current_user = await resolve_current_user(session=session, authorization=authorization)
+        if isinstance(current_user, AuthFailure):
+            return error_response(
+                request,
+                status_code=401,
+                code="unauthorized",
+                message=current_user.message,
+            )
+        user_handle = current_user.handle
+
+    vibe_check = await create_vibe_check(
+        session=session,
+        slug=slug,
+        payload=payload,
+        user_handle=user_handle,
+    )
     if vibe_check is None:
         return error_response(
             request,

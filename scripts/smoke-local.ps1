@@ -81,6 +81,22 @@ Assert-True ($detail.success -eq $true) "Place detail response did not use a suc
 Assert-True ($detail.data.slug -eq "kissa-focus") "Place detail returned the wrong slug"
 Assert-True ($detail.data.recent_vibe_checks.Count -ge 1) "Place detail returned no recent vibe checks"
 
+Write-Step "Checking local auth and profile"
+$login = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/dev-login" -Method Post -ContentType "application/json" -Body '{"handle":"priya"}'
+Assert-True ($login.success -eq $true) "Dev login response did not use a success envelope"
+Assert-True ($login.data.access_token.StartsWith("local-dev.")) "Dev login did not return a local token"
+Assert-True ($login.data.user.handle -eq "priya") "Dev login returned the wrong user"
+
+$authHeaders = @{ Authorization = "Bearer $($login.data.access_token)" }
+$me = Invoke-RestMethod -Uri "$ApiBaseUrl/auth/me" -Headers $authHeaders
+Assert-True ($me.success -eq $true) "Auth me response did not use a success envelope"
+Assert-True ($me.data.handle -eq "priya") "Auth me returned the wrong user"
+
+$profile = Invoke-RestMethod -Uri "$ApiBaseUrl/profiles/me" -Headers $authHeaders
+Assert-True ($profile.success -eq $true) "Profile response did not use a success envelope"
+Assert-True ($profile.data.stats.vibe_checks_count -ge 1) "Profile returned no seeded vibe checks"
+Assert-True ($profile.data.recent_drops.Count -ge 1) "Profile returned no recent drops"
+
 Write-Step "Checking error envelope"
 try {
     Invoke-Json "$ApiBaseUrl/places/not-a-real-place" | Out-Null

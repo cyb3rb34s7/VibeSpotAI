@@ -4,16 +4,21 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-nat
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
+  devLogin,
+  getMyProfile,
   getNearbyPlaces,
   getPlaceDetail,
   submitVibeCheck,
+  type AuthUser,
+  type MyProfile,
   type NearbyPlace,
   type PlaceDetail,
   type VibeCheckPayload,
 } from "../api/client";
-import { BottomNav } from "../components/BottomNav";
+import { BottomNav, type BottomNavTab } from "../components/BottomNav";
 import { PlaceDetailSheet } from "../components/PlaceDetailSheet";
 import { PlacePreviewCard } from "../components/PlacePreviewCard";
+import { ProfilePanel } from "../components/ProfilePanel";
 import { SearchPill } from "../components/SearchPill";
 import { VibeMap } from "../components/VibeMap";
 import { colors, spacing, typography } from "../theme/tokens";
@@ -26,6 +31,12 @@ export function MapHomeScreen() {
   const [detailError, setDetailError] = useState<string | null>(null);
   const [detailLoadingSlug, setDetailLoadingSlug] = useState<string | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<BottomNavTab>("Map");
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [profile, setProfile] = useState<MyProfile | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -49,6 +60,37 @@ export function MapHomeScreen() {
     }
 
     loadPlaces();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadLocalSession() {
+      try {
+        const session = await devLogin("priya");
+        const myProfile = await getMyProfile(session.access_token);
+        if (isMounted) {
+          setAccessToken(session.access_token);
+          setCurrentUser(session.user);
+          setProfile(myProfile);
+          setProfileError(null);
+        }
+      } catch (caught) {
+        if (isMounted) {
+          setProfileError(caught instanceof Error ? caught.message : "Unable to start profile");
+        }
+      } finally {
+        if (isMounted) {
+          setProfileLoading(false);
+        }
+      }
+    }
+
+    loadLocalSession();
 
     return () => {
       isMounted = false;
@@ -83,9 +125,22 @@ export function MapHomeScreen() {
       throw new Error("No place selected");
     }
 
-    await submitVibeCheck(selectedSlug, payload);
+    await submitVibeCheck(selectedSlug, payload, accessToken ?? undefined);
     const refreshedDetail = await getPlaceDetail(selectedSlug);
     setDetail(refreshedDetail);
+    if (accessToken) {
+      const refreshedProfile = await getMyProfile(accessToken);
+      setProfile(refreshedProfile);
+    }
+  }
+
+  function selectTab(tab: BottomNavTab) {
+    if (tab === "Drop" && places[0]) {
+      openPlaceDetail(places[0].slug);
+      return;
+    }
+
+    setActiveTab(tab === "Search" ? "Map" : tab);
   }
 
   return (
@@ -103,45 +158,53 @@ export function MapHomeScreen() {
           <View style={styles.header}>
             <View>
               <Text style={styles.brand}>VibeSpot</Text>
-              <Text style={styles.subtitle}>Local signal, right now</Text>
+              <Text style={styles.subtitle}>
+                {currentUser ? `@${currentUser.handle}` : "Local signal, right now"}
+              </Text>
             </View>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>P</Text>
             </View>
           </View>
 
-          <SearchPill />
-
-          {isLoading ? (
-            <View style={styles.statePanel}>
-              <ActivityIndicator color={colors.lime} />
-              <Text style={styles.stateText}>Loading the local grid...</Text>
-            </View>
-          ) : error ? (
-            <View style={styles.statePanel}>
-              <Text style={styles.errorTitle}>Backend not reachable</Text>
-              <Text style={styles.stateText}>{error}</Text>
-            </View>
+          {activeTab === "Profile" ? (
+            <ProfilePanel error={profileError} isLoading={profileLoading} profile={profile} />
           ) : (
             <>
-              <VibeMap places={places} />
+              <SearchPill />
 
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Best nearby</Text>
-                <Text style={styles.sectionMeta}>{places.length} live candidates</Text>
-              </View>
+              {isLoading ? (
+                <View style={styles.statePanel}>
+                  <ActivityIndicator color={colors.lime} />
+                  <Text style={styles.stateText}>Loading the local grid...</Text>
+                </View>
+              ) : error ? (
+                <View style={styles.statePanel}>
+                  <Text style={styles.errorTitle}>Backend not reachable</Text>
+                  <Text style={styles.stateText}>{error}</Text>
+                </View>
+              ) : (
+                <>
+                  <VibeMap places={places} />
 
-              {places.slice(0, 6).map((place) => (
-                <PlacePreviewCard
-                  key={place.id}
-                  onPress={() => openPlaceDetail(place.slug)}
-                  place={place}
-                />
-              ))}
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Best nearby</Text>
+                    <Text style={styles.sectionMeta}>{places.length} live candidates</Text>
+                  </View>
+
+                  {places.slice(0, 6).map((place) => (
+                    <PlacePreviewCard
+                      key={place.id}
+                      onPress={() => openPlaceDetail(place.slug)}
+                      place={place}
+                    />
+                  ))}
+                </>
+              )}
             </>
           )}
         </ScrollView>
-        <BottomNav />
+        <BottomNav activeTab={activeTab} onSelectTab={selectTab} />
       </SafeAreaView>
       <PlaceDetailSheet
         detail={detail}

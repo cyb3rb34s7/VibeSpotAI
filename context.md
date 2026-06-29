@@ -9,13 +9,14 @@ Building the local MVP foundation end to end:
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
 - `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
 - `POST /places/{slug}/vibe-checks` accepts local demo-user submissions and returns the created signal.
+- `/auth/dev-login`, `/auth/me`, and `/profiles/me` provide local identity and contribution feedback.
 - Vibe-check submissions refresh place summary evidence counts deterministically.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
 - Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, and TypeScript.
 - Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders home/detail/submission flows against the local backend.
-- `scripts/smoke-local.ps1` verifies Docker, API envelopes, seeded place data, and optional Expo web/Android bundles.
+- `scripts/smoke-local.ps1` verifies Docker, API envelopes, auth/profile, seeded place data, and optional Expo web/Android bundles.
 
 ## Done
 
@@ -41,6 +42,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Repaired Android emulator smoke path, added safe-area layout handling, and visually checked home/detail/submission flows in Expo Go.
 - 2026-06-29: Marked the local MVP foundation implementation plan checklist complete.
 - 2026-06-29: Added a repeatable local smoke script for Docker, API, and optional mobile bundle checks.
+- 2026-06-29: Added local dev auth, `/profiles/me`, authenticated vibe-check ownership, and a mobile Profile tab.
 
 ## Next
 
@@ -159,7 +161,8 @@ Building the local MVP foundation end to end:
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
-- Local vibe-check submissions use the seeded `priya` demo user until real auth is designed.
+- Local dev auth uses stateless `local-dev.*` bearer tokens for seeded users until real OTP/provider auth is designed.
+- Vibe-check submissions use the bearer user when present and fall back to seeded `priya` for unauthenticated local calls.
 - All API responses should use `{success, data|error, trace_id}`.
 - Summary refreshes are deterministic SQL/Python work for now; no LLM call is needed for the local contribution loop.
 - Worker jobs are available for async follow-up work, but user-facing summary counts still refresh synchronously after local submissions.

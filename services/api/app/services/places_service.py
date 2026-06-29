@@ -191,6 +191,7 @@ async def create_vibe_check(
     *,
     slug: str,
     payload: VibeCheckCreate,
+    user_handle: str = "priya",
 ) -> VibeCheckCreated | None:
     result = await session.execute(
         text(
@@ -198,8 +199,8 @@ async def create_vibe_check(
             WITH target_place AS (
                 SELECT id, slug FROM places WHERE slug = :slug
             ),
-            demo_user AS (
-                SELECT id FROM users WHERE handle = 'priya' LIMIT 1
+            selected_user AS (
+                SELECT id, handle FROM users WHERE handle = :user_handle LIMIT 1
             ),
             inserted AS (
                 INSERT INTO vibe_checks (
@@ -217,7 +218,7 @@ async def create_vibe_check(
                     raw_answers
                 )
                 SELECT
-                    demo_user.id,
+                    selected_user.id,
                     target_place.id,
                     :visit_intent,
                     :noise_score,
@@ -230,7 +231,7 @@ async def create_vibe_check(
                     :trust_weight,
                     CAST(:raw_answers AS jsonb)
                 FROM target_place
-                CROSS JOIN demo_user
+                CROSS JOIN selected_user
                 RETURNING
                     id::text,
                     place_id,
@@ -248,6 +249,7 @@ async def create_vibe_check(
             SELECT
                 inserted.id,
                 target_place.slug AS place_slug,
+                selected_user.handle AS created_by_handle,
                 inserted.visit_intent,
                 inserted.noise_score,
                 inserted.wifi_score,
@@ -260,10 +262,12 @@ async def create_vibe_check(
                 inserted.submitted_at
             FROM inserted
             JOIN target_place ON target_place.id = inserted.place_id
+            JOIN selected_user ON true
             """
         ),
         {
             "slug": slug,
+            "user_handle": user_handle,
             "visit_intent": payload.visit_intent,
             "noise_score": payload.noise_score,
             "wifi_score": payload.wifi_score,

@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add local auth and profile loop
+
+**What changed:** Added local dev login, bearer current-user lookup, `/profiles/me`, authenticated vibe-check ownership, mobile in-memory session bootstrapping, a real Profile tab, and smoke/API docs for the new flow.
+**Why:** The MVP needs identity and contribution feedback without committing to OTP/provider infrastructure before the local product loop is accepted.
+**Files touched:** `services/api/app/api/routes/*`, `services/api/app/schemas/*`, `services/api/app/services/*`, `services/api/tests/test_auth_profile_api.py`, `apps/mobile/src/api/client.ts`, `apps/mobile/src/components/*`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `scripts/smoke-local.ps1`, `README.md`, `docs/api-examples.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. Existing seeded data remains; local dev tokens are stateless and expire only when the implementation changes.
+
 ## 2026-06-29 - Add local smoke script
 
 **What changed:** Added `scripts/smoke-local.ps1` to verify Docker containers, API success/error envelopes, seeded nearby/detail data, and optional Expo web/Android bundles.
