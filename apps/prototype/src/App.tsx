@@ -52,7 +52,6 @@ function App() {
           {screen === "place" ? (
             <PlaceDetail
               onBack={() => setScreen("map")}
-              onNavigate={navigate}
               onStartVibeCheck={startVibeCheck}
               place={selectedPlace}
             />

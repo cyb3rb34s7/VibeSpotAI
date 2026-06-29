@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronUp, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronUp, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import { type CSSProperties, useState } from "react";
 import { BottomNav, type Screen } from "../components/BottomNav";
 import { places, type Place } from "../data";
@@ -37,6 +37,13 @@ export function MapHome({ onNavigate, onOpenPlace, onStartVibeCheck }: MapHomePr
         </button>
       </header>
 
+      <button
+        aria-label="Clear selected place"
+        className={`map-clear-layer ${selected ? "is-active" : ""}`}
+        onClick={() => setSelected(null)}
+        type="button"
+      />
+
       <section className="place-layer" aria-label="Places on map">
         {places.map((place) => {
           const Icon = place.icon;
@@ -45,7 +52,10 @@ export function MapHome({ onNavigate, onOpenPlace, onStartVibeCheck }: MapHomePr
             <motion.button
               className={`map-place-chip ${isSelected ? "is-selected" : selected ? "is-muted" : ""}`}
               key={place.id}
-              onClick={() => setSelected(place)}
+              onClick={(event) => {
+                event.stopPropagation();
+                setSelected(place);
+              }}
               style={
                 {
                   "--chip-x": `${place.position.x}%`,
@@ -82,6 +92,14 @@ export function MapHome({ onNavigate, onOpenPlace, onStartVibeCheck }: MapHomePr
             key={selected.id}
             transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}
           >
+            <button
+              aria-label="Close selected place"
+              className="selected-card-close"
+              onClick={() => setSelected(null)}
+              type="button"
+            >
+              <X size={15} />
+            </button>
             <div className="selected-image" style={{ background: selected.image }} />
             <div className="selected-copy">
               <div className="eyebrow-row">
