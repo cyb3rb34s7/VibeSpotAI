@@ -1,16 +1,27 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 
 import type { NearbyPlace } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { PressScale } from "./PressScale";
 
 type MapPreviewProps = {
+  onOpenPlace?: (slug: string) => void;
   places: NearbyPlace[];
 };
 
-export function MapPreview({ places }: MapPreviewProps) {
+export function MapPreview({ onOpenPlace, places }: MapPreviewProps) {
   const featured = places.slice(0, 5);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(featured[0]?.id ?? null);
+  const selectedPlace = useMemo(
+    () => featured.find((place) => place.id === selectedPlaceId) ?? featured[0],
+    [featured, selectedPlaceId],
+  );
+
+  useEffect(() => {
+    setSelectedPlaceId(featured[0]?.id ?? null);
+  }, [featured[0]?.id]);
 
   return (
     <View style={styles.container}>
@@ -30,16 +41,17 @@ export function MapPreview({ places }: MapPreviewProps) {
       {featured.map((place, index) => (
         <LivePin
           index={index}
+          isSelected={place.id === selectedPlace?.id}
           key={place.id}
-          matchPercent={place.match_percent}
+          label={markerLabel(place, index)}
+          onPress={() => setSelectedPlaceId(place.id)}
           position={pinPositions[index] ?? pinPositions[0]}
         />
       ))}
 
-      <View style={styles.mapLabel}>
-        <Text style={styles.mapLabelTitle}>Koramangala live grid</Text>
-        <Text style={styles.mapLabelMeta}>{places.length} seeded spots nearby</Text>
-      </View>
+      {selectedPlace ? (
+        <FloatingPlaceCard onOpenPlace={onOpenPlace} place={selectedPlace} />
+      ) : null}
       <View style={styles.cityPulse}>
         <Text style={styles.cityPulseText}>Aditya dropped in HSR - Sneha pioneered Indiranagar</Text>
       </View>
@@ -49,11 +61,15 @@ export function MapPreview({ places }: MapPreviewProps) {
 
 function LivePin({
   index,
-  matchPercent,
+  isSelected,
+  label,
+  onPress,
   position,
 }: {
   index: number;
-  matchPercent: number;
+  isSelected: boolean;
+  label: string;
+  onPress: () => void;
   position: (typeof pinPositions)[number];
 }) {
   const pulse = useRef(new Animated.Value(0)).current;
@@ -82,7 +98,15 @@ function LivePin({
   const glowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.04, 0.12] });
 
   return (
-    <View style={[styles.pin, position]}>
+    <PressScale
+      accessibilityLabel={`${label} map marker`}
+      accessibilityRole="button"
+      containerStyle={[styles.pin, position]}
+      haptic={isFresh ? "medium" : "light"}
+      onPress={onPress}
+      pressedScale={0.94}
+      style={[styles.pinPress, isSelected && styles.selectedPinPress]}
+    >
       <Animated.View
         style={[
           styles.pinGlow,
@@ -95,20 +119,65 @@ function LivePin({
       {isFresh ? <View style={styles.freshRing} /> : null}
       <View style={styles.pinStem} />
       <View style={styles.pinPoint} />
-      <View style={styles.pinCard}>
+      <View style={[styles.pinCard, isSelected && styles.selectedPinCard]}>
         <View style={styles.pinAccent} />
-        <Text style={styles.pinText}>{matchPercent}</Text>
-        <View style={styles.avatarStack}>
-          <View style={styles.avatarMini}>
-            <Text style={styles.avatarMiniText}>M</Text>
-          </View>
-          <View style={[styles.avatarMini, styles.avatarMiniOffset]}>
-            <Text style={styles.avatarMiniText}>R</Text>
-          </View>
+        <Text numberOfLines={1} style={[styles.pinText, isSelected && styles.selectedPinText]}>
+          {label}
+        </Text>
+      </View>
+    </PressScale>
+  );
+}
+
+function FloatingPlaceCard({
+  onOpenPlace,
+  place,
+}: {
+  onOpenPlace?: (slug: string) => void;
+  place: NearbyPlace;
+}) {
+  return (
+    <View style={styles.placeCard}>
+      <View style={styles.placeHeader}>
+        <View style={styles.placeCopy}>
+          <Text numberOfLines={1} style={styles.placeName}>{place.name}</Text>
+          <Text numberOfLines={1} style={styles.placeMeta}>
+            {place.neighborhood} / {place.distance_m}m
+          </Text>
+        </View>
+        <View style={styles.matchBadge}>
+          <Text style={styles.matchText}>{place.match_percent}%</Text>
         </View>
       </View>
+      <Text numberOfLines={2} style={styles.placeReason}>
+        {place.reason || `${place.evidence_count} people shaped this signal`}
+      </Text>
+      <PressScale
+        accessibilityLabel={`Open ${place.name}`}
+        accessibilityRole="button"
+        containerStyle={styles.openButtonShell}
+        haptic="medium"
+        onPress={() => onOpenPlace?.(place.slug)}
+        pressedScale={0.97}
+        style={styles.openButton}
+      >
+        <Text style={styles.openButtonText}>View vibe</Text>
+      </PressScale>
     </View>
   );
+}
+
+function markerLabel(place: NearbyPlace, index: number) {
+  if (index === 0) {
+    return "Fresh";
+  }
+
+  const firstTag = place.tags[0]?.replace(/\s+/g, " ");
+  if (firstTag && firstTag.length <= 10) {
+    return firstTag;
+  }
+
+  return `${place.match_percent}%`;
 }
 
 const pinPositions = [
@@ -153,9 +222,14 @@ const styles = StyleSheet.create({
     width: 1,
   },
   pin: {
+    position: "absolute",
+  },
+  pinPress: {
     alignItems: "center",
     justifyContent: "center",
-    position: "absolute",
+  },
+  selectedPinPress: {
+    zIndex: 4,
   },
   pinGlow: {
     backgroundColor: colors.lime,
@@ -209,6 +283,10 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 6,
   },
+  selectedPinCard: {
+    backgroundColor: colors.lime,
+    borderColor: colors.lime,
+  },
   pinAccent: {
     backgroundColor: colors.lime,
     bottom: 0,
@@ -222,47 +300,79 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "900",
   },
-  avatarStack: {
-    flexDirection: "row",
+  selectedPinText: {
+    color: colors.onLime,
   },
-  avatarMini: {
-    alignItems: "center",
-    backgroundColor: colors.backgroundAlt,
-    borderColor: colors.mapBase,
-    borderRadius: 999,
-    borderWidth: 1,
-    height: 16,
-    justifyContent: "center",
-    width: 16,
-  },
-  avatarMiniOffset: {
-    marginLeft: -5,
-  },
-  avatarMiniText: {
-    color: colors.text,
-    fontSize: 8,
-    fontWeight: "900",
-  },
-  mapLabel: {
-    bottom: spacing.md,
-    left: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    position: "absolute",
-    backgroundColor: colors.surfaceGlassStrong,
+  placeCard: {
+    backgroundColor: colors.surface,
     borderColor: colors.border,
     borderRadius: radii.lg,
     borderWidth: 1,
+    bottom: spacing.md,
+    elevation: 12,
+    gap: spacing.xs,
+    left: spacing.md,
+    minWidth: 278,
+    padding: spacing.sm,
+    position: "absolute",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.28,
+    shadowRadius: 24,
+    zIndex: 5,
   },
-  mapLabelTitle: {
+  placeHeader: {
+    paddingRight: 58,
+  },
+  placeCopy: {
+    minWidth: 0,
+  },
+  placeName: {
     color: colors.text,
     fontSize: typography.body,
-    fontWeight: "800",
+    fontWeight: "900",
   },
-  mapLabelMeta: {
+  placeMeta: {
     color: colors.muted,
-    fontSize: typography.small,
+    fontSize: typography.micro,
+    fontWeight: "800",
     marginTop: 2,
+  },
+  matchBadge: {
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 5,
+    position: "absolute",
+    right: spacing.sm,
+    top: spacing.sm,
+  },
+  matchText: {
+    color: colors.onLime,
+    fontSize: typography.micro,
+    fontWeight: "900",
+  },
+  placeReason: {
+    color: colors.textSoft,
+    fontSize: typography.micro,
+    fontWeight: "800",
+    lineHeight: 15,
+  },
+  openButtonShell: {
+    alignSelf: "flex-start",
+  },
+  openButton: {
+    backgroundColor: colors.surfaceHigh,
+    borderColor: colors.border,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 7,
+  },
+  openButtonText: {
+    color: colors.text,
+    fontSize: typography.micro,
+    fontWeight: "900",
   },
   cityPulse: {
     backgroundColor: "rgba(15, 16, 20, 0.72)",

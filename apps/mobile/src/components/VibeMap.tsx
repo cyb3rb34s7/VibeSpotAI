@@ -18,12 +18,13 @@ declare global {
 }
 
 type VibeMapProps = {
+  onOpenPlace?: (slug: string) => void;
   places: NearbyPlace[];
 };
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
 
-export function VibeMap({ places }: VibeMapProps) {
+export function VibeMap({ onOpenPlace, places }: VibeMapProps) {
   const mapElementRef = useRef<unknown>(null);
   const [hasMapError, setHasMapError] = useState(false);
   const [isGoogleMapVisible, setIsGoogleMapVisible] = useState(false);
@@ -105,14 +106,14 @@ export function VibeMap({ places }: VibeMapProps) {
   }, [places]);
 
   if (Platform.OS !== "web" || !googleMapsKey || hasMapError) {
-    return <MapPreview places={places} />;
+    return <MapPreview onOpenPlace={onOpenPlace} places={places} />;
   }
 
   return (
     <View style={styles.container}>
       {!isGoogleMapVisible ? (
         <View style={styles.fallbackLayer}>
-          <MapPreview places={places} />
+          <MapPreview onOpenPlace={onOpenPlace} places={places} />
         </View>
       ) : null}
       <View

@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add interactive map place cards
+
+**What changed:** Replaced cryptic marker initials with meaningful compact map labels like `Fresh`, `Cold Brew`, and match percentages, added tappable fallback-map markers, and introduced an Airbnb-style floating place card with name, distance, match, reason, and a `View vibe` CTA that opens the existing detail sheet.
+**Why:** Map pins should be useful and premium, not decorative noise; tapping a marker should reveal enough context in-map before the user opens the full place detail.
+**Files touched:** `apps/mobile/src/components/MapPreview.tsx`, `apps/mobile/src/components/VibeMap.tsx`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Refine home header and map pins
 
 **What changed:** Removed the top-right home profile bubble that collided visually with the Expo dev overlay during local QA, and redesigned the fallback map pins from large green circular blobs into compact glass score tags with subtle anchor points.

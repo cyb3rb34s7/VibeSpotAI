@@ -16,6 +16,7 @@ Building the local MVP foundation end to end:
 - The second polish pass adds native haptics, tab transition motion, backend-confirmed submit reward animation, personalized affinity proof on place detail, semantic modal close controls, and a stronger Google Maps error fallback.
 - Bottom navigation native layout is fixed: `PressScale` now supports outer layout styles so flex-based nav items distribute evenly instead of clamping left.
 - Home header and fallback map pins are refined: the top-right in-app profile bubble was removed to avoid Expo dev overlay collision, and the map now uses compact glass score tags instead of large green circular blobs.
+- Fallback map markers are now interactive: labels use meaningful signals such as `Fresh`, `Cold Brew`, or match percent, and tapping reveals an Airbnb-style floating place card with a `View vibe` CTA into the detail sheet.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
@@ -54,6 +55,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added native-feel haptics, tab transitions, submit reward animation, place affinity proof, semantic modal close controls, and robust Google Maps fallback behavior.
 - 2026-06-29: Fixed bottom navigation native layout by separating `PressScale` outer layout from inner animated visuals.
 - 2026-06-29: Refined the home header and fallback map pins after visual QA rejected the top-right collision and green blob marker style.
+- 2026-06-29: Added interactive fallback map markers and Airbnb-style in-map place cards.
 
 ## Next
 
@@ -172,6 +174,7 @@ Building the local MVP foundation end to end:
 - Keep root `AGENTS.md` as the single agent instruction source; remove generated nested agent files from app scaffolds.
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
 - Keep the stylized VibeSpot map visible until Google Maps is proven healthy; never expose Google's white error panel in the product UI.
+- Map markers should avoid cryptic initials. Use meaningful place or signal labels on the marker, then show richer context in a floating map card or bottom sheet.
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
 - Auth uses database-backed OTP challenges and bearer sessions. Local mode returns OTP codes in the API response because no email provider is configured yet.

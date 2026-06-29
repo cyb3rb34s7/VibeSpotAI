@@ -284,7 +284,7 @@ export function MapHomeScreen() {
                 ) : (
                   <>
                     <UnlockMoment count={Math.min(3, places.length)} />
-                    <VibeMap places={places} />
+                    <VibeMap onOpenPlace={openPlaceDetail} places={places} />
                     <FreshDropsPeek places={places} />
 
                     <View style={styles.sectionHeader}>
