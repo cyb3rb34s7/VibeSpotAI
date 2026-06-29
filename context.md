@@ -17,6 +17,7 @@ Building the local MVP foundation end to end:
 - Bottom navigation native layout is fixed: `PressScale` now supports outer layout styles so flex-based nav items distribute evenly instead of clamping left.
 - Home header and fallback map pins are refined: the top-right in-app profile bubble was removed to avoid Expo dev overlay collision, and the map now uses compact glass score tags instead of large green circular blobs.
 - Fallback map markers are now interactive: labels use meaningful signals such as `Fresh`, `Cold Brew`, or match percent, and tapping reveals an Airbnb-style floating place card with a `View vibe` CTA into the detail sheet.
+- Current mobile UI screenshots are tracked in `docs/ui-screens/mobile/` for review.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
@@ -56,6 +57,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Fixed bottom navigation native layout by separating `PressScale` outer layout from inner animated visuals.
 - 2026-06-29: Refined the home header and fallback map pins after visual QA rejected the top-right collision and green blob marker style.
 - 2026-06-29: Added interactive fallback map markers and Airbnb-style in-map place cards.
+- 2026-06-29: Added tracked mobile UI review screenshots under `docs/ui-screens/mobile/`.
 
 ## Next
 

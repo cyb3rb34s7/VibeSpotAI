@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add mobile UI review screenshots
+
+**What changed:** Added tracked PNG captures for the main mobile UI states under `docs/ui-screens/mobile/`.
+**Why:** The current UI needs easy visual review from GitHub without requiring the local app to be running.
+**Files touched:** `docs/ui-screens/mobile/*`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add interactive map place cards
 
 **What changed:** Replaced cryptic marker initials with meaningful compact map labels like `Fresh`, `Cold Brew`, and match percentages, added tappable fallback-map markers, and introduced an Airbnb-style floating place card with name, distance, match, reason, and a `View vibe` CTA that opens the existing detail sheet.
