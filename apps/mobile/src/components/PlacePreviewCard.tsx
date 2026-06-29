@@ -40,8 +40,10 @@ export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
         {place.summary}
       </Text>
       <View style={styles.evidenceRow}>
-        <Feather color={colors.muted} name="message-circle" size={14} />
-        <Text style={styles.evidence}>Based on {place.evidence_count} early drops</Text>
+        <Feather color={colors.muted} name={place.reason ? "zap" : "message-circle"} size={14} />
+        <Text style={styles.evidence}>
+          {place.reason || `Based on ${place.evidence_count} early drops`}
+        </Text>
       </View>
     </PressScale>
   );

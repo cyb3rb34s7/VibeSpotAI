@@ -73,6 +73,7 @@ When Expo web and Android Metro are already running, include bundle checks:
 The local MVP supports:
 
 - Nearby place discovery around Koramangala using PostGIS.
+- Intent search for ranked place matches from the search pill.
 - Place detail sheets with summary, signal averages, and recent drops.
 - Local vibe-check submission through the mobile detail sheet.
 - Local dev auth, current-user lookup, and a profile tab with contribution stats.

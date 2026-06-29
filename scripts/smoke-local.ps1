@@ -75,6 +75,14 @@ Assert-True ($nearby.data.Count -ge 3) "Nearby response returned fewer than 3 pl
 Assert-True ($nearby.data[0].slug -eq "kissa-focus") "Expected kissa-focus to be the closest seeded place"
 Assert-True ($nearby.data[0].distance_m -le 20) "Closest seeded place distance looked wrong"
 
+Write-Step "Checking intent search"
+$searchQuery = [System.Uri]::EscapeDataString("quiet cafe with strong wifi")
+$search = Invoke-Json "$ApiBaseUrl/places/search?query=$searchQuery&lat=12.9352&lng=77.6245&radius_m=2500"
+Assert-True ($search.success -eq $true) "Search response did not use a success envelope"
+Assert-True ($search.data.Count -ge 1) "Search response returned no places"
+Assert-True ($search.data[0].slug -eq "kissa-focus") "Search did not rank kissa-focus first for quiet wifi"
+Assert-True (-not [string]::IsNullOrWhiteSpace($search.data[0].reason)) "Search result did not include a reason"
+
 Write-Step "Checking place detail"
 $detail = Invoke-Json "$ApiBaseUrl/places/kissa-focus"
 Assert-True ($detail.success -eq $true) "Place detail response did not use a success envelope"

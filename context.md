@@ -7,6 +7,7 @@ Building the local MVP foundation end to end:
 - Local Docker infra is running for Postgres/PostGIS/pgvector, Redis, and MinIO.
 - FastAPI backend is running through Docker with explicit `uvicorn --reload`.
 - `/places/nearby` returns seeded Koramangala cafes ordered by PostGIS distance.
+- `/places/search` returns deterministic intent-ranked places with match reasons.
 - `/places/{slug}` returns detail summaries, signal averages, and recent vibe-check evidence.
 - `POST /places/{slug}/vibe-checks` accepts local demo-user submissions and returns the created signal.
 - `/auth/dev-login`, `/auth/me`, and `/profiles/me` provide local identity and contribution feedback.
@@ -16,7 +17,7 @@ Building the local MVP foundation end to end:
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
 - Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, and TypeScript.
 - Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders home/detail/submission flows against the local backend.
-- `scripts/smoke-local.ps1` verifies Docker, API envelopes, auth/profile, seeded place data, and optional Expo web/Android bundles.
+- `scripts/smoke-local.ps1` verifies Docker, API envelopes, auth/profile, nearby/search/detail data, and optional Expo web/Android bundles.
 
 ## Done
 
@@ -43,6 +44,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Marked the local MVP foundation implementation plan checklist complete.
 - 2026-06-29: Added a repeatable local smoke script for Docker, API, and optional mobile bundle checks.
 - 2026-06-29: Added local dev auth, `/profiles/me`, authenticated vibe-check ownership, and a mobile Profile tab.
+- 2026-06-29: Added deterministic intent search and wired the mobile search pill to ranked results.
 
 ## Next
 
@@ -165,6 +167,7 @@ Building the local MVP foundation end to end:
 - Vibe-check submissions use the bearer user when present and fall back to seeded `priya` for unauthenticated local calls.
 - All API responses should use `{success, data|error, trace_id}`.
 - Summary refreshes are deterministic SQL/Python work for now; no LLM call is needed for the local contribution loop.
+- Intent search is deterministic keyword-plus-distance scoring for now; pgvector/LLM parsing remain later upgrades.
 - Worker jobs are available for async follow-up work, but user-facing summary counts still refresh synchronously after local submissions.
 
 ## Critical Files

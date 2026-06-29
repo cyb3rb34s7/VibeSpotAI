@@ -6,6 +6,7 @@ from app.schemas.place import (
     PlaceDetail,
     PlaceSignalSummary,
     RecentVibeCheck,
+    SearchPlace,
     VibeCheckCreate,
     VibeCheckCreated,
 )
@@ -56,6 +57,113 @@ async def get_nearby_places(
     )
 
     return [NearbyPlace(**dict(row._mapping)) for row in result]
+
+
+async def search_places(
+    session: AsyncSession,
+    *,
+    query: str,
+    lat: float,
+    lng: float,
+    radius_m: int,
+) -> list[SearchPlace]:
+    normalized_query = query.strip().lower()
+    result = await session.execute(
+        text(
+            """
+            WITH origin AS (
+                SELECT ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography AS location
+            ),
+            candidates AS (
+                SELECT
+                    places.id,
+                    places.name,
+                    places.slug,
+                    places.category,
+                    places.neighborhood,
+                    ST_Y(places.location::geometry) AS lat,
+                    ST_X(places.location::geometry) AS lng,
+                    ROUND(ST_Distance(places.location, origin.location))::integer AS distance_m,
+                    places.tags,
+                    place_summaries.summary_text AS summary,
+                    place_summaries.best_for,
+                    place_summaries.avoid_when,
+                    place_summaries.evidence_count,
+                    CASE
+                        WHEN :query LIKE '%quiet%' AND (
+                            places.tags::text ILIKE '%quiet%'
+                            OR place_summaries.summary_text ILIKE '%quiet%'
+                            OR place_summaries.best_for ILIKE '%silent%'
+                        ) THEN 26
+                        ELSE 0
+                    END AS quiet_score,
+                    CASE
+                        WHEN (:query LIKE '%wifi%' OR :query LIKE '%wi-fi%') AND (
+                            places.tags::text ILIKE '%wifi%'
+                            OR place_summaries.summary_text ILIKE '%wifi%'
+                            OR place_summaries.best_for ILIKE '%wifi%'
+                        ) THEN 24
+                        ELSE 0
+                    END AS wifi_score,
+                    CASE
+                        WHEN (:query LIKE '%work%' OR :query LIKE '%focus%') AND (
+                            places.tags::text ILIKE '%work%'
+                            OR place_summaries.best_for ILIKE '%work%'
+                            OR place_summaries.summary_text ILIKE '%work%'
+                        ) THEN 20
+                        ELSE 0
+                    END AS work_score,
+                    GREATEST(
+                        0,
+                        18 - (ROUND(ST_Distance(places.location, origin.location))::integer / 160)
+                    )::integer AS distance_score
+                FROM places
+                CROSS JOIN origin
+                LEFT JOIN place_summaries ON place_summaries.place_id = places.id
+                WHERE ST_DWithin(places.location, origin.location, :radius_m)
+            )
+            SELECT
+                id::text,
+                name,
+                slug,
+                category,
+                neighborhood,
+                lat,
+                lng,
+                distance_m,
+                tags,
+                LEAST(
+                    99,
+                    GREATEST(72, 78 + quiet_score + wifi_score + work_score + distance_score)
+                )::integer AS match_percent,
+                summary,
+                best_for,
+                avoid_when,
+                evidence_count,
+                CASE
+                    WHEN quiet_score + wifi_score + work_score > 0 THEN CONCAT(
+                        'Matches ',
+                        TRIM(BOTH ', ' FROM CONCAT(
+                            CASE WHEN quiet_score > 0 THEN 'quiet, ' ELSE '' END,
+                            CASE WHEN wifi_score > 0 THEN 'wifi, ' ELSE '' END,
+                            CASE WHEN work_score > 0 THEN 'work, ' ELSE '' END
+                        )),
+                        ' intent near you.'
+                    )
+                    ELSE 'Nearby candidate with live local evidence.'
+                END AS reason
+            FROM candidates
+            ORDER BY
+                (quiet_score + wifi_score + work_score + distance_score) DESC,
+                distance_m ASC,
+                name ASC
+            LIMIT 20
+            """
+        ),
+        {"query": normalized_query, "lat": lat, "lng": lng, "radius_m": radius_m},
+    )
+
+    return [SearchPlace(**dict(row._mapping)) for row in result]
 
 
 async def get_place_detail(session: AsyncSession, slug: str) -> PlaceDetail | None:

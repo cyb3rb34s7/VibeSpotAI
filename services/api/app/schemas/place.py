@@ -18,6 +18,10 @@ class NearbyPlace(BaseModel):
     evidence_count: int = Field(ge=0)
 
 
+class SearchPlace(NearbyPlace):
+    reason: str
+
+
 class PlaceSignalSummary(BaseModel):
     avg_noise_score: float = Field(ge=0)
     avg_wifi_score: float = Field(ge=0)

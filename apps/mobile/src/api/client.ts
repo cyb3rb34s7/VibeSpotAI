@@ -33,6 +33,7 @@ export type NearbyPlace = {
   best_for: string;
   avoid_when: string;
   evidence_count: number;
+  reason?: string;
 };
 
 export type PlaceDetail = NearbyPlace & {
@@ -122,6 +123,18 @@ export async function getNearbyPlaces(): Promise<NearbyPlace[]> {
   );
   const envelope = (await response.json()) as ApiEnvelope<NearbyPlace[]>;
   return unwrapEnvelope(response, envelope, "Failed to load nearby places");
+}
+
+export async function searchPlaces(query: string): Promise<NearbyPlace[]> {
+  const params = new URLSearchParams({
+    lat: "12.9352",
+    lng: "77.6245",
+    query,
+    radius_m: "2500",
+  });
+  const response = await fetch(`${API_BASE_URL}/places/search?${params.toString()}`);
+  const envelope = (await response.json()) as ApiEnvelope<NearbyPlace[]>;
+  return unwrapEnvelope(response, envelope, "Failed to search places");
 }
 
 export async function getPlaceDetail(slug: string): Promise<PlaceDetail> {

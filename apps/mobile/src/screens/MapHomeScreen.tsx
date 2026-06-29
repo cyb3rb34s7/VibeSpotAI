@@ -8,6 +8,7 @@ import {
   getMyProfile,
   getNearbyPlaces,
   getPlaceDetail,
+  searchPlaces,
   submitVibeCheck,
   type AuthUser,
   type MyProfile,
@@ -27,6 +28,8 @@ export function MapHomeScreen() {
   const [places, setPlaces] = useState<NearbyPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchLabel, setSearchLabel] = useState("Best nearby");
   const [detail, setDetail] = useState<PlaceDetail | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
   const [detailLoadingSlug, setDetailLoadingSlug] = useState<string | null>(null);
@@ -38,32 +41,22 @@ export function MapHomeScreen() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadPlaces() {
-      try {
-        const nearbyPlaces = await getNearbyPlaces();
-        if (isMounted) {
-          setPlaces(nearbyPlaces);
-          setError(null);
-        }
-      } catch (caught) {
-        if (isMounted) {
-          setError(caught instanceof Error ? caught.message : "Unable to load places");
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
+  async function loadNearbyPlaces() {
+    setIsLoading(true);
+    try {
+      const nearbyPlaces = await getNearbyPlaces();
+      setPlaces(nearbyPlaces);
+      setError(null);
+      setSearchLabel("Best nearby");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unable to load places");
+    } finally {
+      setIsLoading(false);
     }
+  }
 
-    loadPlaces();
-
-    return () => {
-      isMounted = false;
-    };
+  useEffect(() => {
+    void loadNearbyPlaces();
   }, []);
 
   useEffect(() => {
@@ -134,6 +127,33 @@ export function MapHomeScreen() {
     }
   }
 
+  async function runSearch(nextQuery = searchQuery) {
+    const query = nextQuery.trim();
+    if (!query) {
+      await loadNearbyPlaces();
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const results = await searchPlaces(query);
+      setPlaces(results);
+      setSearchLabel("Intent matches");
+      setError(null);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unable to search places");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function updateSearchQuery(value: string) {
+    setSearchQuery(value);
+    if (!value.trim() && searchLabel !== "Best nearby") {
+      void runSearch(value);
+    }
+  }
+
   function selectTab(tab: BottomNavTab) {
     if (tab === "Drop" && places[0]) {
       openPlaceDetail(places[0].slug);
@@ -171,7 +191,11 @@ export function MapHomeScreen() {
             <ProfilePanel error={profileError} isLoading={profileLoading} profile={profile} />
           ) : (
             <>
-              <SearchPill />
+              <SearchPill
+                onChangeText={updateSearchQuery}
+                onSubmit={runSearch}
+                value={searchQuery}
+              />
 
               {isLoading ? (
                 <View style={styles.statePanel}>
@@ -188,7 +212,7 @@ export function MapHomeScreen() {
                   <VibeMap places={places} />
 
                   <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Best nearby</Text>
+                    <Text style={styles.sectionTitle}>{searchLabel}</Text>
                     <Text style={styles.sectionMeta}>{places.length} live candidates</Text>
                   </View>
 

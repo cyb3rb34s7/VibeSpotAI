@@ -1,20 +1,34 @@
 import { Feather } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme/tokens";
-import { PressScale } from "./PressScale";
 
-export function SearchPill() {
+type SearchPillProps = {
+  onChangeText: (value: string) => void;
+  onSubmit: () => void;
+  value: string;
+};
+
+export function SearchPill({ onChangeText, onSubmit, value }: SearchPillProps) {
   return (
-    <PressScale accessibilityRole="button" pressedScale={0.985} style={styles.container}>
+    <View style={styles.container}>
       <Feather color={colors.lime} name="star" size={23} />
-      <Text numberOfLines={1} style={styles.placeholder}>
-        Find a quiet cafe with strong wifi...
-      </Text>
+      <TextInput
+        accessibilityLabel="Search by intent"
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmit}
+        placeholder="Find a quiet cafe with strong wifi..."
+        placeholderTextColor={colors.textSoft}
+        returnKeyType="search"
+        style={styles.input}
+        value={value}
+      />
       <View pointerEvents="none" style={styles.filterButton}>
         <Feather color={colors.text} name="sliders" size={19} />
       </View>
-    </PressScale>
+    </View>
   );
 }
 
@@ -31,11 +45,13 @@ const styles = StyleSheet.create({
     paddingLeft: spacing.md,
     paddingRight: spacing.xs,
   },
-  placeholder: {
+  input: {
     color: colors.text,
     flex: 1,
     fontSize: typography.body,
     fontWeight: "700",
+    minHeight: 44,
+    padding: 0,
   },
   filterButton: {
     alignItems: "center",

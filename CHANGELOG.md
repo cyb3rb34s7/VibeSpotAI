@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add deterministic intent search
+
+**What changed:** Added `GET /places/search`, explicit keyword-plus-distance ranking with match reasons, backend tests, mobile search input wiring, reason display on cards, and smoke/API docs.
+**Why:** The MVP promise is intent-led discovery; the search pill should rank places for queries like quiet wifi without introducing an LLM or agent yet.
+**Files touched:** `services/api/app/api/routes/places.py`, `services/api/app/services/places_service.py`, `services/api/app/schemas/place.py`, `services/api/tests/test_places_api.py`, `apps/mobile/src/api/client.ts`, `apps/mobile/src/components/SearchPill.tsx`, `apps/mobile/src/components/PlacePreviewCard.tsx`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `scripts/smoke-local.ps1`, `README.md`, `docs/api-examples.md`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add local auth and profile loop
 
 **What changed:** Added local dev login, bearer current-user lookup, `/profiles/me`, authenticated vibe-check ownership, mobile in-memory session bootstrapping, a real Profile tab, and smoke/API docs for the new flow.

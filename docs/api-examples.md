@@ -38,6 +38,14 @@ curl.exe "http://localhost:38191/places/nearby?lat=12.9352&lng=77.6245&radius_m=
 
 Returns seeded Koramangala places ordered by PostGIS distance.
 
+## Intent Search
+
+```powershell
+curl.exe "http://localhost:38191/places/search?query=quiet%20cafe%20with%20strong%20wifi&lat=12.9352&lng=77.6245&radius_m=2500"
+```
+
+Returns seeded places ranked by explicit keyword intent scoring plus distance, with a short `reason` for each match.
+
 ## Place Detail
 
 ```powershell

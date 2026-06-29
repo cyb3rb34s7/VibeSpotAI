@@ -79,6 +79,24 @@ def test_place_detail_returns_summary_and_recent_vibe_checks() -> None:
     )
 
 
+def test_search_places_ranks_intent_matches_with_reasons() -> None:
+    client = TestClient(app)
+
+    response = client.get(
+        "/places/search?query=quiet cafe with strong wifi&lat=12.9352&lng=77.6245&radius_m=2500"
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["success"] is True
+    assert len(body["data"]) >= 1
+    first_place = body["data"][0]
+    assert first_place["slug"] == "kissa-focus"
+    assert first_place["match_percent"] >= 90
+    assert "reason" in first_place
+    assert "quiet" in first_place["reason"].lower() or "wifi" in first_place["reason"].lower()
+
+
 def test_place_detail_returns_404_for_unknown_slug() -> None:
     client = TestClient(app)
 

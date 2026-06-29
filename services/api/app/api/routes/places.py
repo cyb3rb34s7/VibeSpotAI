@@ -6,7 +6,12 @@ from app.core.response import error_response
 from app.db.session import get_session
 from app.schemas.place import VibeCheckCreate
 from app.services.auth_service import AuthFailure, read_authorization_header, resolve_current_user
-from app.services.places_service import create_vibe_check, get_nearby_places, get_place_detail
+from app.services.places_service import (
+    create_vibe_check,
+    get_nearby_places,
+    get_place_detail,
+    search_places,
+)
 
 router = APIRouter(prefix="/places", tags=["places"])
 
@@ -20,6 +25,25 @@ async def nearby_places(
     session: AsyncSession = Depends(get_session),
 ) -> dict:
     places = await get_nearby_places(session=session, lat=lat, lng=lng, radius_m=radius_m)
+    return ok(request, [place.model_dump(mode="json") for place in places])
+
+
+@router.get("/search")
+async def intent_search(
+    request: Request,
+    query: str = Query(..., min_length=2, max_length=120),
+    lat: float = Query(..., ge=-90, le=90),
+    lng: float = Query(..., ge=-180, le=180),
+    radius_m: int = Query(2500, ge=100, le=10000),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    places = await search_places(
+        session=session,
+        query=query,
+        lat=lat,
+        lng=lng,
+        radius_m=radius_m,
+    )
     return ok(request, [place.model_dump(mode="json") for place in places])
 
 
