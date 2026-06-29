@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme/tokens";
 import { PressScale } from "./PressScale";
@@ -20,7 +20,7 @@ export function SearchPill({ onChangeText, onSubmit, value }: SearchPillProps) {
         autoCorrect={false}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
-        placeholder="Find a quiet cafe with strong wifi..."
+        placeholder="Quiet cafe with strong wifi"
         placeholderTextColor={colors.textSoft}
         returnKeyType="search"
         style={styles.input}
@@ -33,7 +33,7 @@ export function SearchPill({ onChangeText, onSubmit, value }: SearchPillProps) {
         pressedScale={0.94}
         style={styles.filterButton}
       >
-        <Text style={styles.buttonText}>Go</Text>
+        <Feather color={colors.text} name="arrow-right" size={18} />
       </PressScale>
     </View>
   );
@@ -68,10 +68,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     height: 44,
     justifyContent: "center",
-  },
-  buttonText: {
-    color: colors.text,
-    fontSize: typography.small,
-    fontWeight: "900",
   },
 });

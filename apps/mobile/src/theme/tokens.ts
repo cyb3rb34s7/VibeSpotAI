@@ -12,6 +12,10 @@ export const colors = {
   lime: "#BDF44A",
   onLime: "#172000",
   coral: "#FF9A7A",
+  amber: "#FFC857",
+  violet: "#9B8CFF",
+  cold: "#4A4A52",
+  dangerSoft: "#FF6B8A",
   mapBase: "#171A19",
   mapLine: "rgba(189, 244, 74, 0.12)",
 } as const;

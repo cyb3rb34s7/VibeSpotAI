@@ -11,8 +11,16 @@ type PlacePreviewCardProps = {
 };
 
 export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
+  const isFresh = place.match_percent >= 96 || Boolean(place.reason);
+
   return (
     <PressScale accessibilityRole="button" onPress={onPress} pressedScale={0.985} style={styles.card}>
+      {isFresh ? (
+        <View style={styles.freshBadge}>
+          <View style={styles.freshDot} />
+          <Text style={styles.freshText}>Fresh drop</Text>
+        </View>
+      ) : null}
       <View style={styles.header}>
         <View style={styles.titleGroup}>
           <Text style={styles.name}>{place.name}</Text>
@@ -45,6 +53,18 @@ export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
           {place.reason || `Based on ${place.evidence_count} early drops`}
         </Text>
       </View>
+      <View style={styles.socialRow}>
+        <View style={styles.avatarStack}>
+          {["M", "R", "A"].map((initial, index) => (
+            <View key={initial} style={[styles.avatarMini, index > 0 && styles.avatarMiniOffset]}>
+              <Text style={styles.avatarMiniText}>{initial}</Text>
+            </View>
+          ))}
+        </View>
+        <Text numberOfLines={1} style={styles.socialText}>
+          Meera, Rohan +{Math.max(2, Math.round(place.evidence_count / 2))} shaped this signal
+        </Text>
+      </View>
     </PressScale>
   );
 }
@@ -57,6 +77,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: spacing.md,
     padding: spacing.md,
+  },
+  freshBadge: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(189, 244, 74, 0.1)",
+    borderColor: "rgba(189, 244, 74, 0.22)",
+    borderRadius: radii.full,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 6,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 5,
+  },
+  freshDot: {
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    height: 7,
+    width: 7,
+  },
+  freshText: {
+    color: colors.lime,
+    fontSize: typography.micro,
+    fontWeight: "900",
+    textTransform: "uppercase",
   },
   header: {
     alignItems: "flex-start",
@@ -127,5 +172,38 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: typography.small,
     fontWeight: "700",
+  },
+  socialRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  avatarStack: {
+    flexDirection: "row",
+  },
+  avatarMini: {
+    alignItems: "center",
+    backgroundColor: colors.surfaceHigh,
+    borderColor: colors.surface,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    height: 22,
+    justifyContent: "center",
+    width: 22,
+  },
+  avatarMiniOffset: {
+    marginLeft: -7,
+  },
+  avatarMiniText: {
+    color: colors.text,
+    fontSize: typography.micro,
+    fontWeight: "900",
+  },
+  socialText: {
+    color: colors.muted,
+    flex: 1,
+    fontSize: typography.micro,
+    fontWeight: "800",
   },
 });

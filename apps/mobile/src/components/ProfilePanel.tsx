@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef } from "react";
+import { ActivityIndicator, Animated, StyleSheet, Text, View } from "react-native";
 
 import type { MyProfile } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
@@ -31,6 +32,9 @@ export function ProfilePanel({ error, isLoading, onLogout, profile }: ProfilePan
     );
   }
 
+  const tastePercent = Math.min(89, 38 + profile.stats.vibe_checks_count * 3);
+  const exploredBlocks = Math.min(8, profile.stats.places_contributed_count);
+
   return (
     <View style={styles.stack}>
       <View style={styles.heroCard}>
@@ -58,6 +62,48 @@ export function ProfilePanel({ error, isLoading, onLogout, profile }: ProfilePan
       <View style={styles.statsRow}>
         <Metric label="drops" value={profile.stats.vibe_checks_count.toString()} />
         <Metric label="places" value={profile.stats.places_contributed_count.toString()} />
+      </View>
+
+      <View style={styles.streakCard}>
+        <BreathingIcon />
+        <View style={styles.streakCopy}>
+          <Text style={styles.streakTitle}>{Math.max(1, profile.stats.vibe_checks_count)} day signal streak</Text>
+          <Text style={styles.streakText}>
+            Active now. Drop again before it cools into gray.
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.progressHeader}>
+          <Text style={styles.sectionTitle}>Taste profile</Text>
+          <Text style={styles.progressValue}>{tastePercent}% defined</Text>
+        </View>
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${tastePercent}%` }]} />
+        </View>
+        <Text style={styles.progressHint}>
+          Afternoon worker - window-seat hunter - cold brew curious
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.progressHeader}>
+          <Text style={styles.sectionTitle}>Your city map</Text>
+          <Text style={styles.progressValue}>{exploredBlocks}/16 blocks</Text>
+        </View>
+        <View style={styles.cityGrid}>
+          {Array.from({ length: 16 }).map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.cityBlock,
+                index < exploredBlocks && styles.cityBlockActive,
+                index === exploredBlocks && styles.cityBlockNext,
+              ]}
+            />
+          ))}
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -88,6 +134,47 @@ export function ProfilePanel({ error, isLoading, onLogout, profile }: ProfilePan
           </View>
         ))}
       </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Locked next</Text>
+        <View style={styles.achievementRow}>
+          <LockedAchievement title="Pioneer" subtitle="Claim 3 untouched cafes" />
+          <LockedAchievement title="Zone regular" subtitle="Drop in 5 neighborhoods" />
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function BreathingIcon() {
+  const scale = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, { duration: 1000, toValue: 1, useNativeDriver: true }),
+        Animated.timing(scale, { duration: 1000, toValue: 0, useNativeDriver: true }),
+      ]),
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [scale]);
+
+  const animatedScale = scale.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
+
+  return (
+    <Animated.View style={[styles.streakIcon, { transform: [{ scale: animatedScale }] }]}>
+      <Feather color={colors.onLime} name="activity" size={20} />
+    </Animated.View>
+  );
+}
+
+function LockedAchievement({ subtitle, title }: { subtitle: string; title: string }) {
+  return (
+    <View style={styles.lockedAchievement}>
+      <Feather color={colors.muted} name="lock" size={15} />
+      <Text style={styles.lockedTitle}>{title}</Text>
+      <Text style={styles.lockedSubtitle}>{subtitle}</Text>
     </View>
   );
 }
@@ -146,6 +233,42 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.sm,
   },
+  streakCard: {
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderColor: "rgba(189, 244, 74, 0.18)",
+    borderRadius: radii.xl,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  streakIcon: {
+    alignItems: "center",
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    height: 44,
+    justifyContent: "center",
+    shadowColor: colors.lime,
+    shadowOpacity: 0.36,
+    shadowRadius: 16,
+    width: 44,
+  },
+  streakCopy: {
+    flex: 1,
+  },
+  streakTitle: {
+    color: colors.text,
+    fontSize: typography.body,
+    fontWeight: "900",
+  },
+  streakText: {
+    color: colors.muted,
+    fontSize: typography.small,
+    fontWeight: "700",
+    lineHeight: 18,
+    marginTop: 3,
+  },
   logoutButton: {
     alignItems: "center",
     alignSelf: "flex-start",
@@ -195,6 +318,56 @@ const styles = StyleSheet.create({
     fontSize: typography.title,
     fontWeight: "900",
     marginBottom: spacing.sm,
+  },
+  progressHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  progressValue: {
+    color: colors.lime,
+    fontSize: typography.small,
+    fontWeight: "900",
+  },
+  progressTrack: {
+    backgroundColor: colors.surfaceHigh,
+    borderRadius: radii.full,
+    height: 12,
+    marginTop: spacing.sm,
+    overflow: "hidden",
+  },
+  progressFill: {
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    height: "100%",
+  },
+  progressHint: {
+    color: colors.textSoft,
+    fontSize: typography.small,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginTop: spacing.sm,
+  },
+  cityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 7,
+    marginTop: spacing.sm,
+  },
+  cityBlock: {
+    backgroundColor: colors.surfaceHigh,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 34,
+    width: "22%",
+  },
+  cityBlockActive: {
+    backgroundColor: colors.lime,
+    borderColor: colors.lime,
+  },
+  cityBlockNext: {
+    borderColor: colors.amber,
   },
   tagRow: {
     flexDirection: "row",
@@ -268,5 +441,32 @@ const styles = StyleSheet.create({
     color: colors.coral,
     fontSize: typography.title,
     fontWeight: "900",
+  },
+  achievementRow: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  lockedAchievement: {
+    backgroundColor: colors.surfaceHigh,
+    borderColor: colors.border,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 116,
+    opacity: 0.78,
+    padding: spacing.sm,
+  },
+  lockedTitle: {
+    color: colors.text,
+    fontSize: typography.small,
+    fontWeight: "900",
+    marginTop: spacing.xs,
+  },
+  lockedSubtitle: {
+    color: colors.muted,
+    fontSize: typography.micro,
+    fontWeight: "800",
+    lineHeight: 15,
+    marginTop: 4,
   },
 });

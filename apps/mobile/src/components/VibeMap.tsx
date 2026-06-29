@@ -54,7 +54,7 @@ export function VibeMap({ places }: VibeMapProps) {
           new window.google!.maps.Marker({
             position: { lat: place.lat, lng: place.lng },
             map,
-            title: `${place.name} · ${place.match_percent}%`,
+            title: `${place.name} - ${place.match_percent}%`,
             label: {
               text: String(place.match_percent),
               color: colors.onLime,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.xl,
     borderWidth: 1,
-    height: 270,
+    height: 238,
     overflow: "hidden",
   },
   mapCanvas: {

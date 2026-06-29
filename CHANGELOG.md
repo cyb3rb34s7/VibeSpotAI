@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add premium psychology UI pass
+
+**What changed:** Added fresh-drop reveal mechanics, animated live pins with avatar social proof, a compact unlock moment, social-proof place cards, a docked animated bottom nav with pending/streak indicators, profile streak/taste/city-progress systems, locked achievements, a waveform crowd control, polished auth copy, and tab scroll reset behavior.
+**Why:** The mobile MVP needs to feel closer to the intended iOS-like product direction, with behavioral psychology visible in the UI instead of a plain CRUD-style prototype.
+**Files touched:** `apps/mobile/src/components/AuthPanel.tsx`, `apps/mobile/src/components/BottomNav.tsx`, `apps/mobile/src/components/FreshDropsPeek.tsx`, `apps/mobile/src/components/MapPreview.tsx`, `apps/mobile/src/components/PlaceDetailSheet.tsx`, `apps/mobile/src/components/PlacePreviewCard.tsx`, `apps/mobile/src/components/ProfilePanel.tsx`, `apps/mobile/src/components/SearchPill.tsx`, `apps/mobile/src/components/VibeMap.tsx`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `apps/mobile/src/theme/tokens.ts`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. This is a mobile UI-only slice; backend data written during manual browser submit remains in the local database until reseeded.
+
 ## 2026-06-29 - Replace dev auth with OTP sessions
 
 **What changed:** Replaced `/auth/dev-login` and stateless `local-dev.*` tokens with `/auth/start`, `/auth/verify`, `/auth/logout`, hashed OTP challenges, hashed bearer sessions, authenticated-only vibe-check submission, mobile sign-in UI, and updated smoke/API docs.

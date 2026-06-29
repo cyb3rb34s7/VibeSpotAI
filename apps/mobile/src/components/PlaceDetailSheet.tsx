@@ -66,7 +66,7 @@ export function PlaceDetailSheet({
         visit_intent: selectedIntent.value,
         wifi_score: wifiScore,
       });
-      setSubmitMessage("Signal added");
+      setSubmitMessage("Signal added - you shaped this cafe");
     } catch (caught) {
       setSubmitMessage(caught instanceof Error ? caught.message : "Could not add signal");
     } finally {
@@ -163,6 +163,7 @@ export function PlaceDetailSheet({
                 </View>
 
                 <Text style={styles.bodyText}>Crowd</Text>
+                <NoiseWaveform crowdLevel={crowdLevel} />
                 <View style={styles.chipRow}>
                   {crowdOptions.map((option) => (
                     <ChoiceChip
@@ -210,13 +211,38 @@ export function PlaceDetailSheet({
                     {isSubmitting ? "Dropping..." : "Drop signal"}
                   </Text>
                 </PressScale>
-                {submitMessage ? <Text style={styles.submitMessage}>{submitMessage}</Text> : null}
+                {submitMessage ? (
+                  <View style={styles.successPanel}>
+                    <Feather color={colors.onLime} name="check" size={16} />
+                    <Text style={styles.successText}>{submitMessage}</Text>
+                  </View>
+                ) : null}
               </View>
             </ScrollView>
           ) : null}
         </View>
       </KeyboardAvoidingView>
     </Modal>
+  );
+}
+
+function NoiseWaveform({ crowdLevel }: { crowdLevel: (typeof crowdOptions)[number] }) {
+  const heights =
+    crowdLevel === "low"
+      ? [5, 8, 6, 7, 5, 8, 6]
+      : crowdLevel === "medium"
+        ? [8, 15, 10, 18, 11, 14, 9]
+        : [14, 26, 11, 30, 18, 24, 13];
+
+  return (
+    <View style={styles.waveform}>
+      {heights.map((height, index) => (
+        <View key={`${height}-${index}`} style={[styles.waveBar, { height }]} />
+      ))}
+      <Text style={styles.waveLabel}>
+        {crowdLevel === "low" ? "Library calm" : crowdLevel === "medium" ? "Cafe buzz" : "Peak chaos"}
+      </Text>
+    </View>
   );
 }
 
@@ -410,6 +436,30 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     marginBottom: spacing.sm,
   },
+  waveform: {
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 5,
+    marginBottom: spacing.sm,
+    minHeight: 48,
+    paddingHorizontal: spacing.sm,
+  },
+  waveBar: {
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    width: 4,
+  },
+  waveLabel: {
+    color: colors.muted,
+    flex: 1,
+    fontSize: typography.small,
+    fontWeight: "800",
+    marginLeft: spacing.sm,
+  },
   choiceChip: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
@@ -458,11 +508,20 @@ const styles = StyleSheet.create({
     fontSize: typography.body,
     fontWeight: "900",
   },
-  submitMessage: {
-    color: colors.muted,
-    fontSize: typography.small,
-    fontWeight: "800",
+  successPanel: {
+    alignItems: "center",
+    backgroundColor: colors.lime,
+    borderRadius: radii.full,
+    flexDirection: "row",
+    gap: 6,
+    justifyContent: "center",
     marginTop: spacing.sm,
-    textAlign: "center",
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 9,
+  },
+  successText: {
+    color: colors.onLime,
+    fontSize: typography.small,
+    fontWeight: "900",
   },
 });

@@ -36,8 +36,10 @@ export function AuthPanel({
       <View style={styles.icon}>
         <Feather color={colors.onLime} name="lock" size={22} />
       </View>
-      <Text style={styles.title}>Sign in to VibeSpot</Text>
-      <Text style={styles.copy}>Use your seeded local email to create a real session.</Text>
+      <Text style={styles.title}>Unlock your city signal</Text>
+      <Text style={styles.copy}>
+        Start a private session and keep your taste map, streak, and drops tied to you.
+      </Text>
 
       <View style={styles.field}>
         <Text style={styles.label}>Email</Text>
@@ -62,18 +64,18 @@ export function AuthPanel({
         {isLoading && !localOtpCode ? (
           <ActivityIndicator color={colors.onLime} />
         ) : (
-          <Text style={styles.primaryText}>Send OTP</Text>
+          <Text style={styles.primaryText}>Send code</Text>
         )}
       </PressScale>
 
       {localOtpCode ? (
         <>
           <View style={styles.localCode}>
-            <Text style={styles.localCodeLabel}>Local OTP</Text>
+            <Text style={styles.localCodeLabel}>Local sign-in code</Text>
             <Text style={styles.localCodeText}>{localOtpCode}</Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>OTP</Text>
+            <Text style={styles.label}>Code</Text>
             <TextInput
               keyboardType="number-pad"
               maxLength={6}

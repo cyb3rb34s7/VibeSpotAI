@@ -12,11 +12,12 @@ Building the local MVP foundation end to end:
 - `POST /places/{slug}/vibe-checks` requires a bearer session and returns the created signal.
 - `/auth/start`, `/auth/verify`, `/auth/logout`, `/auth/me`, and `/profiles/me` provide database-backed OTP auth and contribution feedback.
 - Vibe-check submissions refresh place summary evidence counts deterministically.
+- The mobile UI now includes the first psychology-driven polish pass: fresh-drop reveals, animated live pins, social-proof place cards, progress/streak profile systems, locked achievements, a waveform crowd picker, and a docked bottom nav.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
-- Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, and TypeScript.
-- Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders home/detail/submission flows against the local backend.
+- Final local MVP smoke verification is complete for Docker, API, worker, Expo web bundle, Android bundle, TypeScript, and browser E2E.
+- Android emulator visual QA is running through Expo Go on `Medium_Phone_API_36.1`; the app renders the premium home map/fresh-drop layout against the local backend.
 - `scripts/smoke-local.ps1` verifies Docker, API envelopes, auth/profile, nearby/search/detail data, and optional Expo web/Android bundles.
 
 ## Done
@@ -46,12 +47,14 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added initial auth/profile loop, authenticated vibe-check ownership, and a mobile Profile tab.
 - 2026-06-29: Added deterministic intent search and wired the mobile search pill to ranked results.
 - 2026-06-29: Replaced dev auth with database-backed OTP challenges and bearer sessions.
+- 2026-06-29: Added premium psychology UI pass with fresh-drop reveal loops, live animated pins, social proof, streak/progress profile systems, docked nav polish, and waveform contribution controls.
 
 ## Next
 
 1. Decide whether the first deployed preview should stay Expo Go based or move to a development build.
 2. Configure Google Cloud Maps JavaScript API/referrers when real map rendering is required beyond the fallback.
 3. Add persisted secure mobile session storage before production mobile builds.
+4. Replace local sign-in code display with a real email/SMS provider before external users test auth.
 
 ## Problems & Solutions
 
@@ -170,6 +173,7 @@ Building the local MVP foundation end to end:
 - Summary refreshes are deterministic SQL/Python work for now; no LLM call is needed for the local contribution loop.
 - Intent search is deterministic keyword-plus-distance scoring for now; pgvector/LLM parsing remain later upgrades.
 - Worker jobs are available for async follow-up work, but user-facing summary counts still refresh synchronously after local submissions.
+- Psychological hooks should be pragmatic UI systems, not fake agents: use reveal loops, progress gaps, streak state, social proof, and reciprocity cues where they clarify the product loop.
 
 ## Critical Files
 
