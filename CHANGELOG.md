@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Fix bottom nav native layout
+
+**What changed:** Added an explicit `containerStyle` to `PressScale` and moved bottom-nav flex distribution onto the outer pressable shell while keeping the animated visual pill inside.
+**Why:** Native screenshots showed the bottom navigation items clamped to the left because layout styles were applied only to the animated child, not the touch/layout wrapper.
+**Files touched:** `apps/mobile/src/components/PressScale.tsx`, `apps/mobile/src/components/BottomNav.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Add native-feel motion and haptics
 
 **What changed:** Added `expo-haptics`, a shared haptic intent helper, haptic-aware press interactions, tab fade/slide transitions, backend-confirmed submit success feedback, a premium affinity proof card in the detail sheet, semantic close controls for the modal, and a stronger Google Maps failure fallback that keeps the stylized VibeSpot map visible until Google is proven healthy.

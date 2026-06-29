@@ -49,6 +49,7 @@ export function BottomNav({ activeTab, onSelectTab, pendingDrops = 0, streakCoun
             <PressScale
               accessibilityLabel={item.label}
               accessibilityRole="button"
+              containerStyle={styles.itemShell}
               haptic={item.label === "Drop" ? "medium" : "light"}
               key={item.label}
               onPress={() => onSelectTab(item.label)}
@@ -108,11 +109,14 @@ const styles = StyleSheet.create({
   item: {
     alignItems: "center",
     borderRadius: radii.lg,
-    flex: 1,
     gap: 2,
     justifyContent: "center",
     minHeight: 56,
     overflow: "hidden",
+    width: "100%",
+  },
+  itemShell: {
+    flex: 1,
   },
   activeItem: {
     backgroundColor: colors.lime,

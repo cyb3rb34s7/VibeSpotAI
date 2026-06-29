@@ -11,6 +11,7 @@ import { triggerHaptic, type HapticIntent } from "../utils/haptics";
 
 type PressScaleProps = PropsWithChildren<
   Omit<PressableProps, "style"> & {
+    containerStyle?: StyleProp<ViewStyle>;
     haptic?: HapticIntent;
     pressedScale?: number;
     style?: StyleProp<ViewStyle>;
@@ -19,6 +20,7 @@ type PressScaleProps = PropsWithChildren<
 
 export function PressScale({
   children,
+  containerStyle,
   haptic,
   pressedScale = 0.98,
   style,
@@ -41,6 +43,7 @@ export function PressScale({
   return (
     <Pressable
       {...props}
+      style={containerStyle}
       onPress={(event) => {
         if (!props.disabled && haptic) {
           triggerHaptic(haptic);
