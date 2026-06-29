@@ -15,6 +15,7 @@ Building the local MVP foundation end to end:
 - The mobile UI now includes the first psychology-driven polish pass: fresh-drop reveals, animated live pins, social-proof place cards, progress/streak profile systems, locked achievements, a waveform crowd picker, and a docked bottom nav.
 - The second polish pass adds native haptics, tab transition motion, backend-confirmed submit reward animation, personalized affinity proof on place detail, semantic modal close controls, and a stronger Google Maps error fallback.
 - Bottom navigation native layout is fixed: `PressScale` now supports outer layout styles so flex-based nav items distribute evenly instead of clamping left.
+- Home header and fallback map pins are refined: the top-right in-app profile bubble was removed to avoid Expo dev overlay collision, and the map now uses compact glass score tags instead of large green circular blobs.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
@@ -52,6 +53,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added premium psychology UI pass with fresh-drop reveal loops, live animated pins, social proof, streak/progress profile systems, docked nav polish, and waveform contribution controls.
 - 2026-06-29: Added native-feel haptics, tab transitions, submit reward animation, place affinity proof, semantic modal close controls, and robust Google Maps fallback behavior.
 - 2026-06-29: Fixed bottom navigation native layout by separating `PressScale` outer layout from inner animated visuals.
+- 2026-06-29: Refined the home header and fallback map pins after visual QA rejected the top-right collision and green blob marker style.
 
 ## Next
 

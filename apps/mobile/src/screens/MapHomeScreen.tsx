@@ -228,9 +228,6 @@ export function MapHomeScreen() {
                 {currentUser ? `@${currentUser.handle}` : "Local signal, right now"}
               </Text>
             </View>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>P</Text>
-            </View>
           </View>
 
           <Animated.View
@@ -383,9 +380,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   header: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingTop: spacing.sm,
   },
   brand: {
@@ -399,21 +394,6 @@ const styles = StyleSheet.create({
     fontSize: typography.small,
     fontWeight: "800",
     marginTop: 2,
-  },
-  avatar: {
-    alignItems: "center",
-    backgroundColor: colors.surfaceHigh,
-    borderColor: colors.lime,
-    borderRadius: 999,
-    borderWidth: 2,
-    height: 44,
-    justifyContent: "center",
-    width: 44,
-  },
-  avatarText: {
-    color: colors.lime,
-    fontSize: typography.body,
-    fontWeight: "900",
   },
   sectionHeader: {
     alignItems: "flex-end",

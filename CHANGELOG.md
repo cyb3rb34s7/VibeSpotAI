@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Refine home header and map pins
+
+**What changed:** Removed the top-right home profile bubble that collided visually with the Expo dev overlay during local QA, and redesigned the fallback map pins from large green circular blobs into compact glass score tags with subtle anchor points.
+**Why:** The previous home screen still felt too toy-like and visually noisy for the premium iOS direction.
+**Files touched:** `apps/mobile/src/screens/MapHomeScreen.tsx`, `apps/mobile/src/components/MapPreview.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes.
+
 ## 2026-06-29 - Fix bottom nav native layout
 
 **What changed:** Added an explicit `containerStyle` to `PressScale` and moved bottom-nav flex distribution onto the outer pressable shell while keeping the animated visual pill inside.

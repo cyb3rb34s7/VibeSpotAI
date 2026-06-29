@@ -79,7 +79,7 @@ function LivePin({
   }, [index, pulse]);
 
   const glowScale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.42] });
-  const glowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.18, 0.42] });
+  const glowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.04, 0.12] });
 
   return (
     <View style={[styles.pin, position]}>
@@ -93,15 +93,18 @@ function LivePin({
         ]}
       />
       {isFresh ? <View style={styles.freshRing} /> : null}
-      <View style={styles.pinCore}>
+      <View style={styles.pinStem} />
+      <View style={styles.pinPoint} />
+      <View style={styles.pinCard}>
+        <View style={styles.pinAccent} />
         <Text style={styles.pinText}>{matchPercent}</Text>
-      </View>
-      <View style={styles.avatarStack}>
-        <View style={styles.avatarMini}>
-          <Text style={styles.avatarMiniText}>M</Text>
-        </View>
-        <View style={[styles.avatarMini, styles.avatarMiniOffset]}>
-          <Text style={styles.avatarMiniText}>R</Text>
+        <View style={styles.avatarStack}>
+          <View style={styles.avatarMini}>
+            <Text style={styles.avatarMiniText}>M</Text>
+          </View>
+          <View style={[styles.avatarMini, styles.avatarMiniOffset]}>
+            <Text style={styles.avatarMiniText}>R</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -109,11 +112,11 @@ function LivePin({
 }
 
 const pinPositions = [
-  { top: "35%", left: "48%" },
-  { top: "45%", left: "64%" },
-  { top: "52%", left: "30%" },
-  { top: "27%", left: "70%" },
-  { top: "61%", left: "53%" },
+  { top: "43%", left: "52%" },
+  { top: "55%", left: "70%" },
+  { top: "39%", left: "35%" },
+  { top: "30%", left: "75%" },
+  { top: "64%", left: "76%" },
 ] as const;
 
 const styles = StyleSheet.create({
@@ -157,46 +160,80 @@ const styles = StyleSheet.create({
   pinGlow: {
     backgroundColor: colors.lime,
     borderRadius: 999,
-    height: 52,
-    opacity: 0.2,
+    height: 14,
+    opacity: 0.08,
     position: "absolute",
-    width: 52,
+    top: 42,
+    width: 14,
   },
   freshRing: {
     borderColor: colors.lime,
     borderRadius: 999,
-    borderWidth: 2,
-    height: 62,
-    opacity: 0.78,
+    borderWidth: 1,
+    height: 22,
+    opacity: 0.22,
     position: "absolute",
-    width: 62,
+    top: 38,
+    width: 22,
   },
-  pinCore: {
-    alignItems: "center",
+  pinStem: {
+    backgroundColor: "rgba(189, 244, 74, 0.45)",
+    borderRadius: radii.full,
+    height: 14,
+    position: "absolute",
+    top: 31,
+    width: 2,
+  },
+  pinPoint: {
     backgroundColor: colors.lime,
-    borderRadius: 999,
-    height: 34,
+    borderColor: colors.mapBase,
+    borderRadius: radii.full,
+    borderWidth: 2,
+    height: 8,
+    position: "absolute",
+    top: 42,
+    width: 8,
+  },
+  pinCard: {
+    alignItems: "center",
+    backgroundColor: "rgba(24, 26, 32, 0.92)",
+    borderColor: "rgba(189, 244, 74, 0.36)",
+    borderRadius: 13,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 5,
+    height: 28,
     justifyContent: "center",
-    width: 34,
+    minWidth: 62,
+    overflow: "hidden",
+    paddingLeft: 8,
+    paddingRight: 6,
+  },
+  pinAccent: {
+    backgroundColor: colors.lime,
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    top: 0,
+    width: 3,
   },
   pinText: {
-    color: colors.onLime,
+    color: colors.lime,
     fontSize: 10,
     fontWeight: "900",
   },
   avatarStack: {
     flexDirection: "row",
-    marginTop: 4,
   },
   avatarMini: {
     alignItems: "center",
-    backgroundColor: colors.surfaceHigh,
+    backgroundColor: colors.backgroundAlt,
     borderColor: colors.mapBase,
     borderRadius: 999,
     borderWidth: 1,
-    height: 17,
+    height: 16,
     justifyContent: "center",
-    width: 17,
+    width: 16,
   },
   avatarMiniOffset: {
     marginLeft: -5,
