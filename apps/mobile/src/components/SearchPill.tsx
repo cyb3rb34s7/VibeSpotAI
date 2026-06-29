@@ -29,6 +29,7 @@ export function SearchPill({ onChangeText, onSubmit, value }: SearchPillProps) {
       <PressScale
         accessibilityLabel="Run intent search"
         accessibilityRole="button"
+        haptic="light"
         onPress={onSubmit}
         pressedScale={0.94}
         style={styles.filterButton}

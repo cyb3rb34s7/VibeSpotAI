@@ -57,6 +57,7 @@ export function AuthPanel({
       <PressScale
         accessibilityRole="button"
         disabled={isLoading}
+        haptic="medium"
         onPress={submitEmail}
         pressedScale={0.98}
         style={styles.primaryButton}
@@ -89,6 +90,7 @@ export function AuthPanel({
           <PressScale
             accessibilityRole="button"
             disabled={isLoading}
+            haptic="success"
             onPress={submitOtp}
             pressedScale={0.98}
             style={styles.secondaryButton}

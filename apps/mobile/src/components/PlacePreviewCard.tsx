@@ -14,7 +14,13 @@ export function PlacePreviewCard({ onPress, place }: PlacePreviewCardProps) {
   const isFresh = place.match_percent >= 96 || Boolean(place.reason);
 
   return (
-    <PressScale accessibilityRole="button" onPress={onPress} pressedScale={0.985} style={styles.card}>
+    <PressScale
+      accessibilityRole="button"
+      haptic="light"
+      onPress={onPress}
+      pressedScale={0.985}
+      style={styles.card}
+    >
       {isFresh ? (
         <View style={styles.freshBadge}>
           <View style={styles.freshDot} />

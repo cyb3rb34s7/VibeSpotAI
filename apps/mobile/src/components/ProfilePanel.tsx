@@ -51,6 +51,7 @@ export function ProfilePanel({ error, isLoading, onLogout, profile }: ProfilePan
 
       <PressScale
         accessibilityRole="button"
+        haptic="warning"
         onPress={onLogout}
         pressedScale={0.98}
         style={styles.logoutButton}

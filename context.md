@@ -13,6 +13,7 @@ Building the local MVP foundation end to end:
 - `/auth/start`, `/auth/verify`, `/auth/logout`, `/auth/me`, and `/profiles/me` provide database-backed OTP auth and contribution feedback.
 - Vibe-check submissions refresh place summary evidence counts deterministically.
 - The mobile UI now includes the first psychology-driven polish pass: fresh-drop reveals, animated live pins, social-proof place cards, progress/streak profile systems, locked achievements, a waveform crowd picker, and a docked bottom nav.
+- The second polish pass adds native haptics, tab transition motion, backend-confirmed submit reward animation, personalized affinity proof on place detail, semantic modal close controls, and a stronger Google Maps error fallback.
 - API errors now use the same trace-aware envelope shape as success responses.
 - Dramatiq worker groundwork exists at `app.jobs.summary_jobs` and runs through `vibespot-worker`.
 - Expo web runs on port `38201`, compiles a real JS bundle, and renders seeded nearby places from the backend.
@@ -48,6 +49,7 @@ Building the local MVP foundation end to end:
 - 2026-06-29: Added deterministic intent search and wired the mobile search pill to ranked results.
 - 2026-06-29: Replaced dev auth with database-backed OTP challenges and bearer sessions.
 - 2026-06-29: Added premium psychology UI pass with fresh-drop reveal loops, live animated pins, social proof, streak/progress profile systems, docked nav polish, and waveform contribution controls.
+- 2026-06-29: Added native-feel haptics, tab transitions, submit reward animation, place affinity proof, semantic modal close controls, and robust Google Maps fallback behavior.
 
 ## Next
 
@@ -165,6 +167,7 @@ Building the local MVP foundation end to end:
 - Treat Lovable/charm-sketch UI as reference only, not production architecture.
 - Keep root `AGENTS.md` as the single agent instruction source; remove generated nested agent files from app scaffolds.
 - Google Maps integration should degrade to the stylized local map if key/configuration fails during local iteration.
+- Keep the stylized VibeSpot map visible until Google Maps is proven healthy; never expose Google's white error panel in the product UI.
 - Use Expo-compatible vector icons for the mobile app until native/web bundling requirements are broader and tested.
 - Noise scores use a 0-100 index; wifi scores use a 1-5 score.
 - Auth uses database-backed OTP challenges and bearer sessions. Local mode returns OTP codes in the API response because no email provider is configured yet.

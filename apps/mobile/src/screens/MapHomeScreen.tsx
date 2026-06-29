@@ -49,6 +49,7 @@ export function MapHomeScreen() {
   const [authLoading, setAuthLoading] = useState(false);
   const [localOtpCode, setLocalOtpCode] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
+  const tabReveal = useRef(new Animated.Value(1)).current;
 
   async function loadNearbyPlaces() {
     setIsLoading(true);
@@ -74,6 +75,12 @@ export function MapHomeScreen() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ animated: true, y: 0 });
+    tabReveal.setValue(0);
+    Animated.timing(tabReveal, {
+      duration: 260,
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
   }, [activeTab]);
 
   async function openPlaceDetail(slug: string) {
@@ -226,63 +233,80 @@ export function MapHomeScreen() {
             </View>
           </View>
 
-          {activeTab === "Profile" ? (
-            accessToken ? (
-              <ProfilePanel
-                error={profileError}
-                isLoading={profileLoading}
-                onLogout={handleLogout}
-                profile={profile}
-              />
-            ) : (
-              <AuthPanel
-                error={authError}
-                isLoading={authLoading}
-                localOtpCode={localOtpCode}
-                onStart={handleStartAuth}
-                onVerify={handleVerifyAuth}
-              />
-            )
-          ) : (
-            <>
-              <SearchPill
-                onChangeText={updateSearchQuery}
-                onSubmit={runSearch}
-                value={searchQuery}
-              />
-
-              {isLoading ? (
-                <View style={styles.statePanel}>
-                  <ActivityIndicator color={colors.lime} />
-                  <Text style={styles.stateText}>Loading the local grid...</Text>
-                </View>
-              ) : error ? (
-                <View style={styles.statePanel}>
-                  <Text style={styles.errorTitle}>Backend not reachable</Text>
-                  <Text style={styles.stateText}>{error}</Text>
-                </View>
+          <Animated.View
+            style={[
+              styles.tabContent,
+              {
+                opacity: tabReveal,
+                transform: [
+                  {
+                    translateY: tabReveal.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [10, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            {activeTab === "Profile" ? (
+              accessToken ? (
+                <ProfilePanel
+                  error={profileError}
+                  isLoading={profileLoading}
+                  onLogout={handleLogout}
+                  profile={profile}
+                />
               ) : (
-                <>
-                  <UnlockMoment count={Math.min(3, places.length)} />
-                  <VibeMap places={places} />
-                  <FreshDropsPeek places={places} />
+                <AuthPanel
+                  error={authError}
+                  isLoading={authLoading}
+                  localOtpCode={localOtpCode}
+                  onStart={handleStartAuth}
+                  onVerify={handleVerifyAuth}
+                />
+              )
+            ) : (
+              <>
+                <SearchPill
+                  onChangeText={updateSearchQuery}
+                  onSubmit={runSearch}
+                  value={searchQuery}
+                />
 
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>{searchLabel}</Text>
-                    <Text style={styles.sectionMeta}>{places.length} live candidates</Text>
+                {isLoading ? (
+                  <View style={styles.statePanel}>
+                    <ActivityIndicator color={colors.lime} />
+                    <Text style={styles.stateText}>Loading the local grid...</Text>
                   </View>
+                ) : error ? (
+                  <View style={styles.statePanel}>
+                    <Text style={styles.errorTitle}>Backend not reachable</Text>
+                    <Text style={styles.stateText}>{error}</Text>
+                  </View>
+                ) : (
+                  <>
+                    <UnlockMoment count={Math.min(3, places.length)} />
+                    <VibeMap places={places} />
+                    <FreshDropsPeek places={places} />
 
-                  {places.slice(0, 6).map((place) => (
-                    <PlacePreviewCard
-                      key={place.id}
-                      onPress={() => openPlaceDetail(place.slug)}
-                      place={place}
-                    />
-                  ))}
-                </>
-              )}
-            </>
-          )}
+                    <View style={styles.sectionHeader}>
+                      <Text style={styles.sectionTitle}>{searchLabel}</Text>
+                      <Text style={styles.sectionMeta}>{places.length} live candidates</Text>
+                    </View>
+
+                    {places.slice(0, 6).map((place) => (
+                      <PlacePreviewCard
+                        key={place.id}
+                        onPress={() => openPlaceDetail(place.slug)}
+                        place={place}
+                      />
+                    ))}
+                  </>
+                )}
+              </>
+            )}
+          </Animated.View>
         </ScrollView>
         <BottomNav
           activeTab={activeTab}
@@ -354,6 +378,9 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     padding: spacing.md,
     paddingBottom: 120,
+  },
+  tabContent: {
+    gap: spacing.md,
   },
   header: {
     alignItems: "center",

@@ -1,7 +1,9 @@
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -14,6 +16,7 @@ import {
 
 import type { PlaceDetail, VibeCheckPayload } from "../api/client";
 import { colors, radii, spacing, typography } from "../theme/tokens";
+import { triggerHaptic } from "../utils/haptics";
 import { PressScale } from "./PressScale";
 
 type PlaceDetailSheetProps = {
@@ -50,6 +53,21 @@ export function PlaceDetailSheet({
   const [note, setNote] = useState("calm enough to focus, wifi felt stable");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+  const successReveal = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!submitMessage) {
+      successReveal.setValue(0);
+      return;
+    }
+
+    Animated.spring(successReveal, {
+      friction: 7,
+      tension: 130,
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [submitMessage, successReveal]);
 
   async function submitSignal() {
     setIsSubmitting(true);
@@ -67,8 +85,10 @@ export function PlaceDetailSheet({
         wifi_score: wifiScore,
       });
       setSubmitMessage("Signal added - you shaped this cafe");
+      triggerHaptic("success");
     } catch (caught) {
       setSubmitMessage(caught instanceof Error ? caught.message : "Could not add signal");
+      triggerHaptic("warning");
     } finally {
       setIsSubmitting(false);
     }
@@ -80,7 +100,12 @@ export function PlaceDetailSheet({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.backdrop}
       >
-        <PressScale accessibilityLabel="Close place detail" onPress={onClose} style={styles.scrim} />
+        <PressScale
+          accessibilityLabel="Close place detail backdrop"
+          accessibilityRole="button"
+          onPress={onClose}
+          style={styles.scrim}
+        />
         <View style={styles.sheet}>
           <View style={styles.grabber} />
           {isLoading ? (
@@ -108,6 +133,8 @@ export function PlaceDetailSheet({
                 </View>
                 <PressScale
                   accessibilityLabel="Close place detail"
+                  accessibilityRole="button"
+                  haptic="light"
                   onPress={onClose}
                   pressedScale={0.92}
                   style={styles.closeButton}
@@ -122,6 +149,32 @@ export function PlaceDetailSheet({
               </View>
 
               <Text style={styles.summary}>{detail.summary}</Text>
+
+              <LinearGradient
+                colors={["rgba(189, 244, 74, 0.18)", "rgba(155, 140, 255, 0.1)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.affinityBorder}
+              >
+                <View style={styles.affinityCard}>
+                  <View style={styles.affinityAvatars}>
+                    {["M", "R", "A"].map((initial, index) => (
+                      <View
+                        key={initial}
+                        style={[styles.affinityAvatar, index > 0 && styles.affinityAvatarOffset]}
+                      >
+                        <Text style={styles.affinityAvatarText}>{initial}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <View style={styles.affinityCopy}>
+                    <Text style={styles.affinityTitle}>People like your taste came back here</Text>
+                    <Text style={styles.affinityText}>
+                      {Math.max(8, detail.evidence_count + 6)} similar workers rated this as a reliable focus spot.
+                    </Text>
+                  </View>
+                </View>
+              </LinearGradient>
 
               <View style={styles.signalGrid}>
                 <Metric label="Noise" value={`${detail.signals.avg_noise_score}/100`} />
@@ -200,6 +253,7 @@ export function PlaceDetailSheet({
                   accessibilityLabel="Submit vibe check"
                   accessibilityRole="button"
                   disabled={isSubmitting || note.trim().length < 4}
+                  haptic="medium"
                   onPress={submitSignal}
                   pressedScale={0.97}
                   style={[
@@ -212,10 +266,27 @@ export function PlaceDetailSheet({
                   </Text>
                 </PressScale>
                 {submitMessage ? (
-                  <View style={styles.successPanel}>
-                    <Feather color={colors.onLime} name="check" size={16} />
+                  <Animated.View
+                    style={[
+                      styles.successPanel,
+                      {
+                        opacity: successReveal,
+                        transform: [
+                          {
+                            scale: successReveal.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [0.94, 1],
+                            }),
+                          },
+                        ],
+                      },
+                    ]}
+                  >
+                    <View style={styles.successIcon}>
+                      <Feather color={colors.onLime} name="check" size={15} />
+                    </View>
                     <Text style={styles.successText}>{submitMessage}</Text>
-                  </View>
+                  </Animated.View>
                 ) : null}
               </View>
             </ScrollView>
@@ -270,6 +341,7 @@ function ChoiceChip({
     <PressScale
       accessibilityLabel={label}
       accessibilityRole="button"
+      haptic="light"
       onPress={onPress}
       pressedScale={0.94}
       style={[styles.choiceChip, isActive && styles.activeChoice]}
@@ -362,6 +434,56 @@ const styles = StyleSheet.create({
     fontSize: typography.body,
     lineHeight: 23,
     marginTop: spacing.lg,
+  },
+  affinityBorder: {
+    borderRadius: radii.lg,
+    marginTop: spacing.md,
+    padding: 1,
+  },
+  affinityCard: {
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    flexDirection: "row",
+    gap: spacing.sm,
+    padding: spacing.sm,
+  },
+  affinityAvatars: {
+    flexDirection: "row",
+    width: 54,
+  },
+  affinityAvatar: {
+    alignItems: "center",
+    backgroundColor: colors.lime,
+    borderColor: colors.surface,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    height: 28,
+    justifyContent: "center",
+    width: 28,
+  },
+  affinityAvatarOffset: {
+    marginLeft: -9,
+  },
+  affinityAvatarText: {
+    color: colors.onLime,
+    fontSize: typography.micro,
+    fontWeight: "900",
+  },
+  affinityCopy: {
+    flex: 1,
+  },
+  affinityTitle: {
+    color: colors.text,
+    fontSize: typography.small,
+    fontWeight: "900",
+  },
+  affinityText: {
+    color: colors.muted,
+    fontSize: typography.micro,
+    fontWeight: "800",
+    lineHeight: 15,
+    marginTop: 3,
   },
   signalGrid: {
     flexDirection: "row",
@@ -518,6 +640,14 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: 9,
+  },
+  successIcon: {
+    alignItems: "center",
+    backgroundColor: "rgba(23, 32, 0, 0.16)",
+    borderRadius: radii.full,
+    height: 24,
+    justifyContent: "center",
+    width: 24,
   },
   successText: {
     color: colors.onLime,

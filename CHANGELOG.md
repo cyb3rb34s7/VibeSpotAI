@@ -2,6 +2,13 @@
 
 Newest entries first. Every implementation commit should add a dated entry explaining what changed and why.
 
+## 2026-06-29 - Add native-feel motion and haptics
+
+**What changed:** Added `expo-haptics`, a shared haptic intent helper, haptic-aware press interactions, tab fade/slide transitions, backend-confirmed submit success feedback, a premium affinity proof card in the detail sheet, semantic close controls for the modal, and a stronger Google Maps failure fallback that keeps the stylized VibeSpot map visible until Google is proven healthy.
+**Why:** The previous polish pass established the psychological UI layer; this pass makes the app feel more tactile, native, and resilient under local Google Maps key failures.
+**Files touched:** `apps/mobile/package.json`, `apps/mobile/package-lock.json`, `apps/mobile/src/utils/haptics.ts`, `apps/mobile/src/components/*`, `apps/mobile/src/screens/MapHomeScreen.tsx`, `context.md`, `CHANGELOG.md`.
+**Reverts cleanly?:** yes. Reinstall mobile dependencies after reverting package metadata.
+
 ## 2026-06-29 - Add premium psychology UI pass
 
 **What changed:** Added fresh-drop reveal mechanics, animated live pins with avatar social proof, a compact unlock moment, social-proof place cards, a docked animated bottom nav with pending/streak indicators, profile streak/taste/city-progress systems, locked achievements, a waveform crowd control, polished auth copy, and tab scroll reset behavior.

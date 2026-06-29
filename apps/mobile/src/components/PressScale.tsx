@@ -7,8 +7,11 @@ import {
   type ViewStyle,
 } from "react-native";
 
+import { triggerHaptic, type HapticIntent } from "../utils/haptics";
+
 type PressScaleProps = PropsWithChildren<
   Omit<PressableProps, "style"> & {
+    haptic?: HapticIntent;
     pressedScale?: number;
     style?: StyleProp<ViewStyle>;
   }
@@ -16,8 +19,10 @@ type PressScaleProps = PropsWithChildren<
 
 export function PressScale({
   children,
+  haptic,
   pressedScale = 0.98,
   style,
+  onPress,
   onPressIn,
   onPressOut,
   ...props
@@ -36,6 +41,12 @@ export function PressScale({
   return (
     <Pressable
       {...props}
+      onPress={(event) => {
+        if (!props.disabled && haptic) {
+          triggerHaptic(haptic);
+        }
+        onPress?.(event);
+      }}
       onPressIn={(event) => {
         animate(pressedScale);
         onPressIn?.(event);

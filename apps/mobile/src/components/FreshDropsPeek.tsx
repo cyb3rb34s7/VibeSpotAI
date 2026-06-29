@@ -33,6 +33,7 @@ export function FreshDropsPeek({ places }: FreshDropsPeekProps) {
           <PressScale
             accessibilityLabel={isVisible ? `${place.name} fresh drop` : "Reveal hidden drop"}
             accessibilityRole="button"
+            haptic={isVisible ? "light" : "medium"}
             key={place.id}
             onPress={() => setRevealed(Math.min(3, revealed + 1))}
             pressedScale={0.98}

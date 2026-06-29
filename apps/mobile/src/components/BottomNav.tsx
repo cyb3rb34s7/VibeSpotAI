@@ -49,6 +49,7 @@ export function BottomNav({ activeTab, onSelectTab, pendingDrops = 0, streakCoun
             <PressScale
               accessibilityLabel={item.label}
               accessibilityRole="button"
+              haptic={item.label === "Drop" ? "medium" : "light"}
               key={item.label}
               onPress={() => onSelectTab(item.label)}
               pressedScale={0.95}
@@ -85,7 +86,8 @@ export function BottomNav({ activeTab, onSelectTab, pendingDrops = 0, streakCoun
 const styles = StyleSheet.create({
   dock: {
     backgroundColor: colors.background,
-    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+    paddingTop: spacing.lg,
   },
   container: {
     alignSelf: "stretch",
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     gap: spacing.xs,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
     marginHorizontal: spacing.md,
     padding: 6,
     shadowColor: "#000",
