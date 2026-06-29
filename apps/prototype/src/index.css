@@ -176,9 +176,9 @@ button {
   box-shadow: 0 -18px 42px rgba(0, 0, 0, 0.46);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  height: 94px;
+  height: 90px;
   left: 0;
-  padding: 12px 28px 28px;
+  padding: 11px 34px 27px;
   position: absolute;
   right: 0;
   z-index: 30;
@@ -191,10 +191,10 @@ button {
   border-radius: 999px;
   color: #d7dac7;
   display: flex;
-  height: 58px;
+  height: 54px;
   justify-content: center;
   margin: 0 auto;
-  width: 58px;
+  width: 54px;
 }
 
 .nav-button.is-active {
@@ -289,14 +289,14 @@ button {
   box-shadow: var(--shadow);
   color: var(--lime);
   display: grid;
-  gap: 12px;
+  gap: 10px;
   grid-template-columns: auto 1fr auto;
   left: 24px;
-  min-height: 66px;
-  padding: 10px 12px 10px 18px;
+  min-height: 60px;
+  padding: 9px 10px 9px 18px;
   position: absolute;
   right: 24px;
-  top: 28px;
+  top: 34px;
   z-index: 8;
 }
 
@@ -307,13 +307,13 @@ button {
 
 .floating-search span {
   color: var(--text);
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 700;
 }
 
 .floating-search strong {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   margin-top: 2px;
 }
@@ -325,40 +325,9 @@ button {
   border-radius: 999px;
   color: var(--text);
   display: flex;
-  height: 44px;
+  height: 40px;
   justify-content: center;
-  width: 44px;
-}
-
-.map-filter-row {
-  display: flex;
-  gap: 8px;
-  left: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  position: absolute;
-  right: 20px;
-  top: 106px;
-  z-index: 7;
-}
-
-.map-filter-row::-webkit-scrollbar {
-  display: none;
-}
-
-.map-filter-row button {
-  align-items: center;
-  backdrop-filter: blur(18px);
-  background: rgba(22, 23, 30, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  color: rgba(244, 242, 235, 0.74);
-  display: inline-flex;
-  flex: 0 0 auto;
-  font-size: 12px;
-  font-weight: 800;
-  gap: 7px;
-  padding: 9px 12px;
+  width: 40px;
 }
 
 .place-layer {
@@ -371,15 +340,15 @@ button {
   align-items: center;
   background: rgba(18, 19, 25, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  border-radius: 16px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.44);
   color: var(--text);
   display: grid;
   gap: 9px;
-  grid-template-columns: 38px minmax(0, 1fr);
+  grid-template-columns: 34px minmax(0, 1fr);
   left: var(--chip-x);
-  min-width: 172px;
-  padding: 9px;
+  min-width: 158px;
+  padding: 8px;
   position: absolute;
   text-align: left;
   top: var(--chip-y);
@@ -416,9 +385,9 @@ button {
   border-radius: 16px;
   color: var(--chip-accent);
   display: flex;
-  height: 38px;
+  height: 34px;
   justify-content: center;
-  width: 38px;
+  width: 34px;
 }
 
 .chip-copy {
@@ -434,25 +403,25 @@ button {
 }
 
 .chip-copy strong {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
 }
 
 .chip-copy small {
   color: rgba(244, 242, 235, 0.66);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .selected-place-card {
   background: rgba(16, 17, 23, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 28px;
-  bottom: 304px;
+  border-radius: 24px;
+  bottom: 104px;
   box-shadow: var(--shadow);
   display: grid;
   gap: 14px;
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: 82px 1fr;
   left: 18px;
   padding: 12px;
   position: absolute;
@@ -461,9 +430,9 @@ button {
 }
 
 .selected-image {
-  border-radius: 20px;
+  border-radius: 18px;
   filter: brightness(1.28) saturate(1.18);
-  min-height: 132px;
+  min-height: 112px;
   position: relative;
 }
 
@@ -484,7 +453,7 @@ button {
 
 .selected-copy h2 {
   color: var(--text);
-  font-size: 23px;
+  font-size: 20px;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -492,13 +461,13 @@ button {
 .selected-copy p {
   color: var(--muted);
   display: -webkit-box;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 650;
   line-height: 1.28;
   margin-top: 8px;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
 
 .eyebrow-row {
@@ -530,7 +499,7 @@ button {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 900;
-  min-height: 38px;
+  min-height: 34px;
 }
 
 .primary-action {
@@ -548,10 +517,10 @@ button {
   background: rgba(42, 43, 50, 0.66);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 32px 32px 0 0;
-  bottom: 84px;
+  bottom: 82px;
   left: 0;
-  min-height: 142px;
-  padding: 10px 24px 28px;
+  min-height: 224px;
+  padding: 10px 24px 26px;
   position: absolute;
   right: 0;
   z-index: 12;
@@ -588,7 +557,7 @@ button {
 
 .sheet-heading h1 {
   color: var(--text);
-  font-size: 28px;
+  font-size: 24px;
   letter-spacing: -0.03em;
 }
 
@@ -605,10 +574,10 @@ button {
   display: flex;
   font-size: 11px;
   font-weight: 900;
-  height: 30px;
+  height: 28px;
   justify-content: center;
   margin-left: -8px;
-  width: 30px;
+  width: 28px;
 }
 
 .avatar-stack span:last-child {
@@ -616,40 +585,62 @@ button {
   color: #172000;
 }
 
-.signal-strip {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 1fr;
-  margin-top: 14px;
-}
-
-.signal-strip div {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 18px;
-  padding: 12px;
-}
-
-.signal-strip svg {
-  color: var(--lime);
-}
-
-.signal-strip strong,
-.signal-strip span {
-  display: block;
-}
-
-.signal-strip strong {
+.trending-preview {
+  background: rgba(11, 12, 15, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
   color: var(--text);
-  font-size: 13px;
-  margin-top: 6px;
+  display: block;
+  margin-top: 14px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  text-align: left;
+  width: 100%;
 }
 
-.signal-strip span {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.25;
-  margin-top: 3px;
+.trending-image {
+  display: block;
+  filter: brightness(1.18) saturate(1.12);
+  height: 118px;
+  position: relative;
+  width: 100%;
+}
+
+.trending-preview::after {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.76), transparent 72%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.trending-copy {
+  bottom: 14px;
+  left: 16px;
+  position: absolute;
+  right: 16px;
+  z-index: 2;
+}
+
+.trending-copy strong,
+.trending-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trending-copy strong {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.trending-copy small {
+  color: rgba(244, 242, 235, 0.72);
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 4px;
 }
 
 .detail-screen,
@@ -1764,7 +1755,7 @@ button {
 
 @media (max-height: 760px) {
   .selected-place-card {
-    bottom: 256px;
+    bottom: 98px;
   }
 
   .detail-sheet {
